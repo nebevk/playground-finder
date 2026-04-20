@@ -1,0 +1,95 @@
+{
+  "app": {
+    "name": "Playground Finder"
+  },
+  "nav": {
+    "map": "Zemljevid",
+    "search": "Iskanje",
+    "add": "Dodaj",
+    "profile": "Profil"
+  },
+  "map": {
+    "title": "Zemljevid igrišč",
+    "loading": "Nalagam zemljevid…",
+    "close": "Zapri",
+    "seeDetails": "Več podrobnosti"
+  },
+  "search": {
+    "title": "Iskanje",
+    "placeholder": "Iskalnik bo tukaj."
+  },
+  "add": {
+    "title": "Dodaj igrišče",
+    "loginPrompt": "Za dodajanje igrišča se morate prijaviti.",
+    "loginCta": "Prijavi se",
+    "step": "Korak {n} od {total}",
+    "next": "Naprej",
+    "back": "Nazaj",
+    "submit": "Dodaj igrišče",
+    "submitting": "Dodajam…",
+    "step1": {
+      "title": "Označite lokacijo",
+      "hint": "Tapnite na zemljevid ali povlecite oznako, da nastavite položaj.",
+      "useGps": "Uporabi mojo lokacijo"
+    },
+    "step2": {
+      "title": "Podrobnosti igrišča",
+      "name": "Ime",
+      "namePlaceholder": "Npr. Igrišče Tivoli",
+      "description": "Opis",
+      "descriptionPlaceholder": "Kratek opis igrišča (neobvezno)",
+      "surface": "Podlaga",
+      "surfaceOptions": {
+        "tartan": "Tartan",
+        "sand": "Pesek",
+        "grass": "Trava",
+        "gravel": "Gramoz"
+      },
+      "features": "Lastnosti",
+      "featureOptions": {
+        "is_fenced": "Ograjeno",
+        "has_shade": "Senca",
+        "has_water": "Pitnik",
+        "has_toilets": "Stranišče",
+        "has_parking": "Parkirišče"
+      }
+    },
+    "step3": {
+      "title": "Fotografije (neobvezno)",
+      "verifyEmail": "Za nalaganje fotografij morate najprej potrditi e-poštni naslov.",
+      "disclaimer": "Prosimo, ne objavljajte fotografij, na katerih so prepoznavni obrazi otrok.",
+      "pick": "Izberi fotografije",
+      "selected": "Izbranih fotografij: {count}"
+    },
+    "errors": {
+      "noLocation": "Najprej izberite lokacijo na zemljevidu.",
+      "noName": "Vnesite ime igrišča.",
+      "uploadFailed": "Nalaganje fotografije ni uspelo.",
+      "generic": "Shranjevanje ni uspelo. Poskusite znova."
+    },
+    "success": "Igrišče dodano!"
+  },
+  "profile": {
+    "title": "Moj profil",
+    "loggedInAs": "Prijavljeni ste kot {email}",
+    "username": "Uporabniško ime",
+    "logout": "Odjava",
+    "loginCta": "Prijavi se",
+    "signupCta": "Ustvari račun",
+    "loggedOut": "Niste prijavljeni."
+  },
+  "auth": {
+    "loginTitle": "Prijava",
+    "signupTitle": "Ustvari račun",
+    "email": "E-poštni naslov",
+    "password": "Geslo",
+    "submitLogin": "Prijavi se",
+    "submitSignup": "Ustvari račun",
+    "consent": "Strinjam se s <privacyLink>Politiko zasebnosti</privacyLink> in pogoji uporabe.",
+    "consentRequired": "Za nadaljevanje morate sprejeti politiko zasebnosti.",
+    "switchToSignup": "Še nimate računa? Registrirajte se.",
+    "switchToLogin": "Že imate račun? Prijavite se.",
+    "checkEmail": "Preverite e-pošto za potrditveno povezavo.",
+    "errorGeneric": "Prijava ni uspela. Preverite svoje podatke in poskusite znova."
+  }
+}

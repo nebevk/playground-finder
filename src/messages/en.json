@@ -1,0 +1,95 @@
+{
+  "app": {
+    "name": "Playground Finder"
+  },
+  "nav": {
+    "map": "Map",
+    "search": "Search",
+    "add": "Add",
+    "profile": "Profile"
+  },
+  "map": {
+    "title": "Playground map",
+    "loading": "Loading map…",
+    "close": "Close",
+    "seeDetails": "See details"
+  },
+  "search": {
+    "title": "Search",
+    "placeholder": "Search UI coming soon."
+  },
+  "add": {
+    "title": "Add a playground",
+    "loginPrompt": "You need to be logged in to add a playground.",
+    "loginCta": "Log in",
+    "step": "Step {n} of {total}",
+    "next": "Next",
+    "back": "Back",
+    "submit": "Add playground",
+    "submitting": "Submitting…",
+    "step1": {
+      "title": "Pin the location",
+      "hint": "Tap the map or drag the marker to set the position.",
+      "useGps": "Use my location"
+    },
+    "step2": {
+      "title": "Playground details",
+      "name": "Name",
+      "namePlaceholder": "e.g. Tivoli Park playground",
+      "description": "Description",
+      "descriptionPlaceholder": "Short description (optional)",
+      "surface": "Surface",
+      "surfaceOptions": {
+        "tartan": "Tartan",
+        "sand": "Sand",
+        "grass": "Grass",
+        "gravel": "Gravel"
+      },
+      "features": "Features",
+      "featureOptions": {
+        "is_fenced": "Fenced",
+        "has_shade": "Shade",
+        "has_water": "Drinking water",
+        "has_toilets": "Toilets",
+        "has_parking": "Parking"
+      }
+    },
+    "step3": {
+      "title": "Photos (optional)",
+      "verifyEmail": "Verify your email address before uploading photos.",
+      "disclaimer": "Please do not post photos with identifiable faces of children.",
+      "pick": "Choose photos",
+      "selected": "Selected photos: {count}"
+    },
+    "errors": {
+      "noLocation": "Pick a location on the map first.",
+      "noName": "Enter a name for the playground.",
+      "uploadFailed": "Photo upload failed.",
+      "generic": "Could not save. Please try again."
+    },
+    "success": "Playground added!"
+  },
+  "profile": {
+    "title": "My profile",
+    "loggedInAs": "Logged in as {email}",
+    "username": "Username",
+    "logout": "Log out",
+    "loginCta": "Log in",
+    "signupCta": "Create account",
+    "loggedOut": "You are not logged in."
+  },
+  "auth": {
+    "loginTitle": "Log in",
+    "signupTitle": "Create account",
+    "email": "Email",
+    "password": "Password",
+    "submitLogin": "Log in",
+    "submitSignup": "Create account",
+    "consent": "I agree to the <privacyLink>Privacy Policy</privacyLink> and Terms of Use.",
+    "consentRequired": "You must accept the privacy policy to continue.",
+    "switchToSignup": "Don't have an account? Sign up.",
+    "switchToLogin": "Already have an account? Log in.",
+    "checkEmail": "Check your email for a confirmation link.",
+    "errorGeneric": "Sign-in failed. Check your details and try again."
+  }
+}

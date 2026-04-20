@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm -v)",
+      "Bash(npm -v)",
+      "Bash(corepack -v)",
+      "Bash(where pnpm *)",
+      "Bash(where npm *)",
+      "Bash(corepack enable *)",
+      "Bash(corepack prepare *)",
+      "Bash(pnpm create *)",
+      "Bash(mv CLAUDE.md ../_tmp_CLAUDE.md)",
+      "Bash(mv .history ../_tmp_history)",
+      "Bash(mv docs *)",
+      "Bash(mv ../_tmp_CLAUDE.md CLAUDE.md)",
+      "Bash(mv ../_tmp_history .history)",
+      "Bash(mv ../_tmp_docs docs)",
+      "Bash(pnpm add *)",
+      "Bash(mkdir -p \"[locale]\" \"[locale]/search\" \"[locale]/add\" \"[locale]/profile\")",
+      "Bash(mv globals.css \"[locale]/../globals.css.tmp\")",
+      "Bash(mv globals.css.tmp globals.css)",
+      "Bash(rm page.tsx)",
+      "Bash(pnpm dev *)",
+      "Bash(curl -sS -o /dev/null -w \"sl:%{http_code} \" http://localhost:3000/sl)",
+      "Bash(curl -sS -o /dev/null -w \"en:%{http_code} \" http://localhost:3000/en)",
+      "Bash(curl -sS -o /dev/null -w \"root:%{http_code} \" http://localhost:3000/)",
+      "Bash(curl -sS -o /dev/null -w \"sl-profile:%{http_code}\\\\n\" http://localhost:3000/sl/profile)",
+      "Bash(curl -sS http://localhost:3000/sl)",
+      "Bash(curl -sS -o /dev/null -w \"sl:%{http_code} en:%{http_code} \" http://localhost:3000/sl http://localhost:3000/en)",
+      "Bash(curl -sS -o /dev/null -w \"add:%{http_code} search:%{http_code}\\\\n\" http://localhost:3000/sl/add http://localhost:3000/en/search)"
+    ]
+  }
+}
