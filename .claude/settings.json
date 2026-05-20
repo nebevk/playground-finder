@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(curl -sS -o /dev/null -w \"moderation:%{http_code}\\\\n\" http://localhost:3000/sl/admin/moderation)",
-      "Bash(git fetch *)"
+      "Bash(git fetch *)",
+      "Bash(grep -oE '_vercel/insights|\"message\":\"[^\"]{1,200}\"')"
     ]
   }
 }

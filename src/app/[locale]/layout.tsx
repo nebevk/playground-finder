@@ -4,6 +4,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { Geist, Geist_Mono } from "next/font/google";
 import { routing } from "@/i18n/routing";
+import { Analytics } from "@vercel/analytics/next";
 import { BottomNav } from "@/components/BottomNav";
 import { SideNav } from "@/components/SideNav";
 import { CookieBanner } from "@/components/CookieBanner";
@@ -50,6 +51,7 @@ export default async function LocaleLayout({
           </div>
           <CookieBanner />
         </NextIntlClientProvider>
+        <Analytics />
       </body>
     </html>
   );
