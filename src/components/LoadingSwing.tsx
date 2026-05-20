@@ -13,7 +13,7 @@ export function LoadingSwing({ label }: { label?: string }) {
           <rect x="32" y="70" width="56" height="8" rx="3" className="fill-primary" />
         </g>
       </svg>
-      {label && <p className="font-display text-sm text-base-content/70">{label}</p>}
+      {label && <p className="text-sm text-base-content/70">{label}</p>}
     </div>
   );
 }

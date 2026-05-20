@@ -11,9 +11,9 @@ export function SideNav() {
 
   return (
     <aside className="hidden md:flex md:w-64 md:shrink-0 md:flex-col md:border-r md:border-base-300 md:bg-base-100">
-      <div className="px-5 py-6">
+      <div className="px-4 py-6">
         <Link href="/" className="block">
-          <BrandStack size={44} />
+          <BrandStack size={140} align="center" nameSize="text-3xl" />
         </Link>
       </div>
       <ul className="menu menu-lg w-full gap-1 px-3">

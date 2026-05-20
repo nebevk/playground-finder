@@ -1,25 +1,18 @@
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 
 export function BrandMark({ size = 40 }: { size?: number }) {
   return (
-    <span
+    <Image
+      src="/logo.png"
+      alt=""
+      width={size}
+      height={size}
+      priority
       aria-hidden
-      className="inline-flex items-center justify-center rounded-2xl bg-primary text-primary-content shadow-sm"
+      className="object-contain"
       style={{ width: size, height: size }}
-    >
-      <svg viewBox="0 0 512 512" className="h-3/5 w-3/5" fill="currentColor" aria-hidden>
-        <g>
-          <rect x="100" y="140" width="22" height="260" rx="11" />
-          <rect x="200" y="140" width="22" height="260" rx="11" />
-          <rect x="100" y="190" width="122" height="14" rx="7" />
-          <rect x="100" y="240" width="122" height="14" rx="7" />
-          <rect x="100" y="290" width="122" height="14" rx="7" />
-          <rect x="100" y="340" width="122" height="14" rx="7" />
-          <path d="M222 150 Q420 210 380 400" stroke="currentColor" strokeWidth={28} strokeLinecap="round" fill="none" />
-          <circle cx="380" cy="408" r="20" />
-        </g>
-      </svg>
-    </span>
+    />
   );
 }
 
@@ -33,12 +26,19 @@ export function BrandStack({
   nameSize?: "text-2xl" | "text-3xl" | "text-4xl" | "text-5xl";
 }) {
   const t = useTranslations("app");
+  const name = t("name");
+  const match = name.match(/^(.*?)([?!.…]+)$/);
+  const body = match?.[1] ?? name;
+  const punct = match?.[2] ?? "";
+
+  const isCenter = align === "center";
   return (
-    <div className={`flex items-center gap-3 ${align === "center" ? "flex-col text-center" : ""}`}>
+    <div className={`flex gap-3 ${isCenter ? "flex-col items-center text-center" : "items-center"}`}>
       <BrandMark size={size} />
-      <div className="flex flex-col">
-        <span className={`font-display ${nameSize} leading-none text-primary-content`}>
-          {t("name")}
+      <div className={`flex flex-col ${isCenter ? "items-center" : ""}`}>
+        <span className={`font-display whitespace-nowrap ${nameSize} leading-none text-primary-content`}>
+          {body}
+          {punct && <span className="brand-punct text-primary">{punct}</span>}
         </span>
         <span className="mt-1 text-xs text-base-content/60 leading-snug">{t("slogan")}</span>
       </div>

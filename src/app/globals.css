@@ -1,9 +1,33 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
+html, body {
+  font-family: var(--font-sans), ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+
 .font-display {
-  font-family: var(--font-display), "Comic Sans MS", system-ui, sans-serif;
-  letter-spacing: 0;
+  font-family: var(--font-display), system-ui, sans-serif;
+  letter-spacing: 0.005em;
+}
+
+@keyframes brand-wiggle {
+  0%, 70%, 100% { transform: rotate(0deg) translateY(0); }
+  78% { transform: rotate(-14deg) translateY(-3px); }
+  85% { transform: rotate(12deg) translateY(-2px); }
+  92% { transform: rotate(-6deg) translateY(-1px); }
+}
+
+.brand-punct {
+  display: inline-block;
+  transform-origin: 50% 90%;
+  margin-left: 0.05em;
+  font-size: 1.35em;
+  line-height: 1;
+  animation: brand-wiggle 4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-punct { animation: none; }
 }
 
 @keyframes swing {

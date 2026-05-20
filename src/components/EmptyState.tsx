@@ -60,7 +60,7 @@ export function EmptyState({
   return (
     <div className="flex flex-col items-center gap-3 rounded-box border border-dashed border-base-300 px-6 py-10 text-center">
       <Illustration variant={variant} />
-      <p className="font-display text-base font-semibold">{title}</p>
+      <p className="text-base font-semibold">{title}</p>
       {description && <p className="text-sm text-base-content/60">{description}</p>}
       {action}
     </div>

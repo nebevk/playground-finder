@@ -10,7 +10,9 @@
       "Bash(curl -sS https://playground-finder-seven.vercel.app/sl/admin)",
       "Bash(curl -sS -o /dev/null -w 'sl:%{http_code} login:%{http_code} signup:%{http_code} profile:%{http_code} manifest:%{http_code}\\\\n' http://localhost:3000/sl http://localhost:3000/sl/login http://localhost:3000/sl/signup http://localhost:3000/sl/profile http://localhost:3000/manifest.webmanifest)",
       "Bash(pnpm tsc *)",
-      "Bash(pnpm exec *)"
+      "Bash(pnpm exec *)",
+      "Skill(claude-api)",
+      "Skill(claude-api:*)"
     ]
   }
 }

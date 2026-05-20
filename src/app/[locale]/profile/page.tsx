@@ -24,7 +24,7 @@ export default async function ProfilePage({
   if (!user) {
     return (
       <section className="flex flex-col items-center gap-6 p-4 pt-8 text-center">
-        <BrandStack size={64} align="center" />
+        <BrandStack size={140} align="center" nameSize="text-4xl" />
         <p className="text-base-content/70">{t("loggedOut")}</p>
         <div className="flex gap-3">
           <Link href="/login" className="btn btn-primary">
