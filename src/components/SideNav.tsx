@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import { navItems } from "./nav-items";
+import { BrandStack } from "./Brand";
 
 export function SideNav() {
   const t = useTranslations();
@@ -10,8 +11,10 @@ export function SideNav() {
 
   return (
     <aside className="hidden md:flex md:w-64 md:shrink-0 md:flex-col md:border-r md:border-base-300 md:bg-base-100">
-      <div className="px-6 py-6">
-        <span className="text-xl font-bold tracking-tight">{t("app.name")}</span>
+      <div className="px-5 py-6">
+        <Link href="/" className="block">
+          <BrandStack size={44} />
+        </Link>
       </div>
       <ul className="menu menu-lg w-full gap-1 px-3">
         {navItems.map(({ href, icon: Icon, key }) => {

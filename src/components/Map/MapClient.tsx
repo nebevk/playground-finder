@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { FiltersProvider, useFilters } from "@/components/Filters/FiltersContext";
 import { FiltersButton } from "@/components/Filters/FiltersButton";
 import { FiltersDrawer } from "@/components/Filters/FiltersDrawer";
+import { LoadingSwing } from "@/components/LoadingSwing";
 import type { MapPlayground } from "@/lib/playgrounds";
 
 const PlaygroundMap = dynamic(
@@ -18,11 +19,7 @@ const PlaygroundMap = dynamic(
 
 function MapLoading() {
   const t = useTranslations("map");
-  return (
-    <div className="flex h-full w-full items-center justify-center bg-base-200">
-      <span className="loading loading-spinner loading-lg text-primary" aria-label={t("loading")} />
-    </div>
-  );
+  return <LoadingSwing label={t("loading")} />;
 }
 
 function MapWithFilters({ playgrounds }: { playgrounds: MapPlayground[] }) {

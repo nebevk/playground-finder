@@ -1,6 +1,7 @@
 {
   "app": {
-    "name": "Playground Finder"
+    "name": "Kje so igrala?",
+    "slogan": "Odkrij otroška igrišča po Sloveniji"
   },
   "nav": {
     "map": "Zemljevid",
@@ -14,7 +15,9 @@
     "close": "Zapri",
     "seeDetails": "Več podrobnosti",
     "locateMe": "Poišči mojo lokacijo",
-    "useMyLocation": "Uporabi mojo lokacijo"
+    "useMyLocation": "Uporabi mojo lokacijo",
+    "welcome": "Tapnite oznako za podrobnosti.",
+    "dismiss": "Razumem"
   },
   "admin": {
     "title": "Administracija",

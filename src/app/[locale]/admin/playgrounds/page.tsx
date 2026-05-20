@@ -4,6 +4,7 @@ import { Link } from "@/i18n/navigation";
 import { requireAdmin } from "@/lib/admin";
 import { EditPlaygroundForm } from "@/components/Admin/EditPlaygroundForm";
 import { DeletePlaygroundButton } from "@/components/Admin/DeletePlaygroundButton";
+import { EmptyState } from "@/components/EmptyState";
 
 const SURFACE_TYPES = ["tartan", "sand", "grass", "gravel"] as const;
 type SurfaceType = (typeof SURFACE_TYPES)[number];
@@ -47,7 +48,7 @@ export default async function AdminPlaygroundsPage({
       </header>
 
       {items.length === 0 ? (
-        <p className="text-sm text-base-content/60">{t("playgrounds.empty")}</p>
+        <EmptyState variant="playgrounds" title={t("playgrounds.empty")} />
       ) : (
         <div className="overflow-x-auto">
           <table className="table">

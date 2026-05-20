@@ -3,7 +3,14 @@
     "allow": [
       "Bash(curl -sS -o /dev/null -w \"moderation:%{http_code}\\\\n\" http://localhost:3000/sl/admin/moderation)",
       "Bash(git fetch *)",
-      "Bash(grep -oE '_vercel/insights|\"message\":\"[^\"]{1,200}\"')"
+      "Bash(grep -oE '_vercel/insights|\"message\":\"[^\"]{1,200}\"')",
+      "Bash(curl -sS -o /dev/null -w 'sl:%{http_code} en:%{http_code} privacy:%{http_code} manifest:%{http_code} signup:%{http_code} addanon:%{http_code} admin-anon:%{http_code}\\\\n' https://playground-finder-seven.vercel.app/sl https://playground-finder-seven.vercel.app/en https://playground-finder-seven.vercel.app/sl/privacy https://playground-finder-seven.vercel.app/manifest.webmanifest https://playground-finder-seven.vercel.app/sl/signup https://playground-finder-seven.vercel.app/sl/add https://playground-finder-seven.vercel.app/sl/admin)",
+      "Bash(curl -sS https://playground-finder-seven.vercel.app/sl)",
+      "Bash(grep -oE 'leaflet|MapContainer|loading-spinner|Tivoli|Park Zvezda|\"message\":\"[^\"]{1,150}\"')",
+      "Bash(curl -sS https://playground-finder-seven.vercel.app/sl/admin)",
+      "Bash(curl -sS -o /dev/null -w 'sl:%{http_code} login:%{http_code} signup:%{http_code} profile:%{http_code} manifest:%{http_code}\\\\n' http://localhost:3000/sl http://localhost:3000/sl/login http://localhost:3000/sl/signup http://localhost:3000/sl/profile http://localhost:3000/manifest.webmanifest)",
+      "Bash(pnpm tsc *)",
+      "Bash(pnpm exec *)"
     ]
   }
 }

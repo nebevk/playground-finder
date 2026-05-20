@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Butterfly_Kids } from "next/font/google";
 import { routing } from "@/i18n/routing";
 import { Analytics } from "@vercel/analytics/next";
 import { BottomNav } from "@/components/BottomNav";
@@ -12,6 +12,11 @@ import "../globals.css";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
+const butterflyKids = Butterfly_Kids({
+  variable: "--font-display",
+  subsets: ["latin", "latin-ext"],
+  weight: "400",
+});
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -39,7 +44,7 @@ export default async function LocaleLayout({
   setRequestLocale(locale);
 
   return (
-    <html lang={locale} className={`${geistSans.variable} ${geistMono.variable}`}>
+    <html lang={locale} className={`${geistSans.variable} ${geistMono.variable} ${butterflyKids.variable}`}>
       <body className="min-h-dvh antialiased bg-base-100 text-base-content">
         <NextIntlClientProvider>
           <div className="flex min-h-dvh md:flex-row">

@@ -1,6 +1,45 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
+.font-display {
+  font-family: var(--font-display), "Comic Sans MS", system-ui, sans-serif;
+  letter-spacing: 0;
+}
+
+@keyframes swing {
+  0%, 100% { transform: rotate(-18deg); }
+  50% { transform: rotate(18deg); }
+}
+
+@keyframes pop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.15); }
+  100% { transform: scale(1.05); }
+}
+
+.dock-active {
+  animation: pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform: scale(1.05);
+}
+.dock-active > svg {
+  filter: drop-shadow(0 1px 2px oklch(var(--color-primary) / 0.35));
+}
+
+/* Smooth nudge on bottom-nav items */
+.dock > a, .dock > button {
+  transition: transform 180ms ease, color 180ms ease;
+}
+.dock > a:hover, .dock > button:hover {
+  transform: translateY(-2px);
+}
+
+/* Strip default Leaflet marker chrome on our DivIcon */
+.leaflet-div-icon.playground-marker,
+.playground-marker {
+  background: transparent;
+  border: 0;
+}
+
 @plugin "daisyui/theme" {
   name: "retro";
   default: true;

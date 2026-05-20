@@ -2,6 +2,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { requireAdmin } from "@/lib/admin";
+import { EmptyState } from "@/components/EmptyState";
 import {
   approveFlaggedAction,
   deleteFlaggedAction,
@@ -89,7 +90,7 @@ export default async function ModerationPage({
       <section>
         <h2 className="mb-3 text-lg font-semibold">{t("moderation.flaggedHeading")}</h2>
         {items.length === 0 ? (
-          <p className="text-sm text-base-content/60">{t("moderation.empty")}</p>
+          <EmptyState variant="moderation" title={t("moderation.empty")} />
         ) : (
           <ul className="flex flex-col gap-3">
             {items.map((item) => (

@@ -3,6 +3,7 @@ import { Shield } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { logoutAction } from "../(auth)/actions";
+import { BrandStack } from "@/components/Brand";
 import { ExportDataButton } from "@/components/Profile/ExportDataButton";
 import { DeleteAccountButton } from "@/components/Profile/DeleteAccountButton";
 
@@ -22,10 +23,10 @@ export default async function ProfilePage({
 
   if (!user) {
     return (
-      <section className="p-4">
-        <h1 className="text-2xl font-bold">{t("title")}</h1>
-        <p className="mt-2 text-base-content/70">{t("loggedOut")}</p>
-        <div className="mt-4 flex gap-3">
+      <section className="flex flex-col items-center gap-6 p-4 pt-8 text-center">
+        <BrandStack size={64} align="center" />
+        <p className="text-base-content/70">{t("loggedOut")}</p>
+        <div className="flex gap-3">
           <Link href="/login" className="btn btn-primary">
             {t("loginCta")}
           </Link>

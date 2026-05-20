@@ -1,6 +1,7 @@
 {
   "app": {
-    "name": "Playground Finder"
+    "name": "Kje so igrala?",
+    "slogan": "Discover playgrounds across Slovenia"
   },
   "nav": {
     "map": "Map",
@@ -14,7 +15,9 @@
     "close": "Close",
     "seeDetails": "See details",
     "locateMe": "Locate me",
-    "useMyLocation": "Use my location"
+    "useMyLocation": "Use my location",
+    "welcome": "Tap a pin to see details.",
+    "dismiss": "Got it"
   },
   "admin": {
     "title": "Admin",

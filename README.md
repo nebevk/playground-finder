@@ -1,36 +1,41 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Kje so Igrala
 
-## Getting Started
+> Odkrij otroška igrišča po Sloveniji.
 
-First, run the development server:
+A mobile-first, community-driven app for finding playgrounds across Slovenia. Built with Next.js, Supabase (PostGIS), DaisyUI, and React Leaflet.
+
+`kje-so-igrala` is the brand. `playground-finder` is the working name in code and the repo — see [docs/plan.md](docs/plan.md) for the full project plan.
+
+## Quickstart
+
+Requires Node 20+, pnpm (via corepack), and Docker Desktop.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
+pnpm db:start        # boot local Supabase via Docker
+pnpm dev             # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Useful scripts:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| | |
+|---|---|
+| `pnpm dev` | Next dev server |
+| `pnpm build` | Production build |
+| `pnpm db:start` / `db:stop` | Local Supabase (Docker) |
+| `pnpm db:reset` | Wipe DB, re-apply migrations + seed |
+| `pnpm db:types` | Regenerate Supabase TS types |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Project docs
 
-## Learn More
+- [docs/plan.md](docs/plan.md) — features, phases, schema
+- [docs/deploy.md](docs/deploy.md) — production deployment guide
+- [docs/gdpr.md](docs/gdpr.md) — GDPR / ZVOP-2 compliance notes
+- [docs/daisyui-llms.txt](docs/daisyui-llms.txt) — DaisyUI v5 reference
+- [CLAUDE.md](CLAUDE.md) — conventions for AI coding agents
 
-To learn more about Next.js, take a look at the following resources:
+## Production
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Live at https://playground-finder-seven.vercel.app/sl (alpha — invite testers only).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Deploy on push to `master` via Vercel + Supabase. Full instructions in [docs/deploy.md](docs/deploy.md).

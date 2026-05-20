@@ -3,6 +3,7 @@ import { Star } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getReviewsForPlayground } from "@/lib/reviews";
+import { EmptyState } from "@/components/EmptyState";
 import { ReviewForm } from "./ReviewForm";
 import { HelpfulButton } from "./HelpfulButton";
 import { DeleteReviewButton } from "./DeleteReviewButton";
@@ -41,7 +42,9 @@ export async function ReviewsSection({
       )}
 
       {reviews.length === 0 ? (
-        <p className="mt-4 text-sm text-base-content/60">{t("noReviews")}</p>
+        <div className="mt-4">
+          <EmptyState variant="reviews" title={t("noReviews")} />
+        </div>
       ) : (
         <ul className="mt-4 flex flex-col gap-3">
           {reviews.map((r) => (

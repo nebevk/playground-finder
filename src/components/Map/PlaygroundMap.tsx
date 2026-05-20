@@ -9,7 +9,9 @@ import "leaflet/dist/leaflet.css";
 import "leaflet.markercluster/dist/MarkerCluster.css";
 import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 import { fixLeafletDefaultIcons } from "./fix-leaflet-icons";
+import { playgroundMarkerIcon } from "./playground-marker";
 import { PlaygroundSheet } from "./PlaygroundSheet";
+import { WelcomeChip } from "./WelcomeChip";
 import type { MapPlayground } from "@/lib/playgrounds";
 
 fixLeafletDefaultIcons();
@@ -62,6 +64,7 @@ export function PlaygroundMap({ playgrounds }: { playgrounds: MapPlayground[] })
             <Marker
               key={p.id}
               position={[p.lat, p.lng]}
+              icon={playgroundMarkerIcon}
               eventHandlers={{ click: () => setSelected(p) }}
             />
           ))}
@@ -69,6 +72,7 @@ export function PlaygroundMap({ playgrounds }: { playgrounds: MapPlayground[] })
         <LocateButton />
       </MapContainer>
 
+      <WelcomeChip dismissed={selected !== null} />
       <PlaygroundSheet playground={selected} onClose={() => setSelected(null)} />
     </div>
   );
