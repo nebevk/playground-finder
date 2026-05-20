@@ -5,6 +5,13 @@ import { requireAdmin } from "@/lib/admin";
 import { EditPlaygroundForm } from "@/components/Admin/EditPlaygroundForm";
 import { DeletePlaygroundButton } from "@/components/Admin/DeletePlaygroundButton";
 
+const SURFACE_TYPES = ["tartan", "sand", "grass", "gravel"] as const;
+type SurfaceType = (typeof SURFACE_TYPES)[number];
+
+function toSurfaceType(value: string | null): SurfaceType | null {
+  return SURFACE_TYPES.some((surface) => surface === value) ? (value as SurfaceType) : null;
+}
+
 export default async function AdminPlaygroundsPage({
   params,
 }: {
@@ -69,7 +76,7 @@ export default async function AdminPlaygroundsPage({
                           id: pg.id,
                           name: pg.name,
                           description: pg.description,
-                          surface_type: pg.surface_type,
+                          surface_type: toSurfaceType(pg.surface_type),
                           is_fenced: pg.is_fenced,
                           has_shade: pg.has_shade,
                           has_water: pg.has_water,
