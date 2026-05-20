@@ -6,6 +6,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { routing } from "@/i18n/routing";
 import { BottomNav } from "@/components/BottomNav";
 import { SideNav } from "@/components/SideNav";
+import { CookieBanner } from "@/components/CookieBanner";
 import "../globals.css";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
@@ -47,6 +48,7 @@ export default async function LocaleLayout({
               <BottomNav />
             </div>
           </div>
+          <CookieBanner />
         </NextIntlClientProvider>
       </body>
     </html>

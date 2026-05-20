@@ -4,6 +4,8 @@
 
 > The final commercial name is TBD. Use `playground-finder` in code/repos for now, and keep all user-facing strings behind i18n keys so the brand can be swapped without code changes.
 
+> 📦 **Going live?** Jump to [Phase 8: Deployment](#phase-8-deployment) or open [docs/deploy.md](deploy.md) directly.
+
 ---
 
 ## 🚀 Tech Stack
@@ -84,6 +86,28 @@
 **Goal:** Full localization, GDPR pages, and PWA.
 
 * **Prompt:** `"Ensure all UI text is wrapped in the next-intl t() function. Populate sl.json and en.json with all necessary strings. Create a /privacy page rendered in both SL and EN describing data usage (Supabase, Vercel, Cloudflare). Add a react-cookie-consent banner with the message 'We use essential cookies to keep you logged in.' Finally, configure next-pwa to make the app installable on mobile homescreens with an appropriate manifest and icons."`
+
+### Phase 7.5: GDPR Controls & Admin
+**Goal:** Self-service data rights and a moderation surface for flagged content.
+
+* **Built:**
+  * Profile page: real **Export my data** (JSON download) and **Delete my account** (cascade-deletes user content; submitted playgrounds keep `user_id = null`).
+  * `is_admin` column on `profiles` with RLS bypass policies so admins can see flagged rows and edit/delete anyone's content.
+  * `/admin` dashboard with stat tiles.
+  * `/admin/moderation` for triaging flagged playgrounds, reviews, and photos (Approve clears the flag and wipes reports; Delete removes the row).
+  * `/admin/playgrounds` table editor for curating all playgrounds.
+  * `<Turnstile />` placeholder component on signup + add-playground; renders the real Cloudflare widget when `NEXT_PUBLIC_TURNSTILE_SITE_KEY` is set, otherwise shows a dev-only notice.
+
+### Phase 8: Deployment
+**Goal:** Get the app on a public URL for testers.
+
+* See the **full procedure** in [docs/deploy.md](deploy.md). Covers:
+  * Supabase project provisioning + migration push
+  * Vercel deploy + environment variables
+  * Promoting yourself to admin
+  * Sharing the URL with testers
+  * (Alternative) Wiring **Cursor's MCP integrations** for Supabase + Vercel so the entire setup happens from your editor — see [docs/deploy.md#alternative-cursor--mcp-flow](deploy.md#alternative-cursor--mcp-flow)
+  * Post-deploy checklist, ongoing updates, rollback
 
 ---
 

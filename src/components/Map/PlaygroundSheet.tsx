@@ -49,7 +49,7 @@ export function PlaygroundSheet({
               <p className="mt-2 text-sm text-base-content/70">{playground.description}</p>
             )}
             <Link
-              href={{ pathname: "/playground/[id]", params: { id: playground.id } }}
+              href={`/playground/${playground.id}`}
               className="btn btn-primary btn-sm mt-4 w-full"
             >
               {t("seeDetails")}

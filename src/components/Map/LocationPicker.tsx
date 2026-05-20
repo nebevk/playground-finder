@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from "react-leaflet";
 import type { Marker as LeafletMarker } from "leaflet";
 import { LocateFixed } from "lucide-react";
+import { useTranslations } from "next-intl";
 import "leaflet/dist/leaflet.css";
 import { fixLeafletDefaultIcons } from "./fix-leaflet-icons";
 
@@ -24,6 +25,7 @@ function ClickToPlace({ onChange }: { onChange: (pos: LatLng) => void }) {
 
 function GpsButton({ onChange }: { onChange: (pos: LatLng) => void }) {
   const map = useMap();
+  const t = useTranslations("map");
 
   function handle() {
     if (!("geolocation" in navigator)) return;
@@ -42,7 +44,7 @@ function GpsButton({ onChange }: { onChange: (pos: LatLng) => void }) {
     <button
       type="button"
       onClick={handle}
-      aria-label="Use my location"
+      aria-label={t("useMyLocation")}
       className="btn btn-circle btn-primary absolute right-3 bottom-3 z-[1000] shadow-lg"
     >
       <LocateFixed className="size-5" aria-hidden />

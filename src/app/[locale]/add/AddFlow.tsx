@@ -3,6 +3,7 @@
 import { useActionState, useState } from "react";
 import { useTranslations } from "next-intl";
 import { LocationPickerClient } from "@/components/Map/LocationPickerClient";
+import { Turnstile } from "@/components/Turnstile";
 import { createPlaygroundAction, type AddState } from "./actions";
 
 const SURFACE_OPTIONS = ["tartan", "sand", "grass", "gravel"] as const;
@@ -194,8 +195,10 @@ export function AddFlow({ locale, emailVerified }: { locale: string; emailVerifi
               fd.set("locale", locale);
               return action(fd);
             }}
+            className="flex flex-col gap-3"
           >
-            <button type="submit" disabled={pending} className="btn btn-primary">
+            <Turnstile />
+            <button type="submit" disabled={pending} className="btn btn-primary self-end">
               {pending ? t("submitting") : t("submit")}
             </button>
           </form>

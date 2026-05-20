@@ -12,7 +12,167 @@
     "title": "Playground map",
     "loading": "Loading map…",
     "close": "Close",
-    "seeDetails": "See details"
+    "seeDetails": "See details",
+    "locateMe": "Locate me",
+    "useMyLocation": "Use my location"
+  },
+  "admin": {
+    "title": "Admin",
+    "backToSite": "Back to site",
+    "dashboardIntro": "Review and moderate content.",
+    "links": {
+      "moderation": "Flagged content",
+      "playgrounds": "All playgrounds"
+    },
+    "counts": {
+      "flaggedPlaygrounds": "Flagged playgrounds",
+      "flaggedReviews": "Flagged reviews",
+      "flaggedPhotos": "Flagged photos",
+      "openReports": "Open reports"
+    },
+    "moderation": {
+      "title": "Flagged content",
+      "empty": "Nothing to review right now.",
+      "approve": "Approve (clear flag)",
+      "delete": "Delete",
+      "type": {
+        "playground": "Playground",
+        "review": "Review",
+        "photo": "Photo"
+      }
+    },
+    "playgrounds": {
+      "title": "All playgrounds",
+      "new": "Add playground",
+      "empty": "No playgrounds yet.",
+      "name": "Name",
+      "surface": "Surface",
+      "flagged": "Flagged",
+      "actions": "Actions",
+      "edit": "Edit",
+      "delete": "Delete",
+      "editTitle": "Edit playground",
+      "save": "Save",
+      "saved": "Saved.",
+      "deleteConfirm": "Delete this playground?"
+    }
+  },
+  "turnstile": {
+    "notConfigured": "Cloudflare Turnstile not configured (dev mode)."
+  },
+  "cookies": {
+    "message": "We use essential cookies to keep you logged in.",
+    "learnMore": "Learn more",
+    "accept": "Got it"
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "lastUpdated": "Last updated: April 2026",
+    "intro": "This policy describes how we collect and use your data, in line with GDPR and Slovenia's ZVOP-2.",
+    "dataCollected": {
+      "title": "Data we collect",
+      "items": [
+        "Email address and password (for authentication)",
+        "Username (derived from your email address)",
+        "Content you submit (playgrounds, reviews, photos)",
+        "Essential session cookies for login"
+      ]
+    },
+    "processors": {
+      "title": "Data processors",
+      "supabase": "Supabase — database and authentication hosting",
+      "vercel": "Vercel — application hosting",
+      "cloudflare": "Cloudflare — spam protection (Turnstile)"
+    },
+    "rights": {
+      "title": "Your rights",
+      "items": [
+        "Right of access: you can export your data from your profile.",
+        "Right to erasure: you can delete your account from your profile.",
+        "Right to object: contact us."
+      ]
+    },
+    "photos": {
+      "title": "Photos of children",
+      "body": "Identifiable faces of children are not allowed. You can flag inappropriate content with the Report button."
+    },
+    "contact": {
+      "title": "Contact",
+      "body": "For privacy questions, contact us at {email}."
+    }
+  },
+  "filters": {
+    "open": "Filters",
+    "title": "Filters",
+    "features": "Features",
+    "surface": "Surface",
+    "feature": {
+      "is_fenced": "Fenced",
+      "has_shade": "Shade",
+      "has_water": "Drinking water",
+      "has_toilets": "Toilets",
+      "has_parking": "Parking"
+    },
+    "surfaceOption": {
+      "tartan": "Tartan",
+      "sand": "Sand",
+      "grass": "Grass",
+      "gravel": "Gravel"
+    },
+    "clear": "Clear",
+    "apply": "Show ({count})",
+    "results": "{count, plural, one {# playground} other {# playgrounds}}"
+  },
+  "detail": {
+    "notFound": "Playground not found.",
+    "backToMap": "Back to map",
+    "features": "Features",
+    "surface": "Surface",
+    "equipment": "Equipment",
+    "photos": "Photos",
+    "noPhotos": "No photos yet.",
+    "coordinates": "Coordinates",
+    "report": "Report",
+    "reviews": "Reviews",
+    "noReviews": "No reviews yet. Be the first!",
+    "loginToReview": "Log in to leave a review.",
+    "yourReview": "Your review",
+    "rating": "Rating",
+    "comment": "Comment",
+    "commentPlaceholder": "How was the playground?",
+    "submitReview": "Post review",
+    "deleteReview": "Delete review",
+    "helpful": "Helpful",
+    "helpfulCount": "{count}",
+    "reviewError": {
+      "duplicate": "You already reviewed this playground.",
+      "bad_rating": "Rating must be between 1 and 5.",
+      "generic": "Could not save review. Try again."
+    },
+    "reportTitle": "Report content",
+    "reportReasons": {
+      "spam": "Spam",
+      "incorrect_info": "Incorrect information",
+      "privacy_violation": "Privacy violation (child in photo)",
+      "other": "Other"
+    },
+    "reportSubmit": "Send report",
+    "reportCancel": "Cancel",
+    "reportSuccess": "Report submitted. Thank you.",
+    "reportDuplicate": "You already reported this.",
+    "feature": {
+      "is_fenced": "Fenced",
+      "has_shade": "Shade",
+      "has_water": "Drinking water",
+      "has_toilets": "Toilets",
+      "has_parking": "Parking"
+    },
+    "surfaceOption": {
+      "tartan": "Tartan",
+      "sand": "Sand",
+      "grass": "Grass",
+      "gravel": "Gravel"
+    }
   },
   "search": {
     "title": "Search",
@@ -76,7 +236,16 @@
     "logout": "Log out",
     "loginCta": "Log in",
     "signupCta": "Create account",
-    "loggedOut": "You are not logged in."
+    "loggedOut": "You are not logged in.",
+    "data": "My data",
+    "exportData": "Download my data",
+    "exporting": "Preparing…",
+    "deleteAccount": "Delete my account",
+    "deleteConfirmTitle": "Delete account?",
+    "deleteConfirmBody": "This cannot be undone. Your reviews, photos, favorites and reports will be removed. Playgrounds you submitted will remain without your authorship.",
+    "deleteConfirm": "Yes, delete",
+    "deleteCancel": "Cancel",
+    "adminLink": "Admin"
   },
   "auth": {
     "loginTitle": "Log in",

@@ -172,18 +172,21 @@ export type Database = {
           avatar_url: string | null
           created_at: string
           id: string
+          is_admin: boolean
           username: string
         }
         Insert: {
           avatar_url?: string | null
           created_at?: string
           id: string
+          is_admin?: boolean
           username: string
         }
         Update: {
           avatar_url?: string | null
           created_at?: string
           id?: string
+          is_admin?: boolean
           username?: string
         }
         Relationships: []
@@ -214,6 +217,32 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      review_helpful: {
+        Row: {
+          created_at: string
+          review_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          review_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          review_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "review_helpful_review_id_fkey"
+            columns: ["review_id"]
+            isOneToOne: false
+            referencedRelation: "reviews"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       reviews: {
         Row: {
@@ -321,7 +350,7 @@ export type Database = {
       }
     }
     Functions: {
-      [_ in never]: never
+      is_admin: { Args: never; Returns: boolean }
     }
     Enums: {
       [_ in never]: never

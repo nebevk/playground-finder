@@ -12,7 +12,167 @@
     "title": "Zemljevid igrišč",
     "loading": "Nalagam zemljevid…",
     "close": "Zapri",
-    "seeDetails": "Več podrobnosti"
+    "seeDetails": "Več podrobnosti",
+    "locateMe": "Poišči mojo lokacijo",
+    "useMyLocation": "Uporabi mojo lokacijo"
+  },
+  "admin": {
+    "title": "Administracija",
+    "backToSite": "Nazaj na stran",
+    "dashboardIntro": "Pregled in moderiranje vsebine.",
+    "links": {
+      "moderation": "Prijavljena vsebina",
+      "playgrounds": "Vsa igrišča"
+    },
+    "counts": {
+      "flaggedPlaygrounds": "Prijavljena igrišča",
+      "flaggedReviews": "Prijavljena mnenja",
+      "flaggedPhotos": "Prijavljene fotografije",
+      "openReports": "Odprte prijave"
+    },
+    "moderation": {
+      "title": "Prijavljena vsebina",
+      "empty": "Trenutno ni nič za pregledati.",
+      "approve": "Odobri (počisti zastavico)",
+      "delete": "Izbriši",
+      "type": {
+        "playground": "Igrišče",
+        "review": "Mnenje",
+        "photo": "Fotografija"
+      }
+    },
+    "playgrounds": {
+      "title": "Vsa igrišča",
+      "new": "Dodaj igrišče",
+      "empty": "Ni igrišč.",
+      "name": "Ime",
+      "surface": "Podlaga",
+      "flagged": "Prijavljeno",
+      "actions": "Dejanja",
+      "edit": "Uredi",
+      "delete": "Izbriši",
+      "editTitle": "Uredi igrišče",
+      "save": "Shrani",
+      "saved": "Shranjeno.",
+      "deleteConfirm": "Res izbrišem to igrišče?"
+    }
+  },
+  "turnstile": {
+    "notConfigured": "Cloudflare Turnstile ni nastavljen (razvojni način)."
+  },
+  "cookies": {
+    "message": "Uporabljamo nujne piškotke za ohranjanje vaše prijave.",
+    "learnMore": "Več o tem",
+    "accept": "Razumem"
+  },
+  "privacy": {
+    "title": "Politika zasebnosti",
+    "lastUpdated": "Zadnja posodobitev: april 2026",
+    "intro": "Ta politika opisuje, kako zbiramo in uporabljamo vaše podatke v skladu z GDPR in ZVOP-2.",
+    "dataCollected": {
+      "title": "Katere podatke zbiramo",
+      "items": [
+        "E-poštni naslov in geslo (za prijavo)",
+        "Uporabniško ime (izpeljano iz e-poštnega naslova)",
+        "Vsebino, ki jo objavite (igrišča, mnenja, fotografije)",
+        "Nujne sejne piškotke za prijavo"
+      ]
+    },
+    "processors": {
+      "title": "Obdelovalci podatkov",
+      "supabase": "Supabase — gostitev baze in avtentikacije",
+      "vercel": "Vercel — gostitev aplikacije",
+      "cloudflare": "Cloudflare — zaščita pred neželeno vsebino (Turnstile)"
+    },
+    "rights": {
+      "title": "Vaše pravice",
+      "items": [
+        "Pravica do vpogleda: v profilu si lahko prenesete svoje podatke.",
+        "Pravica do izbrisa: v profilu lahko izbrišete svoj račun.",
+        "Pravica do ugovora: pišite nam."
+      ]
+    },
+    "photos": {
+      "title": "Fotografije otrok",
+      "body": "Prepoznavni obrazi otrok niso dovoljeni. Neprimerno vsebino lahko prijavite z gumbom Prijavi."
+    },
+    "contact": {
+      "title": "Kontakt",
+      "body": "Za vprašanja glede zasebnosti nam pišite na {email}."
+    }
+  },
+  "filters": {
+    "open": "Filtri",
+    "title": "Filtri",
+    "features": "Lastnosti",
+    "surface": "Podlaga",
+    "feature": {
+      "is_fenced": "Ograjeno",
+      "has_shade": "Senca",
+      "has_water": "Pitnik",
+      "has_toilets": "Stranišče",
+      "has_parking": "Parkirišče"
+    },
+    "surfaceOption": {
+      "tartan": "Tartan",
+      "sand": "Pesek",
+      "grass": "Trava",
+      "gravel": "Gramoz"
+    },
+    "clear": "Počisti",
+    "apply": "Pokaži ({count})",
+    "results": "{count, plural, one {# igrišče} two {# igrišči} few {# igrišča} other {# igrišč}}"
+  },
+  "detail": {
+    "notFound": "Igrišče ni bilo najdeno.",
+    "backToMap": "Nazaj na zemljevid",
+    "features": "Lastnosti",
+    "surface": "Podlaga",
+    "equipment": "Oprema",
+    "photos": "Fotografije",
+    "noPhotos": "Še ni fotografij.",
+    "coordinates": "Koordinate",
+    "report": "Prijavi",
+    "reviews": "Mnenja",
+    "noReviews": "Še ni mnenj. Bodite prvi!",
+    "loginToReview": "Za pisanje mnenja se prijavite.",
+    "yourReview": "Vaše mnenje",
+    "rating": "Ocena",
+    "comment": "Komentar",
+    "commentPlaceholder": "Kako je bilo na igrišču?",
+    "submitReview": "Objavi mnenje",
+    "deleteReview": "Izbriši mnenje",
+    "helpful": "V pomoč",
+    "helpfulCount": "{count}",
+    "reviewError": {
+      "duplicate": "Mnenje za to igrišče ste že oddali.",
+      "bad_rating": "Ocena mora biti med 1 in 5.",
+      "generic": "Mnenje ni bilo shranjeno. Poskusite znova."
+    },
+    "reportTitle": "Prijava vsebine",
+    "reportReasons": {
+      "spam": "Neželena vsebina",
+      "incorrect_info": "Napačni podatki",
+      "privacy_violation": "Kršitev zasebnosti (otrok na sliki)",
+      "other": "Drugo"
+    },
+    "reportSubmit": "Pošlji prijavo",
+    "reportCancel": "Prekliči",
+    "reportSuccess": "Prijava poslana. Hvala.",
+    "reportDuplicate": "To vsebino ste že prijavili.",
+    "feature": {
+      "is_fenced": "Ograjeno",
+      "has_shade": "Senca",
+      "has_water": "Pitnik",
+      "has_toilets": "Stranišče",
+      "has_parking": "Parkirišče"
+    },
+    "surfaceOption": {
+      "tartan": "Tartan",
+      "sand": "Pesek",
+      "grass": "Trava",
+      "gravel": "Gramoz"
+    }
   },
   "search": {
     "title": "Iskanje",
@@ -76,7 +236,16 @@
     "logout": "Odjava",
     "loginCta": "Prijavi se",
     "signupCta": "Ustvari račun",
-    "loggedOut": "Niste prijavljeni."
+    "loggedOut": "Niste prijavljeni.",
+    "data": "Moji podatki",
+    "exportData": "Prenesi moje podatke",
+    "exporting": "Pripravljam…",
+    "deleteAccount": "Izbriši moj račun",
+    "deleteConfirmTitle": "Res izbrišem račun?",
+    "deleteConfirmBody": "To dejanje je nepovratno. Vaša mnenja, fotografije in oznake bodo izbrisane. Objavljena igrišča ostanejo, a brez vaše oznake.",
+    "deleteConfirm": "Da, izbriši",
+    "deleteCancel": "Prekliči",
+    "adminLink": "Administracija"
   },
   "auth": {
     "loginTitle": "Prijava",

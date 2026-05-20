@@ -4,6 +4,7 @@ import { useState } from "react";
 import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import { LocateFixed } from "lucide-react";
+import { useTranslations } from "next-intl";
 import "leaflet/dist/leaflet.css";
 import "leaflet.markercluster/dist/MarkerCluster.css";
 import "leaflet.markercluster/dist/MarkerCluster.Default.css";
@@ -18,6 +19,7 @@ const DEFAULT_ZOOM = 13;
 
 function LocateButton() {
   const map = useMap();
+  const t = useTranslations("map");
 
   function handleLocate() {
     if (!("geolocation" in navigator)) return;
@@ -32,7 +34,7 @@ function LocateButton() {
     <button
       type="button"
       onClick={handleLocate}
-      aria-label="Locate me"
+      aria-label={t("locateMe")}
       className="btn btn-circle btn-primary absolute right-4 bottom-4 z-[1000] shadow-lg"
     >
       <LocateFixed className="size-5" aria-hidden />

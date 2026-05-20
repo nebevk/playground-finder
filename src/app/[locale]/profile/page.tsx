@@ -1,7 +1,10 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { Shield } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { logoutAction } from "../(auth)/actions";
+import { ExportDataButton } from "@/components/Profile/ExportDataButton";
+import { DeleteAccountButton } from "@/components/Profile/DeleteAccountButton";
 
 export default async function ProfilePage({
   params,
@@ -36,23 +39,40 @@ export default async function ProfilePage({
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("username")
+    .select("username, is_admin")
     .eq("id", user.id)
     .single();
 
   return (
-    <section className="p-4">
-      <h1 className="text-2xl font-bold">{t("title")}</h1>
-      <p className="mt-2 text-base-content/70">
-        {t("loggedInAs", { email: user.email ?? "" })}
-      </p>
-      {profile?.username && (
-        <p className="mt-1 text-sm text-base-content/60">
-          {t("username")}: <span className="font-mono">{profile.username}</span>
+    <section className="flex flex-col gap-8 p-4">
+      <header>
+        <h1 className="text-2xl font-bold">{t("title")}</h1>
+        <p className="mt-2 text-base-content/70">
+          {t("loggedInAs", { email: user.email ?? "" })}
         </p>
+        {profile?.username && (
+          <p className="mt-1 text-sm text-base-content/60">
+            {t("username")}: <span className="font-mono">{profile.username}</span>
+          </p>
+        )}
+      </header>
+
+      {profile?.is_admin && (
+        <Link href="/admin" className="btn btn-primary gap-2 self-start">
+          <Shield className="size-4" aria-hidden />
+          {t("adminLink")}
+        </Link>
       )}
 
-      <form action={logoutAction} className="mt-6">
+      <section>
+        <h2 className="mb-3 text-lg font-semibold">{t("data")}</h2>
+        <div className="flex flex-wrap gap-3">
+          <ExportDataButton />
+          <DeleteAccountButton locale={locale} />
+        </div>
+      </section>
+
+      <form action={logoutAction}>
         <input type="hidden" name="locale" value={locale} />
         <button type="submit" className="btn btn-outline">
           {t("logout")}

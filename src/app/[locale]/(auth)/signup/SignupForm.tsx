@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import { Turnstile } from "@/components/Turnstile";
 import { signupAction, type AuthState } from "../actions";
 
 export function SignupForm({ locale }: { locale: string }) {
@@ -71,6 +72,8 @@ export function SignupForm({ locale }: { locale: string }) {
           {t("checkEmail")}
         </p>
       )}
+
+      <Turnstile />
 
       <button type="submit" disabled={pending} className="btn btn-primary">
         {pending ? "…" : t("submitSignup")}
