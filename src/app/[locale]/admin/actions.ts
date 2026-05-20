@@ -27,6 +27,29 @@ export async function approveFlaggedAction(formData: FormData) {
   revalidatePath(`/${locale}/admin`);
 }
 
+export async function dismissReportAction(formData: FormData) {
+  const supabase = await createClient();
+  const id = String(formData.get("id") ?? "");
+  const locale = String(formData.get("locale") ?? "sl");
+  if (!id) return;
+
+  await supabase.from("reports").delete().eq("id", id);
+  revalidatePath(`/${locale}/admin/moderation`);
+  revalidatePath(`/${locale}/admin`);
+}
+
+export async function flagTargetAction(formData: FormData) {
+  const supabase = await createClient();
+  const target = String(formData.get("target") ?? "") as Target;
+  const id = String(formData.get("id") ?? "");
+  const locale = String(formData.get("locale") ?? "sl");
+  if (!TARGETS.includes(target) || !id) return;
+
+  await supabase.from(tableFor(target)).update({ flagged: true }).eq("id", id);
+  revalidatePath(`/${locale}/admin/moderation`);
+  revalidatePath(`/${locale}/admin`);
+}
+
 export async function deleteFlaggedAction(formData: FormData) {
   const supabase = await createClient();
   const target = String(formData.get("target") ?? "") as Target;

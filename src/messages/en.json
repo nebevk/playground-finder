@@ -39,7 +39,21 @@
         "playground": "Playground",
         "review": "Review",
         "photo": "Photo"
-      }
+      },
+      "flaggedHeading": "Auto-flagged content",
+      "reportsHeading": "Individual reports (below threshold)",
+      "reportsHelp": "Content auto-flags at 3 reports. You can act on these one by one.",
+      "reportsEmpty": "No individual reports.",
+      "reportReason": "Reason",
+      "reportReasons": {
+        "spam": "Spam",
+        "incorrect_info": "Incorrect info",
+        "privacy_violation": "Privacy violation",
+        "other": "Other"
+      },
+      "reportedBy": "Reported by",
+      "dismiss": "Dismiss report",
+      "flagNow": "Flag now"
     },
     "playgrounds": {
       "title": "All playgrounds",

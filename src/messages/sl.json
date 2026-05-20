@@ -39,7 +39,21 @@
         "playground": "Igrišče",
         "review": "Mnenje",
         "photo": "Fotografija"
-      }
+      },
+      "flaggedHeading": "Avtomatsko označena vsebina",
+      "reportsHeading": "Posamezne prijave (pod pragom)",
+      "reportsHelp": "Vsebina se samodejno označi po treh prijavah. Te lahko obravnavate posamično.",
+      "reportsEmpty": "Ni posameznih prijav.",
+      "reportReason": "Razlog",
+      "reportReasons": {
+        "spam": "Neželena vsebina",
+        "incorrect_info": "Napačni podatki",
+        "privacy_violation": "Kršitev zasebnosti",
+        "other": "Drugo"
+      },
+      "reportedBy": "Prijavil",
+      "dismiss": "Zavrni prijavo",
+      "flagNow": "Označi vsebino"
     },
     "playgrounds": {
       "title": "Vsa igrišča",
