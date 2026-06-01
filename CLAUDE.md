@@ -44,3 +44,21 @@ A mobile-first, community-driven app to help parents in Slovenia find the perfec
 - Cloudflare Turnstile on all public submission forms.
 - Email verification required before image upload.
 - 3+ reports on content auto-flags it for admin review.
+
+## Environments
+
+- **Local:** Docker Desktop + Supabase CLI. `pnpm db:start` boots local stack; `pnpm db:reset` re-applies all migrations + seed; `pnpm db:types` regenerates `src/lib/supabase/types.ts`.
+- **Production:** Supabase cloud (linked) + Vercel. Live alpha at `playground-finder-seven.vercel.app`. Auto-deploys on push to `master`.
+
+## MCP integrations (Cursor)
+
+The owner runs Cursor with **Supabase MCP** (production project linked) and **Vercel MCP** (project linked) configured. Prefer MCP for production operations whenever you're inside a Cursor session.
+
+**Preferred flows:**
+- **Apply a new migration to production:** write the SQL file under `supabase/migrations/`, then ask the Cursor agent to apply it via Supabase MCP. Do NOT instruct the user to manually `pnpm supabase db push` or paste SQL into the dashboard — the MCP path is faster and the user has chosen it as the canonical flow.
+- **Inspecting prod state** (table contents, RLS policies, recent deploys, env vars): ask via MCP rather than guessing.
+- **Local migrations** still go through the Supabase CLI (`pnpm db:reset`) because MCP targets the cloud project.
+
+**If you are Claude Code (not Cursor)** and cannot invoke the MCP tools directly: write the migration / propose the change, then explicitly tell the user "ask your Cursor agent to apply this via Supabase MCP" rather than prescribing the manual CLI.
+
+**Security note:** the Supabase service role / personal access tokens used by MCP have full database access. Treat any migration applied via MCP as immediately live — there is no preview-environment step.

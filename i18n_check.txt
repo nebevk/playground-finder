@@ -1,0 +1,8 @@
+SL keys: 204 EN keys: 204
+Missing in EN: []
+Missing in SL: []
+Placeholder mismatches: []
+SL filters.results: "{count, plural, one {# igrišče} two {# igrišči} few {# igrišča} other {# igrišč}}"
+EN filters.results: "{count, plural, one {# playground} other {# playgrounds}}"
+SL auth.consent: "Strinjam se s <privacyLink>Politiko zasebnosti</privacyLink> in pogoji uporabe."
+EN auth.consent: "I agree to the <privacyLink>Privacy Policy</privacyLink> and Terms of Use."

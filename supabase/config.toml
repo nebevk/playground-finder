@@ -113,7 +113,9 @@ file_size_limit = "50MiB"
 
 [storage.buckets.playground-photos]
 public = true
-file_size_limit = "10MiB"
+# Client-side resize (src/lib/image.ts) targets ~250 KB per photo.
+# Lower limit serves as a safety net against API-bypass uploads of giant files.
+file_size_limit = "3MiB"
 allowed_mime_types = ["image/png", "image/jpeg", "image/webp"]
 
 # Allow connections via S3 compatible clients

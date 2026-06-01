@@ -33,6 +33,7 @@ export async function submitReviewAction(
 
   if (error) {
     if (error.code === "23505") return { error: "duplicate" };
+    console.error("submitReviewAction failed", error);
     return { error: "generic" };
   }
 
@@ -105,6 +106,7 @@ export async function submitReportAction(
 
   if (error) {
     if (error.code === "23505") return { error: "duplicate" };
+    console.error("submitReportAction failed", error);
     return { error: "generic" };
   }
 

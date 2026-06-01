@@ -236,7 +236,13 @@
       "verifyEmail": "Verify your email address before uploading photos.",
       "disclaimer": "Please do not post photos with identifiable faces of children.",
       "pick": "Choose photos",
-      "selected": "Selected photos: {count}"
+      "takePhoto": "Take photo",
+      "chooseGallery": "From gallery",
+      "removePhoto": "Remove photo",
+      "selected": "Selected photos: {count} / {max}",
+      "processing": "Preparing photos…",
+      "totalSize": "{kb} KB total",
+      "tooMany": "You can upload up to {max} photos. The rest were skipped."
     },
     "errors": {
       "noLocation": "Pick a location on the map first.",
@@ -262,6 +268,8 @@
     "deleteConfirmBody": "This cannot be undone. Your reviews, photos, favorites and reports will be removed. Playgrounds you submitted will remain without your authorship.",
     "deleteConfirm": "Yes, delete",
     "deleteCancel": "Cancel",
+    "deleting": "Deleting…",
+    "deleteError": "Could not delete your account. Please try again.",
     "adminLink": "Admin"
   },
   "auth": {

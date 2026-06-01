@@ -1,14 +1,18 @@
 "use client";
 
-import { useId, useRef } from "react";
+import { useActionState, useId, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { Trash2 } from "lucide-react";
-import { deleteAccountAction } from "@/app/[locale]/profile/actions";
+import { deleteAccountAction, type DeleteAccountState } from "@/app/[locale]/profile/actions";
 
 export function DeleteAccountButton({ locale }: { locale: string }) {
   const t = useTranslations("profile");
   const id = useId();
   const dialogRef = useRef<HTMLDialogElement | null>(null);
+  const [state, action, pending] = useActionState<DeleteAccountState, FormData>(
+    deleteAccountAction,
+    undefined,
+  );
 
   return (
     <>
@@ -28,6 +32,12 @@ export function DeleteAccountButton({ locale }: { locale: string }) {
           <h3 className="text-lg font-bold">{t("deleteConfirmTitle")}</h3>
           <p className="mt-2 text-sm text-base-content/80">{t("deleteConfirmBody")}</p>
 
+          {state?.error && (
+            <p role="alert" className="mt-3 text-sm text-error">
+              {t("deleteError")}
+            </p>
+          )}
+
           <div className="modal-action mt-4">
             <button
               type="button"
@@ -36,16 +46,16 @@ export function DeleteAccountButton({ locale }: { locale: string }) {
             >
               {t("deleteCancel")}
             </button>
-            <form action={deleteAccountAction}>
+            <form action={action}>
               <input type="hidden" name="locale" value={locale} />
-              <button type="submit" className="btn btn-error btn-sm">
-                {t("deleteConfirm")}
+              <button type="submit" disabled={pending} className="btn btn-error btn-sm">
+                {pending ? t("deleting") : t("deleteConfirm")}
               </button>
             </form>
           </div>
         </div>
         <form method="dialog" className="modal-backdrop">
-          <button>close</button>
+          <button aria-label={t("deleteCancel")} />
         </form>
       </dialog>
     </>

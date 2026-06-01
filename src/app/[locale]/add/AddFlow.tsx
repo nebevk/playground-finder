@@ -2,12 +2,15 @@
 
 import { useActionState, useState } from "react";
 import { useTranslations } from "next-intl";
+import { Camera, Images, X } from "lucide-react";
 import { LocationPickerClient } from "@/components/Map/LocationPickerClient";
 import { Turnstile } from "@/components/Turnstile";
+import { resizeImage } from "@/lib/image";
 import { createPlaygroundAction, type AddState } from "./actions";
 
 const SURFACE_OPTIONS = ["tartan", "sand", "grass", "gravel"] as const;
 const FEATURE_KEYS = ["is_fenced", "has_shade", "has_water", "has_toilets", "has_parking"] as const;
+const MAX_PHOTOS = 8;
 
 type LatLng = { lat: number; lng: number };
 
@@ -20,6 +23,35 @@ export function AddFlow({ locale, emailVerified }: { locale: string; emailVerifi
   const [surface, setSurface] = useState<string>("");
   const [features, setFeatures] = useState<Record<string, boolean>>({});
   const [photos, setPhotos] = useState<File[]>([]);
+  const [processing, setProcessing] = useState(false);
+  const [photosTruncated, setPhotosTruncated] = useState(false);
+
+  async function addPhotos(e: React.ChangeEvent<HTMLInputElement>) {
+    const incoming = Array.from(e.target.files ?? []);
+    // Allow the user to re-pick the same file later by clearing the input value.
+    e.target.value = "";
+    if (incoming.length === 0) return;
+
+    const room = MAX_PHOTOS - photos.length;
+    const accepted = incoming.slice(0, Math.max(0, room));
+    setPhotosTruncated(incoming.length > accepted.length);
+    if (accepted.length === 0) return;
+
+    setProcessing(true);
+    try {
+      const resized = await Promise.all(
+        accepted.map((f) => resizeImage(f).catch(() => f)),
+      );
+      setPhotos((prev) => [...prev, ...resized]);
+    } finally {
+      setProcessing(false);
+    }
+  }
+
+  function removePhoto(index: number) {
+    setPhotos((prev) => prev.filter((_, i) => i !== index));
+    setPhotosTruncated(false);
+  }
 
   const [state, action, pending] = useActionState<AddState, FormData>(
     createPlaygroundAction,
@@ -128,17 +160,87 @@ export function AddFlow({ locale, emailVerified }: { locale: string; emailVerifi
               <div role="alert" className="alert alert-info text-sm">
                 {t("step3.disclaimer")}
               </div>
-              <input
-                type="file"
-                accept="image/png,image/jpeg,image/webp"
-                multiple
-                onChange={(e) => setPhotos(Array.from(e.target.files ?? []))}
-                className="file-input file-input-bordered w-full"
-                aria-label={t("step3.pick")}
-              />
+
+              <div className="flex flex-wrap gap-2">
+                <label
+                  className={`btn btn-primary gap-2 ${
+                    processing || photos.length >= MAX_PHOTOS ? "btn-disabled" : ""
+                  }`}
+                >
+                  <Camera className="size-4" aria-hidden />
+                  {t("step3.takePhoto")}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    capture="environment"
+                    onChange={addPhotos}
+                    disabled={processing || photos.length >= MAX_PHOTOS}
+                    className="hidden"
+                  />
+                </label>
+                <label
+                  className={`btn btn-outline gap-2 ${
+                    processing || photos.length >= MAX_PHOTOS ? "btn-disabled" : ""
+                  }`}
+                >
+                  <Images className="size-4" aria-hidden />
+                  {t("step3.chooseGallery")}
+                  <input
+                    type="file"
+                    accept="image/png,image/jpeg,image/webp"
+                    multiple
+                    onChange={addPhotos}
+                    disabled={processing || photos.length >= MAX_PHOTOS}
+                    className="hidden"
+                  />
+                </label>
+              </div>
+
+              {processing && (
+                <p role="status" className="flex items-center gap-2 text-sm text-base-content/70">
+                  <span className="loading loading-spinner loading-sm" aria-hidden />
+                  {t("step3.processing")}
+                </p>
+              )}
+
               {photos.length > 0 && (
-                <p className="text-sm text-base-content/70">
-                  {t("step3.selected", { count: photos.length })}
+                <>
+                  <p className="text-sm text-base-content/70">
+                    {t("step3.selected", { count: photos.length, max: MAX_PHOTOS })}
+                    {" · "}
+                    {t("step3.totalSize", {
+                      kb: Math.round(photos.reduce((acc, p) => acc + p.size, 0) / 1024),
+                    })}
+                  </p>
+                  <ul className="grid grid-cols-4 gap-2 sm:grid-cols-6">
+                    {photos.map((file, i) => (
+                      <li
+                        key={`${file.name}-${i}`}
+                        className="relative aspect-square overflow-hidden rounded-box bg-base-200"
+                      >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={URL.createObjectURL(file)}
+                          alt=""
+                          className="h-full w-full object-cover"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => removePhoto(i)}
+                          aria-label={t("step3.removePhoto")}
+                          className="btn btn-circle btn-xs absolute right-1 top-1 bg-base-100/90 backdrop-blur"
+                        >
+                          <X className="size-3" aria-hidden />
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+
+              {photosTruncated && (
+                <p role="alert" className="text-sm text-warning">
+                  {t("step3.tooMany", { max: MAX_PHOTOS })}
                 </p>
               )}
             </>
@@ -152,6 +254,7 @@ export function AddFlow({ locale, emailVerified }: { locale: string; emailVerifi
           {state.error === "no_name" && t("errors.noName")}
           {state.error === "upload_failed" && t("errors.uploadFailed")}
           {state.error === "verify_email" && t("step3.verifyEmail")}
+          {state.error === "too_many_photos" && t("step3.tooMany", { max: MAX_PHOTOS })}
           {(state.error === "generic" || state.error === "auth_required") && t("errors.generic")}
         </p>
       )}

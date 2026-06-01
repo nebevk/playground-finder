@@ -12,7 +12,8 @@
       "Bash(pnpm tsc *)",
       "Bash(pnpm exec *)",
       "Skill(claude-api)",
-      "Skill(claude-api:*)"
+      "Skill(claude-api:*)",
+      "Bash(pnpm install *)"
     ]
   }
 }

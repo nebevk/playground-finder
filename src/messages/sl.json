@@ -236,7 +236,13 @@
       "verifyEmail": "Za nalaganje fotografij morate najprej potrditi e-poštni naslov.",
       "disclaimer": "Prosimo, ne objavljajte fotografij, na katerih so prepoznavni obrazi otrok.",
       "pick": "Izberi fotografije",
-      "selected": "Izbranih fotografij: {count}"
+      "takePhoto": "Posnemi fotografijo",
+      "chooseGallery": "Iz galerije",
+      "removePhoto": "Odstrani fotografijo",
+      "selected": "Izbranih fotografij: {count} / {max}",
+      "processing": "Pripravljam fotografije…",
+      "totalSize": "{kb} KB skupaj",
+      "tooMany": "Naložite lahko največ {max} fotografij. Ostale so bile preskočene."
     },
     "errors": {
       "noLocation": "Najprej izberite lokacijo na zemljevidu.",
@@ -262,6 +268,8 @@
     "deleteConfirmBody": "To dejanje je nepovratno. Vaša mnenja, fotografije in oznake bodo izbrisane. Objavljena igrišča ostanejo, a brez vaše oznake.",
     "deleteConfirm": "Da, izbriši",
     "deleteCancel": "Prekliči",
+    "deleting": "Brišem…",
+    "deleteError": "Računa ni bilo mogoče izbrisati. Poskusite znova.",
     "adminLink": "Administracija"
   },
   "auth": {
