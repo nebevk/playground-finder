@@ -6,7 +6,6 @@ import { useTranslations } from "next-intl";
 import { MapPinned, SlidersHorizontal } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { FiltersProvider, useFilters } from "@/components/Filters/FiltersContext";
-import { FiltersButton } from "@/components/Filters/FiltersButton";
 import { FiltersDrawer } from "@/components/Filters/FiltersDrawer";
 import { LoadingSwing } from "@/components/LoadingSwing";
 import { useToast } from "@/components/Toast/ToastProvider";
@@ -54,7 +53,6 @@ function MapWithFilters({
   return (
     <div className="relative h-full w-full">
       <PlaygroundMap playgrounds={visible} focusId={addedId} />
-      <FiltersButton />
       <FiltersDrawer visibleCount={visible.length} />
 
       {empty && (

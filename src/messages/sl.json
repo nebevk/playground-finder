@@ -4,6 +4,7 @@
     "slogan": "Odkrij otroška igrišča po Sloveniji"
   },
   "nav": {
+    "home": "Domov",
     "map": "Zemljevid",
     "search": "Iskanje",
     "add": "Dodaj",
@@ -22,6 +23,9 @@
     "close": "Zapri",
     "seeDetails": "Več podrobnosti",
     "locateMe": "Poišči mojo lokacijo",
+    "controls": "Možnosti zemljevida",
+    "zoomIn": "Približaj",
+    "zoomOut": "Oddalji",
     "useMyLocation": "Uporabi mojo lokacijo",
     "welcome": "Tapni oznako za podrobnosti.",
     "dismiss": "Razumem",
@@ -209,6 +213,7 @@
   },
   "filters": {
     "open": "Filtri",
+    "openWithCount": "Filtri ({count} aktivnih)",
     "title": "Filtri",
     "features": "Lastnosti",
     "surface": "Podlaga",

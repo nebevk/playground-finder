@@ -1,15 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, useMap, AttributionControl } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
-import { LocateFixed } from "lucide-react";
-import { useTranslations } from "next-intl";
 import "leaflet/dist/leaflet.css";
 import "leaflet.markercluster/dist/MarkerCluster.css";
 import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 import { fixLeafletDefaultIcons } from "./fix-leaflet-icons";
 import { playgroundMarkerIcon } from "./playground-marker";
+import { MapControls } from "./MapControls";
 import { PlaygroundSheet } from "./PlaygroundSheet";
 import { WelcomeChip } from "./WelcomeChip";
 import type { MapPlayground } from "@/lib/playgrounds";
@@ -18,31 +17,6 @@ fixLeafletDefaultIcons();
 
 const LJUBLJANA: [number, number] = [46.0569, 14.5058];
 const DEFAULT_ZOOM = 13;
-
-function LocateButton() {
-  const map = useMap();
-  const t = useTranslations("map");
-
-  function handleLocate() {
-    if (!("geolocation" in navigator)) return;
-    navigator.geolocation.getCurrentPosition(
-      (pos) => map.setView([pos.coords.latitude, pos.coords.longitude], 15),
-      () => undefined,
-      { enableHighAccuracy: true, timeout: 8000 },
-    );
-  }
-
-  return (
-    <button
-      type="button"
-      onClick={handleLocate}
-      aria-label={t("locateMe")}
-      className="btn btn-circle btn-primary absolute right-4 bottom-4 z-[1000] shadow-lg"
-    >
-      <LocateFixed className="size-5" aria-hidden />
-    </button>
-  );
-}
 
 // Pans to a just-added playground and opens its sheet, once.
 function FocusOnAdded({
@@ -84,8 +58,12 @@ export function PlaygroundMap({
         center={LJUBLJANA}
         zoom={DEFAULT_ZOOM}
         scrollWheelZoom
+        zoomControl={false}
+        attributionControl={false}
         className="h-full w-full"
       >
+        {/* Bottom-left so the OSM credit stays legible and clear of the bottom-right FAB. */}
+        <AttributionControl position="bottomleft" />
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -100,7 +78,7 @@ export function PlaygroundMap({
             />
           ))}
         </MarkerClusterGroup>
-        <LocateButton />
+        <MapControls />
         <FocusOnAdded playgrounds={playgrounds} focusId={focusId} onFocus={setSelected} />
       </MapContainer>
 

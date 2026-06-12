@@ -69,7 +69,7 @@ export default async function LocaleLayout({
             <div className="flex min-h-dvh md:flex-row">
               <SideNav />
               <div className="mx-auto flex w-full max-w-md flex-1 flex-col md:max-w-none">
-                <main className="flex-1 pb-[calc(5rem+env(safe-area-inset-bottom))] md:pb-0">
+                <main className="flex-1 pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0">
                   {children}
                 </main>
                 <BottomNav />

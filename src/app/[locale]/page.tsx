@@ -1,23 +1,20 @@
-import { setRequestLocale, getTranslations } from "next-intl/server";
-import { MapHome } from "@/components/Map/MapHome";
+import { setRequestLocale } from "next-intl/server";
+import { HomeLanding } from "@/components/Map/HomeLanding";
 import {
   getMapPlaygrounds,
   getLatestPlaygrounds,
   getMostViewedPlaygrounds,
 } from "@/lib/playgrounds";
 
-export default async function MapPage({
+export default async function HomePage({
   params,
-  searchParams,
 }: {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ added?: string }>;
 }) {
   const { locale } = await params;
-  const { added } = await searchParams;
   setRequestLocale(locale);
-  const t = await getTranslations("map");
-  const [playgrounds, latestRaw, popular] = await Promise.all([
+
+  const [points, latestRaw, popular] = await Promise.all([
     getMapPlaygrounds(),
     getLatestPlaygrounds(6),
     getMostViewedPlaygrounds(3),
@@ -28,14 +25,8 @@ export default async function MapPage({
   const latest = latestRaw.filter((p) => !popularIds.has(p.id)).slice(0, 3);
 
   return (
-    <div className="h-[calc(100dvh-5rem-env(safe-area-inset-bottom))] w-full md:h-dvh">
-      <h1 className="sr-only">{t("title")}</h1>
-      <MapHome
-        playgrounds={playgrounds}
-        latest={latest}
-        popular={popular}
-        addedId={added ?? null}
-      />
+    <div className="h-[calc(100dvh-4rem-env(safe-area-inset-bottom))] w-full md:h-dvh">
+      <HomeLanding latest={latest} popular={popular} points={points} />
     </div>
   );
 }

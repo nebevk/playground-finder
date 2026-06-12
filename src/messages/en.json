@@ -4,6 +4,7 @@
     "slogan": "Discover playgrounds across Slovenia"
   },
   "nav": {
+    "home": "Home",
     "map": "Map",
     "search": "Search",
     "add": "Add",
@@ -22,6 +23,9 @@
     "close": "Close",
     "seeDetails": "See details",
     "locateMe": "Locate me",
+    "controls": "Map options",
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out",
     "useMyLocation": "Use my location",
     "welcome": "Tap a pin to see details.",
     "dismiss": "Got it",
@@ -209,6 +213,7 @@
   },
   "filters": {
     "open": "Filters",
+    "openWithCount": "Filters ({count} active)",
     "title": "Filters",
     "features": "Features",
     "surface": "Surface",

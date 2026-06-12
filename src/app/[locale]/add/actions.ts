@@ -89,7 +89,7 @@ export async function createPlaygroundAction(
     }
   }
 
-  redirect(`/${locale}?added=${inserted.id}`);
+  redirect(`/${locale}/map?added=${inserted.id}`);
 }
 
 // Compensating cleanup when photo handling fails after the playground row was inserted.
