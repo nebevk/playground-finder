@@ -35,7 +35,8 @@
       "moderation": "Prijavljena vsebina",
       "playgrounds": "Vsa igrišča",
       "quickAdd": "Hitro dodajanje",
-      "quality": "Kakovost podatkov"
+      "quality": "Kakovost podatkov",
+      "import": "Uvoz iz CSV"
     },
     "counts": {
       "flaggedPlaygrounds": "Prijavljena igrišča",
@@ -111,6 +112,31 @@
       "duplicateNames": "Podvojena imena",
       "nearbyDuplicates": "Bližnji pari (možni dvojniki)",
       "distanceApart": "{distance} m narazen"
+    },
+    "import": {
+      "title": "Uvoz iz CSV",
+      "intro": "Prilepi ali naloži CSV. Vrstice z naslovom se geokodirajo, vrstice z lat/lng se uporabijo neposredno.",
+      "formatHelp": "Stolpci: name, address (ali lat + lng), description, surface, fenced, shade, water, toilets, parking.",
+      "pasteLabel": "Prilepi CSV",
+      "upload": "Naloži datoteko",
+      "parse": "Razčleni",
+      "parsedCount": "Razčlenjenih vrstic: {count}",
+      "process": "Obdelaj in geokodiraj",
+      "processing": "Geokodiram… {done}/{total}",
+      "colName": "Ime",
+      "colCoords": "Koordinate",
+      "colSurface": "Podlaga",
+      "colStatus": "Status",
+      "colInclude": "Uvozi",
+      "statusReady": "Pripravljeno",
+      "statusFailed": "Ni koordinat",
+      "dupWarning": "Možen dvojnik: {name} ({distance} m)",
+      "import": "Uvozi izbrane ({count})",
+      "importing": "Uvažam…",
+      "success": "Uvoženih igrišč: {count}",
+      "error": "Uvoz ni uspel. Poskusi znova.",
+      "emptyInput": "Najprej prilepi CSV.",
+      "nothingValid": "Ni veljavnih vrstic za uvoz."
     },
     "quickAdd": {
       "title": "Hitro dodajanje",

@@ -1,5 +1,5 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { ArrowLeft, MapPinned, ShieldAlert, Plus, ClipboardCheck } from "lucide-react";
+import { ArrowLeft, MapPinned, ShieldAlert, Plus, ClipboardCheck, Upload } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { requireAdmin } from "@/lib/admin";
 
@@ -56,6 +56,10 @@ export default async function AdminDashboardPage({
         <Link href="/admin/add" className="btn btn-outline gap-2 justify-start">
           <Plus className="size-5" aria-hidden />
           {t("links.quickAdd")}
+        </Link>
+        <Link href="/admin/import" className="btn btn-outline gap-2 justify-start">
+          <Upload className="size-5" aria-hidden />
+          {t("links.import")}
         </Link>
         <Link href="/admin/quality" className="btn btn-outline gap-2 justify-start">
           <ClipboardCheck className="size-5" aria-hidden />

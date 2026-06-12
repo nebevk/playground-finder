@@ -35,7 +35,8 @@
       "moderation": "Flagged content",
       "playgrounds": "All playgrounds",
       "quickAdd": "Quick add",
-      "quality": "Data quality"
+      "quality": "Data quality",
+      "import": "Import from CSV"
     },
     "counts": {
       "flaggedPlaygrounds": "Flagged playgrounds",
@@ -111,6 +112,31 @@
       "duplicateNames": "Duplicate names",
       "nearbyDuplicates": "Nearby pairs (possible duplicates)",
       "distanceApart": "{distance} m apart"
+    },
+    "import": {
+      "title": "Import from CSV",
+      "intro": "Paste or upload a CSV. Rows with an address get geocoded; rows with lat/lng are used directly.",
+      "formatHelp": "Columns: name, address (or lat + lng), description, surface, fenced, shade, water, toilets, parking.",
+      "pasteLabel": "Paste CSV",
+      "upload": "Upload file",
+      "parse": "Parse",
+      "parsedCount": "Parsed rows: {count}",
+      "process": "Process & geocode",
+      "processing": "Geocoding… {done}/{total}",
+      "colName": "Name",
+      "colCoords": "Coordinates",
+      "colSurface": "Surface",
+      "colStatus": "Status",
+      "colInclude": "Import",
+      "statusReady": "Ready",
+      "statusFailed": "No coordinates",
+      "dupWarning": "Possible duplicate: {name} ({distance} m)",
+      "import": "Import selected ({count})",
+      "importing": "Importing…",
+      "success": "Imported {count} playgrounds",
+      "error": "Import failed. Please try again.",
+      "emptyInput": "Paste a CSV first.",
+      "nothingValid": "No valid rows to import."
     },
     "quickAdd": {
       "title": "Quick add",
