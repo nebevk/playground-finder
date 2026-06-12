@@ -33,7 +33,9 @@
     "dashboardIntro": "Pregled in moderiranje vsebine.",
     "links": {
       "moderation": "Prijavljena vsebina",
-      "playgrounds": "Vsa igrišča"
+      "playgrounds": "Vsa igrišča",
+      "quickAdd": "Hitro dodajanje",
+      "quality": "Kakovost podatkov"
     },
     "counts": {
       "flaggedPlaygrounds": "Prijavljena igrišča",
@@ -96,6 +98,19 @@
       "prev": "Prejšnja",
       "next": "Naslednja",
       "pageInfo": "{page} / {total}"
+    },
+    "quality": {
+      "title": "Kakovost podatkov",
+      "intro": "Hitro poišči nepopolna in morda podvojena igrišča.",
+      "allGood": "Vse je videti urejeno! 🎉",
+      "sectionEmpty": "Ni težav.",
+      "noPhotos": "Brez fotografij",
+      "noDescription": "Brez opisa",
+      "noDetails": "Brez lastnosti in podlage",
+      "noReviews": "Brez mnenj",
+      "duplicateNames": "Podvojena imena",
+      "nearbyDuplicates": "Bližnji pari (možni dvojniki)",
+      "distanceApart": "{distance} m narazen"
     },
     "quickAdd": {
       "title": "Hitro dodajanje",

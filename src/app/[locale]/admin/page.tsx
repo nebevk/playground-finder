@@ -1,5 +1,5 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { ArrowLeft, MapPinned, ShieldAlert } from "lucide-react";
+import { ArrowLeft, MapPinned, ShieldAlert, Plus, ClipboardCheck } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { requireAdmin } from "@/lib/admin";
 
@@ -49,13 +49,21 @@ export default async function AdminDashboardPage({
       </div>
 
       <nav className="grid gap-3 md:grid-cols-2">
-        <Link href="/admin/moderation" className="btn btn-outline gap-2 justify-start">
-          <ShieldAlert className="size-5" aria-hidden />
-          {t("links.moderation")}
-        </Link>
         <Link href="/admin/playgrounds" className="btn btn-outline gap-2 justify-start">
           <MapPinned className="size-5" aria-hidden />
           {t("links.playgrounds")}
+        </Link>
+        <Link href="/admin/add" className="btn btn-outline gap-2 justify-start">
+          <Plus className="size-5" aria-hidden />
+          {t("links.quickAdd")}
+        </Link>
+        <Link href="/admin/quality" className="btn btn-outline gap-2 justify-start">
+          <ClipboardCheck className="size-5" aria-hidden />
+          {t("links.quality")}
+        </Link>
+        <Link href="/admin/moderation" className="btn btn-outline gap-2 justify-start">
+          <ShieldAlert className="size-5" aria-hidden />
+          {t("links.moderation")}
         </Link>
       </nav>
     </section>

@@ -33,7 +33,9 @@
     "dashboardIntro": "Review and moderate content.",
     "links": {
       "moderation": "Flagged content",
-      "playgrounds": "All playgrounds"
+      "playgrounds": "All playgrounds",
+      "quickAdd": "Quick add",
+      "quality": "Data quality"
     },
     "counts": {
       "flaggedPlaygrounds": "Flagged playgrounds",
@@ -96,6 +98,19 @@
       "prev": "Prev",
       "next": "Next",
       "pageInfo": "{page} / {total}"
+    },
+    "quality": {
+      "title": "Data quality",
+      "intro": "Find incomplete and possibly duplicate playgrounds at a glance.",
+      "allGood": "Everything looks tidy! 🎉",
+      "sectionEmpty": "No issues.",
+      "noPhotos": "No photos",
+      "noDescription": "No description",
+      "noDetails": "No features or surface",
+      "noReviews": "No reviews",
+      "duplicateNames": "Duplicate names",
+      "nearbyDuplicates": "Nearby pairs (possible duplicates)",
+      "distanceApart": "{distance} m apart"
     },
     "quickAdd": {
       "title": "Quick add",
