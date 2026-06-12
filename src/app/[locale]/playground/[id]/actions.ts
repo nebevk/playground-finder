@@ -6,6 +6,15 @@ import { createClient } from "@/lib/supabase/server";
 export type ReviewState = { error?: string; success?: boolean } | undefined;
 export type ReportState = { error?: string; success?: boolean } | undefined;
 
+// Bump the playground's view counter (the "most clicked" signal). Called from a client
+// effect on the detail page so it only fires on a real view, not on link prefetch.
+export async function recordPlaygroundViewAction(id: string): Promise<void> {
+  if (!id) return;
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("increment_playground_views", { p_id: id });
+  if (error) console.error("increment_playground_views failed", error);
+}
+
 const REPORT_REASONS = ["spam", "incorrect_info", "privacy_violation", "other"] as const;
 const REPORT_TARGETS = ["playground", "review", "photo"] as const;
 

@@ -9,6 +9,13 @@
     "add": "Add",
     "profile": "Profile"
   },
+  "home": {
+    "intro": "Find the perfect playground for your kids. Filter by shade, fences and water, and read other parents' reviews.",
+    "latest": "Latest additions",
+    "popular": "Most popular",
+    "noLatest": "No playgrounds yet. Be the first to add one!",
+    "explore": "Explore the map"
+  },
   "map": {
     "title": "Playground map",
     "loading": "Loading map…",

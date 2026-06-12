@@ -1,5 +1,9 @@
 @import "tailwindcss";
-@plugin "daisyui";
+/* Only the custom "retro" theme below — no built-in light/dark, so the OS dark-mode
+   preference can never override it. */
+@plugin "daisyui" {
+  themes: false;
+}
 
 html, body {
   font-family: var(--font-sans), ui-sans-serif, system-ui, -apple-system, sans-serif;

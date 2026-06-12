@@ -58,7 +58,11 @@ export default async function LocaleLayout({
   setRequestLocale(locale);
 
   return (
-    <html lang={locale} className={`${nunito.variable} ${geistMono.variable} ${chewy.variable}`}>
+    <html
+      lang={locale}
+      data-theme="retro"
+      className={`${nunito.variable} ${geistMono.variable} ${chewy.variable}`}
+    >
       <body className="min-h-dvh antialiased bg-base-100 text-base-content">
         <NextIntlClientProvider>
           <ToastProvider>

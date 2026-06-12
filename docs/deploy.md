@@ -215,6 +215,7 @@ These are deliberately left until after initial testing:
 - **Database backups**: Supabase free tier has 7-day point-in-time recovery — fine for testing, consider upgrading before any real data matters
 - **Content moderation for photos**: currently relies on user reports + admin review. At scale you'd want automated NSFW/face detection.
 - **Rate limiting** on submissions (Turnstile helps, but add server-side limits too)
+- **Playground view counter is ungated** — `increment_playground_views` is granted to `anon` with no dedup, so the public "Most popular" ranking is gameable by looping the RPC. Acceptable for alpha (impact is a reordered vanity list); when hardening abuse-resistance, dedup per session/IP (a `views` table with a unique key + `ON CONFLICT`) or switch the ranking to a less spammable signal.
 - **Error pages** (a friendly `not-found.tsx` and `error.tsx`)
 
 ---

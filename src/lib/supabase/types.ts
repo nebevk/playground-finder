@@ -132,6 +132,7 @@ export type Database = {
           name: string
           surface_type: string | null
           user_id: string | null
+          view_count: number
         }
         Insert: {
           created_at?: string
@@ -148,6 +149,7 @@ export type Database = {
           name: string
           surface_type?: string | null
           user_id?: string | null
+          view_count?: number
         }
         Update: {
           created_at?: string
@@ -164,6 +166,7 @@ export type Database = {
           name?: string
           surface_type?: string | null
           user_id?: string | null
+          view_count?: number
         }
         Relationships: []
       }
@@ -313,11 +316,13 @@ export type Database = {
           review_count: number | null
           surface_type: string | null
           user_id: string | null
+          view_count: number | null
         }
         Relationships: []
       }
     }
     Functions: {
+      increment_playground_views: { Args: { p_id: string }; Returns: undefined }
       playgrounds_near: {
         Args: { p_lat: number; p_lng: number; p_radius_m: number }
         Returns: {

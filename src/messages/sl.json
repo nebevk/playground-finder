@@ -9,6 +9,13 @@
     "add": "Dodaj",
     "profile": "Profil"
   },
+  "home": {
+    "intro": "Najdi popolno igrišče za svoje otroke. Filtriraj po senci, ograji in pitniku ter preberi mnenja drugih staršev.",
+    "latest": "Najnovejša igrišča",
+    "popular": "Najbolj priljubljena",
+    "noLatest": "Še ni igrišč. Bodi prvi in dodaj svojega!",
+    "explore": "Razišči zemljevid"
+  },
   "map": {
     "title": "Zemljevid igrišč",
     "loading": "Nalagam zemljevid…",

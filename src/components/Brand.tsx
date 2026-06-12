@@ -16,6 +16,31 @@ export function BrandMark({ size = 40 }: { size?: number }) {
   );
 }
 
+// Just the animated wordmark — no logo, no slogan. For logo-less hero placements.
+export function Wordmark({
+  className = "text-4xl",
+  animate = true,
+}: {
+  className?: string;
+  animate?: boolean;
+}) {
+  const t = useTranslations("app");
+  const name = t("name");
+  const match = name.match(/^(.*?)([?!.…]+)$/);
+  const body = match?.[1] ?? name;
+  const punct = match?.[2] ?? "";
+  return (
+    <span className={`font-display leading-none text-primary-content ${className}`}>
+      {body}
+      {punct && (
+        <span className={`brand-punct text-primary ${animate ? "brand-punct--wiggle" : ""}`}>
+          {punct}
+        </span>
+      )}
+    </span>
+  );
+}
+
 export function BrandStack({
   size = 56,
   align = "start",

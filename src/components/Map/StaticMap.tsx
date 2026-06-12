@@ -6,11 +6,21 @@ import { fixLeafletDefaultIcons } from "./fix-leaflet-icons";
 
 fixLeafletDefaultIcons();
 
-export function StaticMap({ lat, lng }: { lat: number; lng: number }) {
+export function StaticMap({
+  lat,
+  lng,
+  zoom = 16,
+  marker = true,
+}: {
+  lat: number;
+  lng: number;
+  zoom?: number;
+  marker?: boolean;
+}) {
   return (
     <MapContainer
       center={[lat, lng]}
-      zoom={16}
+      zoom={zoom}
       scrollWheelZoom={false}
       dragging={false}
       doubleClickZoom={false}
@@ -19,7 +29,7 @@ export function StaticMap({ lat, lng }: { lat: number; lng: number }) {
       className="h-full w-full"
     >
       <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-      <Marker position={[lat, lng]} />
+      {marker && <Marker position={[lat, lng]} />}
     </MapContainer>
   );
 }

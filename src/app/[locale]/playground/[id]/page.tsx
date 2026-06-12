@@ -9,6 +9,7 @@ import { StaticMapClient } from "@/components/Map/StaticMapClient";
 import { ReviewsSection } from "@/components/Reviews/ReviewsSection";
 import { ReportButton } from "@/components/Reviews/ReportButton";
 import { RatingSummary } from "@/components/RatingSummary";
+import { RecordView } from "@/components/RecordView";
 import { EmptyState } from "@/components/EmptyState";
 
 export default async function PlaygroundDetailPage({
@@ -33,6 +34,7 @@ export default async function PlaygroundDetailPage({
 
   return (
     <article className="flex flex-col">
+      <RecordView id={playground.id} />
       {hero && (
         <div className="relative h-56 w-full overflow-hidden md:h-72">
           {/* eslint-disable-next-line @next/next/no-img-element */}
