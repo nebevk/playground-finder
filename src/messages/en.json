@@ -79,7 +79,23 @@
       "editTitle": "Edit playground",
       "save": "Save",
       "saved": "Saved.",
-      "deleteConfirm": "Delete this playground?"
+      "deleteConfirm": "Delete this playground?",
+      "search": "Search by name…",
+      "reviews": "Reviews",
+      "created": "Added",
+      "filterAll": "All",
+      "filterFlagged": "Flagged",
+      "filterNoReviews": "No reviews",
+      "noResults": "No matches.",
+      "selectAll": "Select all",
+      "selectedCount": "{count} selected",
+      "bulkDelete": "Delete selected",
+      "bulkUnflag": "Unflag",
+      "bulkDeleteConfirm": "Delete {count} playgrounds? This can't be undone.",
+      "bulkError": "Action failed. Please try again.",
+      "prev": "Prev",
+      "next": "Next",
+      "pageInfo": "{page} / {total}"
     }
   },
   "turnstile": {

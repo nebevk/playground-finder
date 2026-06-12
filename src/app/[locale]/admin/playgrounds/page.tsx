@@ -1,16 +1,20 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { ArrowLeft, Pencil, Plus } from "lucide-react";
+import { ArrowLeft, Plus } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { requireAdmin } from "@/lib/admin";
-import { EditPlaygroundForm } from "@/components/Admin/EditPlaygroundForm";
-import { DeletePlaygroundButton } from "@/components/Admin/DeletePlaygroundButton";
 import { EmptyState } from "@/components/EmptyState";
+import {
+  AdminPlaygroundsTable,
+  type AdminPlaygroundRow,
+} from "@/components/Admin/AdminPlaygroundsTable";
+import type { SurfaceType } from "@/lib/playground-types";
 
 const SURFACE_TYPES = ["tartan", "sand", "grass", "gravel"] as const;
-type SurfaceType = (typeof SURFACE_TYPES)[number];
 
 function toSurfaceType(value: string | null): SurfaceType | null {
-  return SURFACE_TYPES.some((surface) => surface === value) ? (value as SurfaceType) : null;
+  return (SURFACE_TYPES as readonly string[]).includes(value ?? "")
+    ? (value as SurfaceType)
+    : null;
 }
 
 export default async function AdminPlaygroundsPage({
@@ -23,14 +27,34 @@ export default async function AdminPlaygroundsPage({
   const { supabase } = await requireAdmin();
   const t = await getTranslations("admin");
 
-  const { data: rows } = await supabase
-    .from("playgrounds")
+  // Admins see all rows (incl. flagged) via the admin RLS policy; the view carries
+  // review_count so the table can sort/filter on engagement.
+  const { data } = await supabase
+    .from("playgrounds_geo")
     .select(
-      "id, name, description, surface_type, is_fenced, has_shade, has_water, has_toilets, has_parking, flagged",
+      "id, name, description, surface_type, is_fenced, has_shade, has_water, has_toilets, has_parking, flagged, review_count, created_at",
     )
     .order("created_at", { ascending: false });
 
-  const items = rows ?? [];
+  const rows: AdminPlaygroundRow[] = (data ?? []).flatMap((r) => {
+    if (r.id == null || r.name == null) return [];
+    return [
+      {
+        id: r.id,
+        name: r.name,
+        description: r.description,
+        surface_type: toSurfaceType(r.surface_type),
+        is_fenced: r.is_fenced ?? false,
+        has_shade: r.has_shade ?? false,
+        has_water: r.has_water ?? false,
+        has_toilets: r.has_toilets ?? false,
+        has_parking: r.has_parking ?? false,
+        flagged: r.flagged ?? false,
+        review_count: r.review_count ?? 0,
+        created_at: r.created_at ?? new Date(0).toISOString(),
+      },
+    ];
+  });
 
   return (
     <section className="flex flex-col gap-4 p-4">
@@ -47,59 +71,10 @@ export default async function AdminPlaygroundsPage({
         </Link>
       </header>
 
-      {items.length === 0 ? (
+      {rows.length === 0 ? (
         <EmptyState variant="playgrounds" title={t("playgrounds.empty")} />
       ) : (
-        <div className="overflow-x-auto">
-          <table className="table">
-            <thead>
-              <tr>
-                <th>{t("playgrounds.name")}</th>
-                <th>{t("playgrounds.surface")}</th>
-                <th>{t("playgrounds.flagged")}</th>
-                <th>{t("playgrounds.actions")}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {items.map((pg) => (
-                <tr key={pg.id}>
-                  <td>
-                    <Link href={`/playground/${pg.id}`} className="link link-hover">
-                      {pg.name}
-                    </Link>
-                  </td>
-                  <td className="text-sm">{pg.surface_type ?? "—"}</td>
-                  <td>{pg.flagged ? "⚠️" : ""}</td>
-                  <td>
-                    <div className="flex gap-2">
-                      <EditPlaygroundForm
-                        playground={{
-                          id: pg.id,
-                          name: pg.name,
-                          description: pg.description,
-                          surface_type: toSurfaceType(pg.surface_type),
-                          is_fenced: pg.is_fenced,
-                          has_shade: pg.has_shade,
-                          has_water: pg.has_water,
-                          has_toilets: pg.has_toilets,
-                          has_parking: pg.has_parking,
-                        }}
-                        locale={locale}
-                        trigger={
-                          <span className="btn btn-ghost btn-xs gap-1">
-                            <Pencil className="size-3" aria-hidden />
-                            {t("playgrounds.edit")}
-                          </span>
-                        }
-                      />
-                      <DeletePlaygroundButton id={pg.id} locale={locale} />
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <AdminPlaygroundsTable rows={rows} locale={locale} />
       )}
     </section>
   );

@@ -79,7 +79,23 @@
       "editTitle": "Uredi igrišče",
       "save": "Shrani",
       "saved": "Shranjeno.",
-      "deleteConfirm": "Res izbrišem to igrišče?"
+      "deleteConfirm": "Res izbrišem to igrišče?",
+      "search": "Iskanje po imenu…",
+      "reviews": "Mnenja",
+      "created": "Dodano",
+      "filterAll": "Vsa",
+      "filterFlagged": "Prijavljena",
+      "filterNoReviews": "Brez mnenj",
+      "noResults": "Ni zadetkov.",
+      "selectAll": "Izberi vsa",
+      "selectedCount": "{count} izbranih",
+      "bulkDelete": "Izbriši izbrana",
+      "bulkUnflag": "Odstrani oznako",
+      "bulkDeleteConfirm": "Res izbrišem {count} igrišč? Tega ni mogoče razveljaviti.",
+      "bulkError": "Dejanje ni uspelo. Poskusi znova.",
+      "prev": "Prejšnja",
+      "next": "Naslednja",
+      "pageInfo": "{page} / {total}"
     }
   },
   "turnstile": {

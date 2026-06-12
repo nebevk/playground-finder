@@ -146,3 +146,43 @@ export async function deletePlaygroundAction(formData: FormData) {
   revalidatePath(`/${locale}/admin/playgrounds`);
   revalidatePath(`/${locale}`);
 }
+
+export type BulkResult = { ok: boolean; count: number };
+
+// Bulk actions are invoked directly from the client table (typed args, not FormData).
+export async function bulkDeletePlaygroundsAction(
+  ids: string[],
+  locale: string,
+): Promise<BulkResult> {
+  const ctx = await getAdminActionContext();
+  if (!ctx || ids.length === 0) return { ok: false, count: 0 };
+
+  const { error } = await ctx.admin.from("playgrounds").delete().in("id", ids);
+  if (error) {
+    console.error("bulkDeletePlaygroundsAction failed", error);
+    return { ok: false, count: 0 };
+  }
+  revalidatePath(`/${locale}/admin/playgrounds`);
+  revalidatePath(`/${locale}/admin`);
+  revalidatePath(`/${locale}`);
+  return { ok: true, count: ids.length };
+}
+
+export async function bulkSetFlaggedPlaygroundsAction(
+  ids: string[],
+  flagged: boolean,
+  locale: string,
+): Promise<BulkResult> {
+  const ctx = await getAdminActionContext();
+  if (!ctx || ids.length === 0) return { ok: false, count: 0 };
+
+  const { error } = await ctx.admin.from("playgrounds").update({ flagged }).in("id", ids);
+  if (error) {
+    console.error("bulkSetFlaggedPlaygroundsAction failed", error);
+    return { ok: false, count: 0 };
+  }
+  revalidatePath(`/${locale}/admin/playgrounds`);
+  revalidatePath(`/${locale}/admin`);
+  revalidatePath(`/${locale}`);
+  return { ok: true, count: ids.length };
+}
