@@ -4,15 +4,20 @@ import { useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { Download } from "lucide-react";
 import { exportDataAction } from "@/app/[locale]/profile/actions";
+import { useToast } from "@/components/Toast/ToastProvider";
 
 export function ExportDataButton() {
   const t = useTranslations("profile");
+  const { showToast } = useToast();
   const [pending, startTransition] = useTransition();
 
   function handleExport() {
     startTransition(async () => {
       const result = await exportDataAction();
-      if (result.error || !result.data) return;
+      if (result.error || !result.data) {
+        showToast(t("exportError"), "error");
+        return;
+      }
 
       const blob = new Blob([JSON.stringify(result.data, null, 2)], {
         type: "application/json",
@@ -25,6 +30,7 @@ export function ExportDataButton() {
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
+      showToast(t("exportSuccess"), "success");
     });
   }
 

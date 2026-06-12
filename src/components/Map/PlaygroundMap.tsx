@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import { LocateFixed } from "lucide-react";
@@ -44,7 +44,38 @@ function LocateButton() {
   );
 }
 
-export function PlaygroundMap({ playgrounds }: { playgrounds: MapPlayground[] }) {
+// Pans to a just-added playground and opens its sheet, once.
+function FocusOnAdded({
+  playgrounds,
+  focusId,
+  onFocus,
+}: {
+  playgrounds: MapPlayground[];
+  focusId: string | null;
+  onFocus: (p: MapPlayground) => void;
+}) {
+  const map = useMap();
+  const done = useRef(false);
+
+  useEffect(() => {
+    if (!focusId || done.current) return;
+    const target = playgrounds.find((p) => p.id === focusId);
+    if (!target) return;
+    done.current = true;
+    map.flyTo([target.lat, target.lng], 16, { duration: 1.2 });
+    onFocus(target);
+  }, [focusId, playgrounds, map, onFocus]);
+
+  return null;
+}
+
+export function PlaygroundMap({
+  playgrounds,
+  focusId = null,
+}: {
+  playgrounds: MapPlayground[];
+  focusId?: string | null;
+}) {
   const [selected, setSelected] = useState<MapPlayground | null>(null);
 
   return (
@@ -70,6 +101,7 @@ export function PlaygroundMap({ playgrounds }: { playgrounds: MapPlayground[] })
           ))}
         </MarkerClusterGroup>
         <LocateButton />
+        <FocusOnAdded playgrounds={playgrounds} focusId={focusId} onFocus={setSelected} />
       </MapContainer>
 
       <WelcomeChip dismissed={selected !== null} />

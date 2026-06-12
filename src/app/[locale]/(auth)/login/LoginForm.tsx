@@ -45,7 +45,8 @@ export function LoginForm({ locale }: { locale: string }) {
       )}
 
       <button type="submit" disabled={pending} className="btn btn-primary">
-        {pending ? "…" : t("submitLogin")}
+        {pending && <span className="loading loading-spinner loading-sm" aria-hidden />}
+        {t("submitLogin")}
       </button>
 
       <Link href="/signup" className="link link-hover text-sm text-center">

@@ -47,9 +47,11 @@ export function ReportButton({
         aria-label={label ?? t("report")}
         aria-haspopup="dialog"
         aria-controls={dialogId}
-        className={`btn btn-ghost gap-1 ${size === "xs" ? "btn-xs" : "btn-sm"}`}
+        className={`btn btn-ghost gap-1 ${
+          size === "xs" ? "btn-sm min-h-10 min-w-10" : "btn-sm"
+        }`}
       >
-        <Flag className={size === "xs" ? "size-3" : "size-4"} aria-hidden />
+        <Flag className="size-4" aria-hidden />
         {label && <span>{label}</span>}
       </button>
 

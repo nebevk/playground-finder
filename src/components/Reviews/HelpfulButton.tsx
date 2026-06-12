@@ -31,9 +31,9 @@ export function HelpfulButton({
         type="submit"
         disabled={disabled}
         aria-pressed={marked}
-        className={`btn btn-xs gap-1 ${marked ? "btn-primary" : "btn-ghost"}`}
+        className={`btn btn-sm min-h-10 gap-1 ${marked ? "btn-primary" : "btn-ghost"}`}
       >
-        <ThumbsUp className="size-3" aria-hidden />
+        <ThumbsUp className="size-4" aria-hidden />
         <span>{t("helpful")}</span>
         {count > 0 && <span className="font-mono">{count}</span>}
       </button>

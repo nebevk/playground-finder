@@ -1,6 +1,9 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
-const CONTACT_EMAIL = "privacy@example.com";
+// Public GDPR contact. Set NEXT_PUBLIC_PRIVACY_EMAIL to a dedicated, monitored address
+// (ideally a .si domain) before broad launch. Falls back to the owner's address so the
+// "right to object" contact is always a real, reachable inbox.
+const CONTACT_EMAIL = process.env.NEXT_PUBLIC_PRIVACY_EMAIL ?? "ne.bevk@gmail.com";
 
 export default async function PrivacyPage({
   params,

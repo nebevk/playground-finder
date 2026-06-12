@@ -76,7 +76,8 @@ export function SignupForm({ locale }: { locale: string }) {
       <Turnstile />
 
       <button type="submit" disabled={pending} className="btn btn-primary">
-        {pending ? "…" : t("submitSignup")}
+        {pending && <span className="loading loading-spinner loading-sm" aria-hidden />}
+        {t("submitSignup")}
       </button>
 
       <Link href="/login" className="link link-hover text-sm text-center">

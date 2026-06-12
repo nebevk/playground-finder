@@ -25,6 +25,12 @@ export async function ReviewsSection({
   const reviews = await getReviewsForPlayground(playgroundId, user?.id ?? null);
   const myReview = reviews.find((r) => r.is_mine);
 
+  const dateFmt = new Intl.DateTimeFormat(locale, {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+
   return (
     <section>
       <h2 className="mb-3 text-lg font-semibold">{t("reviews")}</h2>
@@ -54,8 +60,8 @@ export async function ReviewsSection({
             >
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <div className="flex items-center gap-2">
-                    <span className="font-mono text-sm">{r.username}</span>
+                  <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                    <span className="font-semibold text-sm">{r.username}</span>
                     <span className="flex items-center" aria-label={`${r.rating}/5`}>
                       {[1, 2, 3, 4, 5].map((n) => (
                         <Star
@@ -66,6 +72,9 @@ export async function ReviewsSection({
                           aria-hidden
                         />
                       ))}
+                    </span>
+                    <span className="text-xs text-base-content/50">
+                      {dateFmt.format(new Date(r.created_at))}
                     </span>
                   </div>
                   {r.comment && (

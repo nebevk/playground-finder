@@ -69,7 +69,12 @@ export function ReviewForm({
         </p>
       )}
 
-      <button type="submit" disabled={pending || rating === 0} className="btn btn-primary btn-sm self-start">
+      <button
+        type="submit"
+        disabled={pending || rating === 0}
+        className="btn btn-primary btn-sm self-start"
+      >
+        {pending && <span className="loading loading-spinner loading-xs" aria-hidden />}
         {t("submitReview")}
       </button>
     </form>

@@ -17,7 +17,8 @@
     "locateMe": "Poišči mojo lokacijo",
     "useMyLocation": "Uporabi mojo lokacijo",
     "welcome": "Tapnite oznako za podrobnosti.",
-    "dismiss": "Razumem"
+    "dismiss": "Razumem",
+    "addedToast": "Hvala! 🎉 Tvoje igrišče je na zemljevidu."
   },
   "admin": {
     "title": "Administracija",
@@ -207,7 +208,9 @@
     "step1": {
       "title": "Označite lokacijo",
       "hint": "Tapnite na zemljevid ali povlecite oznako, da nastavite položaj.",
-      "useGps": "Uporabi mojo lokacijo"
+      "useGps": "Uporabi mojo lokacijo",
+      "gpsError": "Lokacije ni bilo mogoče določiti. Tapnite na zemljevid in ročno nastavite položaj.",
+      "located": "Lokacija nastavljena."
     },
     "step2": {
       "title": "Podrobnosti igrišča",
@@ -233,7 +236,7 @@
     },
     "step3": {
       "title": "Fotografije (neobvezno)",
-      "verifyEmail": "Za nalaganje fotografij morate najprej potrditi e-poštni naslov.",
+      "verifyEmail": "Fotografije lahko dodaš, ko potrdiš e-poštni naslov. Igrišče lahko objaviš že zdaj — fotografije dodaš pozneje.",
       "disclaimer": "Prosimo, ne objavljajte fotografij, na katerih so prepoznavni obrazi otrok.",
       "pick": "Izberi fotografije",
       "takePhoto": "Posnemi fotografijo",
@@ -263,6 +266,8 @@
     "data": "Moji podatki",
     "exportData": "Prenesi moje podatke",
     "exporting": "Pripravljam…",
+    "exportSuccess": "Tvoji podatki so preneseni.",
+    "exportError": "Podatkov ni bilo mogoče prenesti. Poskusi znova.",
     "deleteAccount": "Izbriši moj račun",
     "deleteConfirmTitle": "Res izbrišem račun?",
     "deleteConfirmBody": "To dejanje je nepovratno. Vaša mnenja, fotografije in oznake bodo izbrisane. Objavljena igrišča ostanejo, a brez vaše oznake.",

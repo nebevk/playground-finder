@@ -27,7 +27,14 @@ html, body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .brand-punct { animation: none; }
+  .brand-punct,
+  .dock-active {
+    animation: none;
+  }
+  .dock > a:hover,
+  .dock > button:hover {
+    transform: none;
+  }
 }
 
 @keyframes swing {
@@ -67,8 +74,8 @@ html, body {
 @plugin "daisyui/theme" {
   name: "retro";
   default: true;
-  prefersdark: true;
-  color-scheme: "dark";
+  prefersdark: false;
+  color-scheme: "light";
   --color-base-100: oklch(98% 0 0);
   --color-base-200: oklch(96% 0.001 286.375);
   --color-base-300: oklch(92% 0.004 286.32);

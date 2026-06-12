@@ -17,7 +17,8 @@
     "locateMe": "Locate me",
     "useMyLocation": "Use my location",
     "welcome": "Tap a pin to see details.",
-    "dismiss": "Got it"
+    "dismiss": "Got it",
+    "addedToast": "Thanks! 🎉 Your playground is on the map."
   },
   "admin": {
     "title": "Admin",
@@ -207,7 +208,9 @@
     "step1": {
       "title": "Pin the location",
       "hint": "Tap the map or drag the marker to set the position.",
-      "useGps": "Use my location"
+      "useGps": "Use my location",
+      "gpsError": "Couldn't get your location. Tap the map to set the position manually.",
+      "located": "Location set."
     },
     "step2": {
       "title": "Playground details",
@@ -233,7 +236,7 @@
     },
     "step3": {
       "title": "Photos (optional)",
-      "verifyEmail": "Verify your email address before uploading photos.",
+      "verifyEmail": "You can add photos once you verify your email. You can publish the playground now and add photos later.",
       "disclaimer": "Please do not post photos with identifiable faces of children.",
       "pick": "Choose photos",
       "takePhoto": "Take photo",
@@ -263,6 +266,8 @@
     "data": "My data",
     "exportData": "Download my data",
     "exporting": "Preparing…",
+    "exportSuccess": "Your data has been downloaded.",
+    "exportError": "Couldn't export your data. Please try again.",
     "deleteAccount": "Delete my account",
     "deleteConfirmTitle": "Delete account?",
     "deleteConfirmBody": "This cannot be undone. Your reviews, photos, favorites and reports will be removed. Playgrounds you submitted will remain without your authorship.",

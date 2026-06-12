@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
-import { navItems } from "./nav-items";
+import { navItems, isNavItemActive } from "./nav-items";
 import { BrandStack } from "./Brand";
 
 export function SideNav() {
@@ -18,7 +18,7 @@ export function SideNav() {
       </div>
       <ul className="menu menu-lg w-full gap-1 px-3">
         {navItems.map(({ href, icon: Icon, key }) => {
-          const active = href === "/" ? pathname === "/" : pathname.startsWith(href);
+          const active = isNavItemActive(href, pathname);
           return (
             <li key={key}>
               <Link

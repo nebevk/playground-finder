@@ -228,9 +228,9 @@ export function AddFlow({ locale, emailVerified }: { locale: string; emailVerifi
                           type="button"
                           onClick={() => removePhoto(i)}
                           aria-label={t("step3.removePhoto")}
-                          className="btn btn-circle btn-xs absolute right-1 top-1 bg-base-100/90 backdrop-blur"
+                          className="btn btn-circle btn-sm absolute right-1 top-1 min-h-9 w-9 min-w-9 bg-base-100/90 backdrop-blur"
                         >
-                          <X className="size-3" aria-hidden />
+                          <X className="size-4" aria-hidden />
                         </button>
                       </li>
                     ))}

@@ -1,18 +1,12 @@
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { redirect } from "@/i18n/navigation";
 
+// Search isn't built yet and is no longer in the nav. Anyone landing here from an old
+// link or bookmark is sent to the map (where discovery currently lives).
 export default async function SearchPage({
   params,
 }: {
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  setRequestLocale(locale);
-  const t = await getTranslations("search");
-
-  return (
-    <section className="p-4">
-      <h1 className="text-2xl font-bold">{t("title")}</h1>
-      <p className="mt-2 text-base-content/70">{t("placeholder")}</p>
-    </section>
-  );
+  redirect({ href: "/", locale });
 }
