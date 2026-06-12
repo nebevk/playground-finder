@@ -23,11 +23,16 @@ html, body {
   margin-left: 0.05em;
   font-size: 1.35em;
   line-height: 1;
+}
+
+/* Opt-in wiggle — only on hero placements (login/signup/profile), so the
+   always-on nav logo stays calm. */
+.brand-punct--wiggle {
   animation: brand-wiggle 4s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .brand-punct,
+  .brand-punct--wiggle,
   .dock-active {
     animation: none;
   }

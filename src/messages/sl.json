@@ -16,7 +16,7 @@
     "seeDetails": "Več podrobnosti",
     "locateMe": "Poišči mojo lokacijo",
     "useMyLocation": "Uporabi mojo lokacijo",
-    "welcome": "Tapnite oznako za podrobnosti.",
+    "welcome": "Tapni oznako za podrobnosti.",
     "dismiss": "Razumem",
     "addedToast": "Hvala! 🎉 Tvoje igrišče je na zemljevidu.",
     "directions": "Navodila",
@@ -53,7 +53,7 @@
       },
       "flaggedHeading": "Avtomatsko označena vsebina",
       "reportsHeading": "Posamezne prijave (pod pragom)",
-      "reportsHelp": "Vsebina se samodejno označi po treh prijavah. Te lahko obravnavate posamično.",
+      "reportsHelp": "Vsebina se samodejno označi po treh prijavah. Te lahko obravnavaš posamično.",
       "reportsEmpty": "Ni posameznih prijav.",
       "reportReason": "Razlog",
       "reportReasons": {
@@ -86,7 +86,7 @@
     "notConfigured": "Cloudflare Turnstile ni nastavljen (razvojni način)."
   },
   "cookies": {
-    "message": "Uporabljamo nujne piškotke za ohranjanje vaše prijave.",
+    "message": "Uporabljamo nujne piškotke, da ostaneš prijavljen.",
     "learnMore": "Več o tem",
     "accept": "Razumem"
   },
@@ -162,9 +162,9 @@
     "coordinates": "Koordinate",
     "report": "Prijavi",
     "reviews": "Mnenja",
-    "noReviews": "Še ni mnenj. Bodite prvi!",
-    "loginToReview": "Za pisanje mnenja se prijavite.",
-    "yourReview": "Vaše mnenje",
+    "noReviews": "Še ni mnenj. Bodi prvi!",
+    "loginToReview": "Za pisanje mnenja se prijavi.",
+    "yourReview": "Tvoje mnenje",
     "rating": "Ocena",
     "comment": "Komentar",
     "commentPlaceholder": "Kako je bilo na igrišču?",
@@ -173,9 +173,9 @@
     "helpful": "V pomoč",
     "helpfulCount": "{count}",
     "reviewError": {
-      "duplicate": "Mnenje za to igrišče ste že oddali.",
+      "duplicate": "Mnenje za to igrišče že obstaja.",
       "bad_rating": "Ocena mora biti med 1 in 5.",
-      "generic": "Mnenje ni bilo shranjeno. Poskusite znova."
+      "generic": "Mnenje ni bilo shranjeno. Poskusi znova."
     },
     "reportTitle": "Prijava vsebine",
     "reportReasons": {
@@ -187,7 +187,7 @@
     "reportSubmit": "Pošlji prijavo",
     "reportCancel": "Prekliči",
     "reportSuccess": "Prijava poslana. Hvala.",
-    "reportDuplicate": "To vsebino ste že prijavili.",
+    "reportDuplicate": "Ta prijava že obstaja.",
     "feature": {
       "is_fenced": "Ograjeno",
       "has_shade": "Senca",
@@ -208,7 +208,7 @@
   },
   "add": {
     "title": "Dodaj igrišče",
-    "loginPrompt": "Za dodajanje igrišča se morate prijaviti.",
+    "loginPrompt": "Za dodajanje igrišča se prijavi.",
     "loginCta": "Prijavi se",
     "step": "Korak {n} od {total}",
     "next": "Naprej",
@@ -216,10 +216,10 @@
     "submit": "Dodaj igrišče",
     "submitting": "Dodajam…",
     "step1": {
-      "title": "Označite lokacijo",
-      "hint": "Tapnite na zemljevid ali povlecite oznako, da nastavite položaj.",
+      "title": "Označi lokacijo",
+      "hint": "Tapni na zemljevid ali povleci oznako, da nastaviš položaj.",
       "useGps": "Uporabi mojo lokacijo",
-      "gpsError": "Lokacije ni bilo mogoče določiti. Tapnite na zemljevid in ročno nastavite položaj.",
+      "gpsError": "Lokacije ni bilo mogoče določiti. Tapni na zemljevid in ročno nastavi položaj.",
       "located": "Lokacija nastavljena."
     },
     "step2": {
@@ -255,24 +255,24 @@
       "selected": "Izbranih fotografij: {count} / {max}",
       "processing": "Pripravljam fotografije…",
       "totalSize": "{kb} KB skupaj",
-      "tooMany": "Naložite lahko največ {max} fotografij. Ostale so bile preskočene."
+      "tooMany": "Naložiš lahko največ {max} fotografij. Ostale so bile preskočene."
     },
     "errors": {
-      "noLocation": "Najprej izberite lokacijo na zemljevidu.",
-      "noName": "Vnesite ime igrišča.",
+      "noLocation": "Najprej izberi lokacijo na zemljevidu.",
+      "noName": "Vnesi ime igrišča.",
       "uploadFailed": "Nalaganje fotografije ni uspelo.",
-      "generic": "Shranjevanje ni uspelo. Poskusite znova."
+      "generic": "Shranjevanje ni uspelo. Poskusi znova."
     },
     "success": "Igrišče dodano!"
   },
   "profile": {
     "title": "Moj profil",
-    "loggedInAs": "Prijavljeni ste kot {email}",
+    "loggedInAs": "Tvoj račun: {email}",
     "username": "Uporabniško ime",
     "logout": "Odjava",
     "loginCta": "Prijavi se",
     "signupCta": "Ustvari račun",
-    "loggedOut": "Niste prijavljeni.",
+    "loggedOut": "Za ogled profila se prijavi.",
     "data": "Moji podatki",
     "exportData": "Prenesi moje podatke",
     "exporting": "Pripravljam…",
@@ -280,11 +280,11 @@
     "exportError": "Podatkov ni bilo mogoče prenesti. Poskusi znova.",
     "deleteAccount": "Izbriši moj račun",
     "deleteConfirmTitle": "Res izbrišem račun?",
-    "deleteConfirmBody": "To dejanje je nepovratno. Vaša mnenja, fotografije in oznake bodo izbrisane. Objavljena igrišča ostanejo, a brez vaše oznake.",
+    "deleteConfirmBody": "To dejanje je nepovratno. Tvoja mnenja, fotografije in oznake bodo izbrisane. Objavljena igrišča ostanejo, a brez tvoje oznake.",
     "deleteConfirm": "Da, izbriši",
     "deleteCancel": "Prekliči",
     "deleting": "Brišem…",
-    "deleteError": "Računa ni bilo mogoče izbrisati. Poskusite znova.",
+    "deleteError": "Računa ni bilo mogoče izbrisati. Poskusi znova.",
     "adminLink": "Administracija"
   },
   "auth": {
@@ -295,10 +295,10 @@
     "submitLogin": "Prijavi se",
     "submitSignup": "Ustvari račun",
     "consent": "Strinjam se s <privacyLink>Politiko zasebnosti</privacyLink> in pogoji uporabe.",
-    "consentRequired": "Za nadaljevanje morate sprejeti politiko zasebnosti.",
-    "switchToSignup": "Še nimate računa? Registrirajte se.",
-    "switchToLogin": "Že imate račun? Prijavite se.",
-    "checkEmail": "Preverite e-pošto za potrditveno povezavo.",
-    "errorGeneric": "Prijava ni uspela. Preverite svoje podatke in poskusite znova."
+    "consentRequired": "Za nadaljevanje sprejmi politiko zasebnosti.",
+    "switchToSignup": "Še nimaš računa? Registriraj se.",
+    "switchToLogin": "Že imaš račun? Prijavi se.",
+    "checkEmail": "Preveri e-pošto za potrditveno povezavo.",
+    "errorGeneric": "Prijava ni uspela. Preveri svoje podatke in poskusi znova."
   }
 }

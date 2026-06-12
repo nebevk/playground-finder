@@ -20,10 +20,13 @@ export function BrandStack({
   size = 56,
   align = "start",
   nameSize = "text-3xl",
+  animatePunct = false,
 }: {
   size?: number;
   align?: "start" | "center";
   nameSize?: "text-2xl" | "text-3xl" | "text-4xl" | "text-5xl";
+  /** Wiggle the trailing "?" — reserve for hero placements, not the always-on nav. */
+  animatePunct?: boolean;
 }) {
   const t = useTranslations("app");
   const name = t("name");
@@ -38,7 +41,11 @@ export function BrandStack({
       <div className={`flex flex-col ${isCenter ? "items-center" : ""}`}>
         <span className={`font-display whitespace-nowrap ${nameSize} leading-none text-primary-content`}>
           {body}
-          {punct && <span className="brand-punct text-primary">{punct}</span>}
+          {punct && (
+            <span className={`brand-punct text-primary ${animatePunct ? "brand-punct--wiggle" : ""}`}>
+              {punct}
+            </span>
+          )}
         </span>
         <span className="mt-1 text-xs text-base-content/60 leading-snug">{t("slogan")}</span>
       </div>

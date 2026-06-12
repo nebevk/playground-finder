@@ -14,7 +14,7 @@ export default async function SignupPage({
   return (
     <section className="mx-auto max-w-sm p-4 pt-8">
       <div className="mb-8 flex justify-center md:hidden">
-        <BrandStack size={140} align="center" nameSize="text-4xl" />
+        <BrandStack size={140} align="center" nameSize="text-4xl" animatePunct />
       </div>
       <h1 className="mb-6 text-2xl font-bold">{t("signupTitle")}</h1>
       <SignupForm locale={locale} />

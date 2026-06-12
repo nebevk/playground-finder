@@ -16,7 +16,9 @@ export function FiltersButton() {
       className="indicator absolute top-4 right-4 z-[1000]"
     >
       {activeCount > 0 && (
-        <span className="indicator-item badge badge-primary badge-sm">{activeCount}</span>
+        <span className="indicator-item badge badge-accent badge-sm font-semibold">
+          {activeCount}
+        </span>
       )}
       <span className="btn btn-circle btn-md bg-base-100 shadow-lg">
         <SlidersHorizontal className="size-5" aria-hidden />

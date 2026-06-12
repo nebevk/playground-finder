@@ -45,7 +45,7 @@ export async function ReviewsSection({
       </div>
 
       {!user ? (
-        <div className="rounded-box border border-base-300 p-4 text-sm text-base-content/70">
+        <div className="rounded-box border border-base-300 bg-base-200/50 p-4 text-sm text-base-content/70">
           <Link href="/login" className="link link-primary">
             {t("loginToReview")}
           </Link>
@@ -65,7 +65,7 @@ export async function ReviewsSection({
           {reviews.map((r) => (
             <li
               key={r.id}
-              className="rounded-box border border-base-300 p-4"
+              className="rounded-box border border-base-300 bg-base-200/50 p-4"
             >
               <div className="flex items-start justify-between gap-3">
                 <div>

@@ -21,7 +21,7 @@ export function ReviewForm({
   );
 
   return (
-    <form action={action} className="flex flex-col gap-3 rounded-box border border-base-300 p-4">
+    <form action={action} className="flex flex-col gap-3 rounded-box border border-base-300 bg-base-200/50 p-4">
       <input type="hidden" name="playground_id" value={playgroundId} />
       <input type="hidden" name="locale" value={locale} />
       <input type="hidden" name="rating" value={rating} />
