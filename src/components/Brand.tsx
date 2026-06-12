@@ -1,6 +1,11 @@
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 
+// The wordmark name is a violet→rose gradient (clipped to the text). Both hues read
+// >= 4.5:1 on the light background, so the title stays legible while feeling playful.
+const WORDMARK_GRADIENT =
+  "bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent";
+
 export function BrandMark({ size = 40 }: { size?: number }) {
   return (
     <Image
@@ -30,7 +35,7 @@ export function Wordmark({
   const body = match?.[1] ?? name;
   const punct = match?.[2] ?? "";
   return (
-    <span className={`font-display leading-none text-primary-content ${className}`}>
+    <span className={`font-display leading-none ${WORDMARK_GRADIENT} ${className}`}>
       {body}
       {punct && (
         <span className={`brand-punct text-primary ${animate ? "brand-punct--wiggle" : ""}`}>
@@ -64,7 +69,7 @@ export function BrandStack({
     <div className={`flex gap-3 ${isCenter ? "flex-col items-center text-center" : "items-center"}`}>
       <BrandMark size={size} />
       <div className={`flex flex-col ${isCenter ? "items-center" : ""}`}>
-        <span className={`font-display whitespace-nowrap ${nameSize} leading-none text-primary-content`}>
+        <span className={`font-display whitespace-nowrap ${nameSize} leading-none ${WORDMARK_GRADIENT}`}>
           {body}
           {punct && (
             <span className={`brand-punct text-primary ${animatePunct ? "brand-punct--wiggle" : ""}`}>

@@ -86,15 +86,18 @@ html, body {
   prefersdark: false;
   color-scheme: "light";
   --color-base-100: oklch(98% 0 0);
-  --color-base-200: oklch(96% 0.001 286.375);
-  --color-base-300: oklch(92% 0.004 286.32);
+  --color-base-200: oklch(96% 0.008 320);
+  --color-base-300: oklch(92% 0.012 318);
   --color-base-content: oklch(21% 0.006 285.885);
-  --color-primary: oklch(82% 0.119 306.383);
-  --color-primary-content: oklch(29% 0.149 302.717);
-  --color-secondary: oklch(82% 0.119 306.383);
-  --color-secondary-content: oklch(29% 0.149 302.717);
-  --color-accent: oklch(80% 0.105 251.813);
-  --color-accent-content: oklch(28% 0.091 267.935);
+  /* Brighter, more playful palette: vivid violet -> rose -> sunny amber spans the
+     rainbow, with the blue/green semantics below rounding it out. Content colors are
+     contrast-checked (white on primary/secondary >= 4.5:1, dark on amber > 7:1). */
+  --color-primary: oklch(57% 0.22 300);
+  --color-primary-content: oklch(99% 0.01 300);
+  --color-secondary: oklch(58% 0.21 352);
+  --color-secondary-content: oklch(99% 0.01 352);
+  --color-accent: oklch(80% 0.16 75);
+  --color-accent-content: oklch(30% 0.09 75);
   --color-neutral: oklch(44% 0.017 285.786);
   --color-neutral-content: oklch(98% 0 0);
   --color-info: oklch(58% 0.158 241.966);

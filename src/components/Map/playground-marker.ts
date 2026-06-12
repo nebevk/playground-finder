@@ -9,7 +9,7 @@ const PIN_SVG = `
   </defs>
   <g filter="url(#shadow)">
     <path d="M20 1C10 1 2 9 2 19c0 12 14 28 18 32 4-4 18-20 18-32 0-10-8-18-18-18z"
-          fill="oklch(82% 0.119 306.383)" stroke="oklch(29% 0.149 302.717)" stroke-width="2"/>
+          fill="oklch(57% 0.22 300)" stroke="oklch(38% 0.16 300)" stroke-width="2"/>
     <circle cx="20" cy="19" r="6" fill="white"/>
   </g>
 </svg>

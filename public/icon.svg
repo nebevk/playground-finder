@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="112" fill="oklch(82% 0.119 306.383)"/>
-  <g fill="oklch(29% 0.149 302.717)" stroke="oklch(29% 0.149 302.717)">
+  <rect width="512" height="512" rx="112" fill="oklch(57% 0.22 300)"/>
+  <g fill="#ffffff" stroke="#ffffff">
     <rect x="100" y="140" width="22" height="260" rx="11"/>
     <rect x="200" y="140" width="22" height="260" rx="11"/>
     <rect x="100" y="190" width="122" height="14" rx="7"/>

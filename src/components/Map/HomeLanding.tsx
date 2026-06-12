@@ -6,13 +6,24 @@ import { RatingSummary } from "@/components/RatingSummary";
 import { MapPreviewClient } from "./MapPreviewClient";
 import type { MapPlayground } from "@/lib/playgrounds";
 
-function PlaygroundCard({ p }: { p: MapPlayground }) {
+// Each card gets a different rainbow accent (left stripe + matching pin), cycled by
+// position. Decorative only — the stripe carries no meaning, so contrast isn't a concern.
+const CARD_ACCENTS = [
+  { stripe: "border-l-primary", icon: "text-primary" },
+  { stripe: "border-l-secondary", icon: "text-secondary" },
+  { stripe: "border-l-info", icon: "text-info" },
+  { stripe: "border-l-success", icon: "text-success" },
+  { stripe: "border-l-warning", icon: "text-warning" },
+] as const;
+
+function PlaygroundCard({ p, index }: { p: MapPlayground; index: number }) {
+  const accent = CARD_ACCENTS[index % CARD_ACCENTS.length];
   return (
     <Link
       href={`/playground/${p.id}`}
-      className="flex items-center gap-3 rounded-box border border-base-300 bg-base-200/50 p-3 transition-colors hover:bg-base-200"
+      className={`flex items-center gap-3 rounded-box border-l-4 ${accent.stripe} bg-base-200/60 p-3 shadow-sm transition-colors hover:bg-base-200`}
     >
-      <span className="text-primary">
+      <span className={accent.icon}>
         <MapPin className="size-5" aria-hidden />
       </span>
       <span className="min-w-0 flex-1">
@@ -48,9 +59,9 @@ export async function HomeLanding({
             <section className="mb-6">
               <h2 className="mb-2 text-lg font-semibold">{t("popular")}</h2>
               <ul className="flex flex-col gap-2">
-                {popular.map((p) => (
+                {popular.map((p, i) => (
                   <li key={p.id}>
-                    <PlaygroundCard p={p} />
+                    <PlaygroundCard p={p} index={i} />
                   </li>
                 ))}
               </ul>
@@ -63,9 +74,9 @@ export async function HomeLanding({
               <p className="text-sm text-base-content/60">{t("noLatest")}</p>
             ) : (
               <ul className="flex flex-col gap-2 pb-2">
-                {latest.map((p) => (
+                {latest.map((p, i) => (
                   <li key={p.id}>
-                    <PlaygroundCard p={p} />
+                    <PlaygroundCard p={p} index={i} />
                   </li>
                 ))}
               </ul>
