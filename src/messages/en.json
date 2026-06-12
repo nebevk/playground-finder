@@ -96,6 +96,23 @@
       "prev": "Prev",
       "next": "Next",
       "pageInfo": "{page} / {total}"
+    },
+    "quickAdd": {
+      "title": "Quick add",
+      "intro": "Add a playground fast: find an address or tap the map, then fill in the details.",
+      "addressLabel": "Address or place",
+      "addressPlaceholder": "e.g. Tivoli, Ljubljana",
+      "geocode": "Find",
+      "geocodeFail": "Couldn't find that address.",
+      "located": "Location set: {label}",
+      "nearbyWarning": "Already exists nearby:",
+      "nearbyDistance": "{distance} m",
+      "submit": "Add playground",
+      "submitting": "Adding…",
+      "success": "Playground added.",
+      "error": "Couldn't add the playground. Please try again.",
+      "addAnother": "Add another",
+      "view": "View"
     }
   },
   "turnstile": {

@@ -65,7 +65,7 @@ export default async function AdminPlaygroundsPage({
 
       <header className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">{t("playgrounds.title")}</h1>
-        <Link href="/add" className="btn btn-primary btn-sm gap-1">
+        <Link href="/admin/add" className="btn btn-primary btn-sm gap-1">
           <Plus className="size-4" aria-hidden />
           {t("playgrounds.new")}
         </Link>

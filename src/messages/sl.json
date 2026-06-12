@@ -96,6 +96,23 @@
       "prev": "Prejšnja",
       "next": "Naslednja",
       "pageInfo": "{page} / {total}"
+    },
+    "quickAdd": {
+      "title": "Hitro dodajanje",
+      "intro": "Hitro dodaj igrišče: poišči naslov ali tapni na zemljevid, nato vnesi podrobnosti.",
+      "addressLabel": "Naslov ali kraj",
+      "addressPlaceholder": "Npr. Tivoli, Ljubljana",
+      "geocode": "Poišči",
+      "geocodeFail": "Naslova ni bilo mogoče najti.",
+      "located": "Lokacija nastavljena: {label}",
+      "nearbyWarning": "V bližini že obstaja:",
+      "nearbyDistance": "{distance} m",
+      "submit": "Dodaj igrišče",
+      "submitting": "Dodajam…",
+      "success": "Igrišče dodano.",
+      "error": "Igrišča ni bilo mogoče dodati. Poskusi znova.",
+      "addAnother": "Dodaj naslednje",
+      "view": "Poglej"
     }
   },
   "turnstile": {

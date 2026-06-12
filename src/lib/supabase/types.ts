@@ -318,7 +318,14 @@ export type Database = {
       }
     }
     Functions: {
-      [_ in never]: never
+      playgrounds_near: {
+        Args: { p_lat: number; p_lng: number; p_radius_m: number }
+        Returns: {
+          distance_m: number
+          id: string
+          name: string
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
