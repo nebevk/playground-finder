@@ -13,7 +13,7 @@ export async function getMapPlaygrounds(): Promise<MapPlayground[]> {
   const { data, error } = await supabase
     .from("playgrounds_geo")
     .select(
-      "id, name, description, lat, lng, is_fenced, has_shade, has_water, has_toilets, has_parking, surface_type",
+      "id, name, description, lat, lng, is_fenced, has_shade, has_water, has_toilets, has_parking, surface_type, review_count, avg_rating",
     );
 
   if (error) throw error;
@@ -33,6 +33,8 @@ export async function getMapPlaygrounds(): Promise<MapPlayground[]> {
         has_toilets: row.has_toilets ?? false,
         has_parking: row.has_parking ?? false,
         surface_type: (row.surface_type ?? null) as SurfaceType | null,
+        review_count: row.review_count ?? 0,
+        avg_rating: row.avg_rating,
       },
     ];
   });
@@ -44,7 +46,7 @@ export async function getPlaygroundById(id: string): Promise<PlaygroundDetail | 
   const { data, error } = await supabase
     .from("playgrounds_geo")
     .select(
-      "id, name, description, lat, lng, is_fenced, has_shade, has_water, has_toilets, has_parking, surface_type, equipment",
+      "id, name, description, lat, lng, is_fenced, has_shade, has_water, has_toilets, has_parking, surface_type, equipment, review_count, avg_rating",
     )
     .eq("id", id)
     .maybeSingle();
@@ -79,6 +81,8 @@ export async function getPlaygroundById(id: string): Promise<PlaygroundDetail | 
     has_toilets: data.has_toilets ?? false,
     has_parking: data.has_parking ?? false,
     surface_type: (data.surface_type ?? null) as SurfaceType | null,
+    review_count: data.review_count ?? 0,
+    avg_rating: data.avg_rating,
     equipment,
     photos,
   };

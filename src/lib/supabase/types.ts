@@ -296,6 +296,7 @@ export type Database = {
     Views: {
       playgrounds_geo: {
         Row: {
+          avg_rating: number | null
           created_at: string | null
           description: string | null
           equipment: Json | null
@@ -309,42 +310,9 @@ export type Database = {
           lat: number | null
           lng: number | null
           name: string | null
+          review_count: number | null
           surface_type: string | null
           user_id: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          description?: string | null
-          equipment?: Json | null
-          flagged?: boolean | null
-          has_parking?: boolean | null
-          has_shade?: boolean | null
-          has_toilets?: boolean | null
-          has_water?: boolean | null
-          id?: string | null
-          is_fenced?: boolean | null
-          lat?: never
-          lng?: never
-          name?: string | null
-          surface_type?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          description?: string | null
-          equipment?: Json | null
-          flagged?: boolean | null
-          has_parking?: boolean | null
-          has_shade?: boolean | null
-          has_toilets?: boolean | null
-          has_water?: boolean | null
-          id?: string | null
-          is_fenced?: boolean | null
-          lat?: never
-          lng?: never
-          name?: string | null
-          surface_type?: string | null
-          user_id?: string | null
         }
         Relationships: []
       }

@@ -18,7 +18,14 @@
     "useMyLocation": "Use my location",
     "welcome": "Tap a pin to see details.",
     "dismiss": "Got it",
-    "addedToast": "Thanks! 🎉 Your playground is on the map."
+    "addedToast": "Thanks! 🎉 Your playground is on the map.",
+    "directions": "Directions",
+    "emptyFilteredTitle": "No matches",
+    "emptyFiltered": "No playgrounds match these filters here.",
+    "emptyFilteredAction": "Clear filters",
+    "emptyNoneTitle": "No playgrounds here yet",
+    "emptyNone": "Be the first to add a playground in this area.",
+    "emptyNoneAction": "Add playground"
   },
   "admin": {
     "title": "Admin",
@@ -144,6 +151,9 @@
   "detail": {
     "notFound": "Playground not found.",
     "backToMap": "Back to map",
+    "directions": "Get directions",
+    "noRatingsYet": "No ratings yet",
+    "reviewsCount": "{count, plural, one {# review} other {# reviews}}",
     "features": "Features",
     "surface": "Surface",
     "equipment": "Equipment",

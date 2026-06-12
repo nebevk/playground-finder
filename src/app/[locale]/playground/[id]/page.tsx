@@ -1,12 +1,14 @@
 import { notFound } from "next/navigation";
 import { setRequestLocale, getTranslations } from "next-intl/server";
-import { ArrowLeft, Check } from "lucide-react";
+import { ArrowLeft, Check, Navigation } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getPlaygroundById, PLAYGROUND_FEATURE_KEYS } from "@/lib/playgrounds";
+import { directionsUrl } from "@/lib/directions";
 import { StaticMapClient } from "@/components/Map/StaticMapClient";
 import { ReviewsSection } from "@/components/Reviews/ReviewsSection";
 import { ReportButton } from "@/components/Reviews/ReportButton";
+import { RatingSummary } from "@/components/RatingSummary";
 import { EmptyState } from "@/components/EmptyState";
 
 export default async function PlaygroundDetailPage({
@@ -61,6 +63,13 @@ export default async function PlaygroundDetailPage({
         <header className="flex items-start justify-between gap-3">
           <div>
             <h1 className="text-3xl font-bold leading-tight">{playground.name}</h1>
+            <div className="mt-1.5">
+              <RatingSummary
+                avg={playground.avg_rating}
+                count={playground.review_count}
+                size="lg"
+              />
+            </div>
             {playground.description && (
               <p className="mt-2 text-base-content/70">{playground.description}</p>
             )}
@@ -76,8 +85,19 @@ export default async function PlaygroundDetailPage({
           )}
         </header>
 
-        <section className="h-56 overflow-hidden rounded-box border border-base-300">
-          <StaticMapClient lat={playground.lat} lng={playground.lng} />
+        <section className="flex flex-col gap-3">
+          <div className="h-56 overflow-hidden rounded-box border border-base-300">
+            <StaticMapClient lat={playground.lat} lng={playground.lng} />
+          </div>
+          <a
+            href={directionsUrl(playground.lat, playground.lng)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-primary w-full gap-2"
+          >
+            <Navigation className="size-5" aria-hidden />
+            {t("directions")}
+          </a>
         </section>
 
         {activeFeatures.length > 0 && (
@@ -152,10 +172,6 @@ export default async function PlaygroundDetailPage({
         </section>
 
         <ReviewsSection playgroundId={playground.id} locale={locale} />
-
-        <p className="text-xs text-base-content/50">
-          {t("coordinates")}: {playground.lat.toFixed(5)}, {playground.lng.toFixed(5)}
-        </p>
       </div>
     </article>
   );

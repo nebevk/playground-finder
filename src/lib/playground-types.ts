@@ -23,6 +23,8 @@ export type MapPlayground = {
   has_toilets: boolean;
   has_parking: boolean;
   surface_type: SurfaceType | null;
+  review_count: number;
+  avg_rating: number | null;
 };
 
 export type PlaygroundPhoto = {

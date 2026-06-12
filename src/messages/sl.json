@@ -18,7 +18,14 @@
     "useMyLocation": "Uporabi mojo lokacijo",
     "welcome": "Tapnite oznako za podrobnosti.",
     "dismiss": "Razumem",
-    "addedToast": "Hvala! 🎉 Tvoje igrišče je na zemljevidu."
+    "addedToast": "Hvala! 🎉 Tvoje igrišče je na zemljevidu.",
+    "directions": "Navodila",
+    "emptyFilteredTitle": "Ni zadetkov",
+    "emptyFiltered": "Na tem območju ni igrišč s temi filtri.",
+    "emptyFilteredAction": "Počisti filtre",
+    "emptyNoneTitle": "Tu še ni igrišč",
+    "emptyNone": "Bodi prvi in dodaj igrišče na tem območju.",
+    "emptyNoneAction": "Dodaj igrišče"
   },
   "admin": {
     "title": "Administracija",
@@ -144,6 +151,9 @@
   "detail": {
     "notFound": "Igrišče ni bilo najdeno.",
     "backToMap": "Nazaj na zemljevid",
+    "directions": "Navodila do igrišča",
+    "noRatingsYet": "Še ni ocen",
+    "reviewsCount": "{count, plural, one {# mnenje} two {# mnenji} few {# mnenja} other {# mnenj}}",
     "features": "Lastnosti",
     "surface": "Podlaga",
     "equipment": "Oprema",

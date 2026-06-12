@@ -4,6 +4,7 @@ import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getReviewsForPlayground } from "@/lib/reviews";
 import { EmptyState } from "@/components/EmptyState";
+import { RatingSummary } from "@/components/RatingSummary";
 import { ReviewForm } from "./ReviewForm";
 import { HelpfulButton } from "./HelpfulButton";
 import { DeleteReviewButton } from "./DeleteReviewButton";
@@ -25,6 +26,11 @@ export async function ReviewsSection({
   const reviews = await getReviewsForPlayground(playgroundId, user?.id ?? null);
   const myReview = reviews.find((r) => r.is_mine);
 
+  const avgRating =
+    reviews.length > 0
+      ? Math.round((reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length) * 10) / 10
+      : null;
+
   const dateFmt = new Intl.DateTimeFormat(locale, {
     day: "numeric",
     month: "short",
@@ -33,7 +39,10 @@ export async function ReviewsSection({
 
   return (
     <section>
-      <h2 className="mb-3 text-lg font-semibold">{t("reviews")}</h2>
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <h2 className="text-lg font-semibold">{t("reviews")}</h2>
+        {reviews.length > 0 && <RatingSummary avg={avgRating} count={reviews.length} />}
+      </div>
 
       {!user ? (
         <div className="rounded-box border border-base-300 p-4 text-sm text-base-content/70">
