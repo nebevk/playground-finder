@@ -49,14 +49,14 @@ export async function HomeLanding({
   return (
     <div className="flex h-full w-full flex-col bg-base-100">
       <div className="flex-1 overflow-y-auto px-4 pt-8">
-        <div className="mx-auto flex max-w-md flex-col items-center gap-3 text-center">
+        <div className="mx-auto flex max-w-md flex-col items-center gap-3 text-center md:hidden">
           <Wordmark className="text-4xl sm:text-5xl" />
           <p className="text-base text-base-content/80">{t("intro")}</p>
         </div>
 
-        <div className="mx-auto mt-7 max-w-md">
+        <div className="mx-auto mt-7 grid max-w-md gap-x-6 gap-y-6 md:mt-0 md:max-w-3xl md:grid-cols-2">
           {popular.length > 0 && (
-            <section className="mb-6">
+            <section>
               <h2 className="mb-2 text-lg font-semibold">{t("popular")}</h2>
               <ul className="flex flex-col gap-2">
                 {popular.map((p, i) => (

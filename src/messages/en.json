@@ -8,7 +8,22 @@
     "map": "Map",
     "search": "Search",
     "add": "Add",
-    "profile": "Profile"
+    "profile": "Profile",
+    "support": "Support",
+    "about": "About",
+    "privacy": "Privacy",
+    "copyright": "© 2026 Nejc Bevk"
+  },
+  "about": {
+    "title": "About the app",
+    "intro": "“Kje so igrala?” is a community app that helps parents across Slovenia find the perfect playground.",
+    "what": "Browse playgrounds on the map, filter by shade, fences and drinking water, and read other parents' reviews. Anyone can add a new playground and help the community grow.",
+    "authorTitle": "About me",
+    "authorBody": "I'm Nejc Bevk, and I build this app in my spare time. It's a personal project, born from wanting a better overview of playgrounds for our little ones.",
+    "authorLink": "My personal page",
+    "supportTitle": "Support the project",
+    "supportBody": "The app is free and ad-free. If you like it, you can buy me a coffee. Thank you! ☕",
+    "supportCta": "Buy me a coffee on Ko-fi"
   },
   "home": {
     "intro": "Find the perfect playground for your kids. Filter by shade, fences and water, and read other parents' reviews.",
@@ -190,9 +205,10 @@
     },
     "processors": {
       "title": "Data processors",
-      "supabase": "Supabase — database and authentication hosting",
-      "vercel": "Vercel — application hosting",
-      "cloudflare": "Cloudflare — spam protection (Turnstile)"
+      "supabase": "Supabase: database and authentication hosting",
+      "vercel": "Vercel: application hosting",
+      "cloudflare": "Cloudflare: spam protection (Turnstile)",
+      "simpleAnalytics": "Simple Analytics: privacy-friendly visitor statistics (no cookies, no personal data)"
     },
     "rights": {
       "title": "Your rights",

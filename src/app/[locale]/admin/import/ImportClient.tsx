@@ -298,12 +298,12 @@ export function ImportClient({ locale }: { locale: string }) {
                     <td className="whitespace-nowrap text-xs tabular-nums">
                       {c.lat != null && c.lng != null
                         ? `${c.lat.toFixed(4)}, ${c.lng.toFixed(4)}`
-                        : "—"}
+                        : "-"}
                     </td>
                     <td className="text-xs">
                       {(SURFACE_TYPES as readonly string[]).includes(c.surface_type)
                         ? c.surface_type
-                        : "—"}
+                        : "-"}
                     </td>
                     <td className="text-xs">
                       {c.status === "ready" && !c.dup && (

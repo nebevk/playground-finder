@@ -41,6 +41,7 @@ export default async function PrivacyPage({
           <li>{t("processors.supabase")}</li>
           <li>{t("processors.vercel")}</li>
           <li>{t("processors.cloudflare")}</li>
+          <li>{t("processors.simpleAnalytics")}</li>
         </ul>
       </section>
 

@@ -84,7 +84,7 @@ export function EditPlaygroundForm({
                 defaultValue={playground.surface_type ?? ""}
                 className="select select-bordered"
               >
-                <option value="">—</option>
+                <option value="">-</option>
                 {SURFACE_OPTIONS.map((s) => (
                   <option key={s} value={s}>
                     {tSurf(s)}

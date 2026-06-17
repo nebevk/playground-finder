@@ -244,7 +244,7 @@ export function AdminPlaygroundsTable({
                         {pg.name}
                       </Link>
                     </td>
-                    <td className="text-sm">{pg.surface_type ?? "—"}</td>
+                    <td className="text-sm">{pg.surface_type ?? "-"}</td>
                     <td className="text-sm tabular-nums">{pg.review_count}</td>
                     <td className="text-sm whitespace-nowrap">
                       {dateFmt.format(new Date(pg.created_at))}

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
+import Script from "next/script";
 import { Geist_Mono, Nunito, Chewy } from "next/font/google";
 import { routing } from "@/i18n/routing";
 import { Analytics } from "@vercel/analytics/next";
@@ -79,6 +80,11 @@ export default async function LocaleLayout({
           </ToastProvider>
         </NextIntlClientProvider>
         <Analytics />
+        {/* Simple Analytics — privacy-first, cookieless visitor stats. */}
+        <Script
+          src="https://scripts.simpleanalyticscdn.com/latest.js"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );

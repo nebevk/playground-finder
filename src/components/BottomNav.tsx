@@ -1,8 +1,10 @@
 "use client";
 
+import { Coffee } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import { navItems, isNavItemActive } from "./nav-items";
+import { KOFI_URL } from "@/lib/links";
 
 export function BottomNav() {
   const t = useTranslations("nav");
@@ -24,6 +26,10 @@ export function BottomNav() {
           </Link>
         );
       })}
+      <a href={KOFI_URL} target="_blank" rel="noopener noreferrer" aria-label={t("support")}>
+        <Coffee className="size-5 text-secondary" aria-hidden />
+        <span className="dock-label">{t("support")}</span>
+      </a>
     </nav>
   );
 }

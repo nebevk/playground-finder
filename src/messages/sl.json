@@ -8,7 +8,22 @@
     "map": "Zemljevid",
     "search": "Iskanje",
     "add": "Dodaj",
-    "profile": "Profil"
+    "profile": "Profil",
+    "support": "Podpri",
+    "about": "O aplikaciji",
+    "privacy": "Zasebnost",
+    "copyright": "© 2026 Nejc Bevk"
+  },
+  "about": {
+    "title": "O aplikaciji",
+    "intro": "« Kje so igrala? » je skupnostna aplikacija, ki staršem po Sloveniji pomaga najti popolno otroško igrišče.",
+    "what": "Igrišča lahko iščeš na zemljevidu, filtriraš po senci, ograji in pitniku ter prebereš mnenja drugih staršev. Vsak lahko prispeva novo igrišče in tako pomaga skupnosti.",
+    "authorTitle": "O meni",
+    "authorBody": "Aplikacijo v prostem času razvijam Nejc Bevk. To je moj osebni projekt, ki je nastal iz želje po boljšem pregledu nad igrišči za naše najmlajše.",
+    "authorLink": "Moja osebna stran",
+    "supportTitle": "Podpri projekt",
+    "supportBody": "Aplikacija je brezplačna in brez oglasov. Če ti je všeč, me lahko počastiš s kavico. Hvala! ☕",
+    "supportCta": "Časti kavo na Ko-fi"
   },
   "home": {
     "intro": "Najdi popolno igrišče za svoje otroke. Filtriraj po senci, ograji in pitniku ter preberi mnenja drugih staršev.",
@@ -190,9 +205,10 @@
     },
     "processors": {
       "title": "Obdelovalci podatkov",
-      "supabase": "Supabase — gostitev baze in avtentikacije",
-      "vercel": "Vercel — gostitev aplikacije",
-      "cloudflare": "Cloudflare — zaščita pred neželeno vsebino (Turnstile)"
+      "supabase": "Supabase: gostitev baze in avtentikacije",
+      "vercel": "Vercel: gostitev aplikacije",
+      "cloudflare": "Cloudflare: zaščita pred neželeno vsebino (Turnstile)",
+      "simpleAnalytics": "Simple Analytics: statistika obiska, prijazna do zasebnosti (brez piškotkov in brez osebnih podatkov)"
     },
     "rights": {
       "title": "Vaše pravice",
@@ -332,7 +348,7 @@
     },
     "step3": {
       "title": "Fotografije (neobvezno)",
-      "verifyEmail": "Fotografije lahko dodaš, ko potrdiš e-poštni naslov. Igrišče lahko objaviš že zdaj — fotografije dodaš pozneje.",
+      "verifyEmail": "Fotografije lahko dodaš, ko potrdiš e-poštni naslov. Igrišče lahko objaviš že zdaj, fotografije pa dodaš pozneje.",
       "disclaimer": "Prosimo, ne objavljajte fotografij, na katerih so prepoznavni obrazi otrok.",
       "pick": "Izberi fotografije",
       "takePhoto": "Posnemi fotografijo",
