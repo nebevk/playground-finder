@@ -40,9 +40,21 @@ export default async function PrivacyPage({
         <ul className="list-inside list-disc space-y-1 text-base-content/80">
           <li>{t("processors.supabase")}</li>
           <li>{t("processors.vercel")}</li>
+          <li>{t("processors.vercelAnalytics")}</li>
           <li>{t("processors.cloudflare")}</li>
           <li>{t("processors.simpleAnalytics")}</li>
+          <li>{t("processors.kofi")}</li>
         </ul>
+      </section>
+
+      <section>
+        <h2 className="mb-2 text-xl font-semibold">{t("location.title")}</h2>
+        <p className="text-base-content/80">{t("location.body")}</p>
+      </section>
+
+      <section>
+        <h2 className="mb-2 text-xl font-semibold">{t("retention.title")}</h2>
+        <p className="text-base-content/80">{t("retention.body")}</p>
       </section>
 
       <section>

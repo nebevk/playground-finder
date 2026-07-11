@@ -10,6 +10,7 @@ import {
 
 export function FiltersDrawer({ visibleCount }: { visibleCount: number }) {
   const t = useTranslations("filters");
+  const tCommon = useTranslations("common");
   const { state, open, setOpen, toggleFeature, toggleSurface, clearAll, activeCount } =
     useFilters();
 
@@ -35,7 +36,7 @@ export function FiltersDrawer({ visibleCount }: { visibleCount: number }) {
           <button
             type="button"
             onClick={() => setOpen(false)}
-            aria-label={t("title")}
+            aria-label={tCommon("close")}
             className="btn btn-ghost btn-sm btn-circle"
           >
             <X className="size-4" aria-hidden />

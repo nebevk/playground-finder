@@ -53,8 +53,23 @@ export function SignupForm({ locale }: { locale: string }) {
                 {chunks}
               </Link>
             ),
+            termsLink: (chunks) => (
+              <Link href="/terms" className="link link-primary">
+                {chunks}
+              </Link>
+            ),
           })}
         </span>
+      </label>
+
+      <label className="label cursor-pointer items-start gap-3 py-1">
+        <input
+          name="age_confirmed"
+          type="checkbox"
+          required
+          className="checkbox checkbox-primary mt-1"
+        />
+        <span className="label-text text-sm leading-snug">{t("ageConsent")}</span>
       </label>
 
       {state?.error === "consent_required" && (
@@ -62,11 +77,22 @@ export function SignupForm({ locale }: { locale: string }) {
           {t("consentRequired")}
         </p>
       )}
-      {state?.error && state.error !== "consent_required" && (
+      {state?.error === "age_required" && (
         <p role="alert" className="text-sm text-error">
-          {t("errorGeneric")}
+          {t("ageRequired")}
         </p>
       )}
+      {state?.error === "turnstile_failed" && (
+        <p role="alert" className="text-sm text-error">
+          {t("turnstileFailed")}
+        </p>
+      )}
+      {state?.error &&
+        !["consent_required", "age_required", "turnstile_failed"].includes(state.error) && (
+          <p role="alert" className="text-sm text-error">
+            {t("errorGeneric")}
+          </p>
+        )}
       {state?.info === "check_email" && (
         <p role="status" className="text-sm text-success">
           {t("checkEmail")}

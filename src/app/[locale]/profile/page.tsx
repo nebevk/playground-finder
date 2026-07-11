@@ -6,6 +6,8 @@ import { logoutAction } from "../(auth)/actions";
 import { BrandStack } from "@/components/Brand";
 import { ExportDataButton } from "@/components/Profile/ExportDataButton";
 import { DeleteAccountButton } from "@/components/Profile/DeleteAccountButton";
+import { ResendVerificationButton } from "@/components/Profile/ResendVerificationButton";
+import { LocaleSwitcher } from "@/components/LocaleSwitcher";
 
 export default async function ProfilePage({
   params,
@@ -34,6 +36,9 @@ export default async function ProfilePage({
             {t("signupCta")}
           </Link>
         </div>
+        <div className="md:hidden">
+          <LocaleSwitcher />
+        </div>
       </section>
     );
   }
@@ -58,6 +63,15 @@ export default async function ProfilePage({
         )}
       </header>
 
+      {!user.email_confirmed_at && (
+        <div role="alert" className="alert alert-warning items-start text-sm">
+          <div className="flex flex-col gap-2">
+            <p>{t("verifyBanner")}</p>
+            <ResendVerificationButton locale={locale} />
+          </div>
+        </div>
+      )}
+
       {profile?.is_admin && (
         <Link href="/admin" className="btn btn-primary gap-2 self-start">
           <Shield className="size-4" aria-hidden />
@@ -71,6 +85,11 @@ export default async function ProfilePage({
           <ExportDataButton />
           <DeleteAccountButton locale={locale} />
         </div>
+      </section>
+
+      <section className="md:hidden">
+        <h2 className="mb-3 text-lg font-semibold">{t("language")}</h2>
+        <LocaleSwitcher />
       </section>
 
       <form action={logoutAction}>

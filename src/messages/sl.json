@@ -1,6 +1,7 @@
 {
   "app": {
     "name": "Kje so igrala?",
+    "shortName": "Igrala",
     "slogan": "Odkrij otroška igrišča po Sloveniji"
   },
   "nav": {
@@ -12,6 +13,8 @@
     "support": "Podpri",
     "about": "O aplikaciji",
     "privacy": "Zasebnost",
+    "terms": "Pogoji",
+    "language": "Jezik",
     "copyright": "© 2026 Nejc Bevk"
   },
   "about": {
@@ -207,8 +210,18 @@
       "title": "Obdelovalci podatkov",
       "supabase": "Supabase: gostitev baze in avtentikacije",
       "vercel": "Vercel: gostitev aplikacije",
+      "vercelAnalytics": "Vercel Analytics: anonimna statistika ogledov strani brez piškotkov",
       "cloudflare": "Cloudflare: zaščita pred neželeno vsebino (Turnstile)",
-      "simpleAnalytics": "Simple Analytics: statistika obiska, prijazna do zasebnosti (brez piškotkov in brez osebnih podatkov)"
+      "simpleAnalytics": "Simple Analytics: statistika obiska, prijazna do zasebnosti (brez piškotkov in brez osebnih podatkov)",
+      "kofi": "Ko-fi: prostovoljni prispevki (zunanja stran, odpre se le ob kliku na povezavo za podporo)"
+    },
+    "location": {
+      "title": "Tvoja lokacija",
+      "body": "Če uporabiš funkcijo »Najdi me«, se tvoj položaj obdela samo v brskalniku za premik zemljevida. Nikoli se ne pošlje na naše strežnike in se ne shranjuje."
+    },
+    "retention": {
+      "title": "Hramba podatkov",
+      "body": "Tvoje podatke hranimo, dokler obstaja tvoj račun. Ob izbrisu računa se profil, mnenja, fotografije, priljubljene in prijave trajno odstranijo; igrišča, ki si jih dodal, ostanejo brez tvojega avtorstva. Tehnične strežniške dnevnike naši gostitelji hranijo krajši čas (do 30 dni)."
     },
     "rights": {
       "title": "Vaše pravice",
@@ -363,6 +376,7 @@
       "noLocation": "Najprej izberi lokacijo na zemljevidu.",
       "noName": "Vnesi ime igrišča.",
       "uploadFailed": "Nalaganje fotografije ni uspelo.",
+      "turnstile": "Preverjanje proti neželeni vsebini ni uspelo. Poskusi znova.",
       "generic": "Shranjevanje ni uspelo. Poskusi znova."
     },
     "success": "Igrišče dodano!"
@@ -387,7 +401,12 @@
     "deleteCancel": "Prekliči",
     "deleting": "Brišem…",
     "deleteError": "Računa ni bilo mogoče izbrisati. Poskusi znova.",
-    "adminLink": "Administracija"
+    "adminLink": "Administracija",
+    "language": "Jezik",
+    "verifyBanner": "Tvoj e-poštni naslov še ni potrjen. Nalaganje fotografij bo mogoče, ko potrdiš povezavo, ki smo ti jo poslali.",
+    "resendVerification": "Ponovno pošlji potrditveno e-pošto",
+    "resendSuccess": "Potrditvena e-pošta je poslana. Preveri nabiralnik.",
+    "resendError": "E-pošte trenutno ni mogoče poslati. Poskusi znova pozneje."
   },
   "auth": {
     "loginTitle": "Prijava",
@@ -396,11 +415,65 @@
     "password": "Geslo",
     "submitLogin": "Prijavi se",
     "submitSignup": "Ustvari račun",
-    "consent": "Strinjam se s <privacyLink>Politiko zasebnosti</privacyLink> in pogoji uporabe.",
+    "consent": "Strinjam se s <privacyLink>Politiko zasebnosti</privacyLink> in <termsLink>Pogoji uporabe</termsLink>.",
     "consentRequired": "Za nadaljevanje sprejmi politiko zasebnosti.",
+    "ageConsent": "Star/-a sem vsaj 15 let.",
+    "ageRequired": "Za ustvarjanje računa moraš biti star/-a vsaj 15 let.",
     "switchToSignup": "Še nimaš računa? Registriraj se.",
     "switchToLogin": "Že imaš račun? Prijavi se.",
     "checkEmail": "Preveri e-pošto za potrditveno povezavo.",
-    "errorGeneric": "Prijava ni uspela. Preveri svoje podatke in poskusi znova."
+    "errorGeneric": "Prijava ni uspela. Preveri svoje podatke in poskusi znova.",
+    "forgotPassword": "Pozabljeno geslo?",
+    "forgotTitle": "Ponastavi geslo",
+    "forgotIntro": "Vnesi svoj e-poštni naslov in poslali ti bomo povezavo za nastavitev novega gesla.",
+    "submitForgot": "Pošlji povezavo",
+    "resetEmailSent": "Če račun s tem e-poštnim naslovom obstaja, je povezava za ponastavitev na poti.",
+    "backToLogin": "Nazaj na prijavo",
+    "resetTitle": "Nastavi novo geslo",
+    "newPassword": "Novo geslo",
+    "confirmPassword": "Ponovi novo geslo",
+    "passwordMismatch": "Gesli se ne ujemata.",
+    "submitReset": "Shrani novo geslo",
+    "resetLinkInvalid": "Povezava za ponastavitev ni veljavna ali je potekla. Zahtevaj novo.",
+    "turnstileFailed": "Preverjanje proti neželeni vsebini ni uspelo. Poskusi znova."
+  },
+  "terms": {
+    "title": "Pogoji uporabe",
+    "lastUpdated": "Zadnja posodobitev: julij 2026",
+    "intro": "Z uporabo aplikacije se strinjaš s temi pogoji. Aplikacija je brezplačen, skupnostni imenik otroških igrišč v Sloveniji, ki ga kot posameznik vzdržujem takšnega, kakršen je.",
+    "content": {
+      "title": "Tvoja vsebina",
+      "body": "Za vsebino, ki jo objaviš (igrišča, mnenja, fotografije), odgovarjaš sam. Nalagaj le fotografije, ki si jih posnel sam, in nikoli fotografij s prepoznavnimi obrazi otrok. Z objavo nam podeliš neizključno pravico do prikaza vsebine v aplikaciji."
+    },
+    "conduct": {
+      "title": "Sprejemljiva raba",
+      "body": "Ne objavljaj neželene vsebine, zavajajočih informacij ali vsebine, ki krši zasebnost ali pravice drugih. Vsebino lahko drugi uporabniki prijavijo; vsebina z več prijavami gre v pregled in je lahko odstranjena."
+    },
+    "moderation": {
+      "title": "Moderiranje",
+      "body": "Vsako vsebino lahko uredimo, označimo ali odstranimo, račune, ki večkrat kršijo pravila, pa začasno onemogočimo."
+    },
+    "liability": {
+      "title": "Brez jamstva",
+      "body": "Podatki o igriščih so prispevki skupnosti in so lahko netočni ali zastareli. Varnost igrišča vedno presodi sam. Za škodo, nastalo z uporabo aplikacije, ne prevzemamo odgovornosti."
+    },
+    "changes": {
+      "title": "Spremembe",
+      "body": "Pogoje lahko posodobimo; o pomembnih spremembah bomo obvestili v aplikaciji. Nadaljnja uporaba po spremembi pomeni, da posodobljene pogoje sprejemaš."
+    },
+    "contact": {
+      "title": "Kontakt",
+      "body": "Vprašanja o teh pogojih? Piši nam na {email}."
+    }
+  },
+  "common": {
+    "close": "Zapri",
+    "cancel": "Prekliči",
+    "notFoundTitle": "Stran ne obstaja",
+    "notFoundBody": "Strani, ki jo iščeš, ni ali pa je bila premaknjena.",
+    "notFoundCta": "Nazaj na začetno stran",
+    "errorTitle": "Nekaj je šlo narobe",
+    "errorBody": "Prišlo je do nepričakovane napake. Poskusi znova.",
+    "errorRetry": "Poskusi znova"
   }
 }

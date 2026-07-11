@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import Script from "next/script";
 import { Geist_Mono, Nunito, Chewy } from "next/font/google";
 import { routing } from "@/i18n/routing";
+import { getSiteUrl } from "@/lib/site";
 import { Analytics } from "@vercel/analytics/next";
 import { BottomNav } from "@/components/BottomNav";
 import { SideNav } from "@/components/SideNav";
@@ -31,6 +32,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
+  themeColor: "#8e4ae2",
 };
 
 export function generateStaticParams() {
@@ -44,7 +46,31 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "app" });
-  return { title: t("name") };
+  const name = t("name");
+  const slogan = t("slogan");
+
+  return {
+    metadataBase: new URL(getSiteUrl()),
+    title: {
+      default: name,
+      template: `%s · ${name}`,
+    },
+    description: slogan,
+    icons: {
+      icon: [
+        { url: "/icon.svg", type: "image/svg+xml" },
+        { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+      ],
+      apple: "/apple-touch-icon.png",
+    },
+    openGraph: {
+      type: "website",
+      siteName: name,
+      title: name,
+      description: slogan,
+      locale: locale === "sl" ? "sl_SI" : "en_US",
+    },
+  };
 }
 
 export default async function LocaleLayout({

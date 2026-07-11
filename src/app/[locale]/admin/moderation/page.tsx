@@ -63,7 +63,7 @@ export default async function ModerationPage({
       target_type: "photo" as const,
       id: r.id,
       label: r.storage_path,
-      detail: `playground ${r.playground_id}`,
+      detail: `${t("moderation.type.playground")} ${r.playground_id}`,
     })),
   ];
 

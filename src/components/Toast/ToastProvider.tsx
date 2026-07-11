@@ -7,6 +7,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { useTranslations } from "next-intl";
 import { CheckCircle2, AlertCircle, Info, X } from "lucide-react";
 
 type ToastType = "success" | "error" | "info";
@@ -33,6 +34,7 @@ const ALERT_CLASS = {
 } as const;
 
 export function ToastProvider({ children }: { children: ReactNode }) {
+  const tCommon = useTranslations("common");
   const [toasts, setToasts] = useState<Toast[]>([]);
 
   const dismiss = useCallback((id: number) => {
@@ -67,7 +69,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               <button
                 type="button"
                 onClick={() => dismiss(t.id)}
-                aria-label="×"
+                aria-label={tCommon("close")}
                 className="btn btn-ghost btn-xs btn-circle"
               >
                 <X className="size-3" aria-hidden />

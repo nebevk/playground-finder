@@ -14,25 +14,35 @@ export async function exportDataAction(): Promise<
   } = await supabase.auth.getUser();
   if (!user) return { error: "auth_required" };
 
-  const [profile, playgrounds, reviews, favorites, photos, reports] = await Promise.all([
-    supabase.from("profiles").select("*").eq("id", user.id).maybeSingle(),
-    supabase.from("playgrounds").select("*").eq("user_id", user.id),
-    supabase.from("reviews").select("*").eq("user_id", user.id),
-    supabase.from("favorites").select("*").eq("user_id", user.id),
-    supabase.from("photos").select("*").eq("user_id", user.id),
-    supabase.from("reports").select("*").eq("user_id", user.id),
-  ]);
+  const [profile, playgrounds, reviews, favorites, photos, reports, reviewVotes] =
+    await Promise.all([
+      supabase.from("profiles").select("*").eq("id", user.id).maybeSingle(),
+      supabase.from("playgrounds").select("*").eq("user_id", user.id),
+      supabase.from("reviews").select("*").eq("user_id", user.id),
+      supabase.from("favorites").select("*").eq("user_id", user.id),
+      supabase.from("photos").select("*").eq("user_id", user.id),
+      supabase.from("reports").select("*").eq("user_id", user.id),
+      supabase.from("review_helpful").select("*").eq("user_id", user.id),
+    ]);
 
   return {
     data: {
       exported_at: new Date().toISOString(),
-      user: { id: user.id, email: user.email, created_at: user.created_at },
+      user: {
+        id: user.id,
+        email: user.email,
+        created_at: user.created_at,
+        last_sign_in_at: user.last_sign_in_at,
+        // Consent audit trail recorded at signup (may be absent for old accounts).
+        metadata: user.user_metadata,
+      },
       profile: profile.data,
       playgrounds: playgrounds.data ?? [],
       reviews: reviews.data ?? [],
       favorites: favorites.data ?? [],
       photos: photos.data ?? [],
       reports: reports.data ?? [],
+      review_helpful_votes: reviewVotes.data ?? [],
     },
   };
 }

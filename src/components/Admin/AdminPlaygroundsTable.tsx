@@ -41,6 +41,7 @@ export function AdminPlaygroundsTable({
   locale: string;
 }) {
   const t = useTranslations("admin.playgrounds");
+  const tSurface = useTranslations("filters.surfaceOption");
   const router = useRouter();
   const { showToast } = useToast();
   const [pending, startTransition] = useTransition();
@@ -125,7 +126,8 @@ export function AdminPlaygroundsTable({
     runBulk(() => bulkSetFlaggedPlaygroundsAction(ids, false, locale));
   }
 
-  const SortHeader = ({ k, label }: { k: SortKey; label: string }) => (
+  // Plain render helper (not a component) so it doesn't reset state on re-render.
+  const renderSortHeader = (k: SortKey, label: string) => (
     <th>
       <button
         type="button"
@@ -219,10 +221,10 @@ export function AdminPlaygroundsTable({
                       className="checkbox checkbox-sm"
                     />
                   </th>
-                  <SortHeader k="name" label={t("name")} />
+                  {renderSortHeader("name", t("name"))}
                   <th>{t("surface")}</th>
-                  <SortHeader k="reviews" label={t("reviews")} />
-                  <SortHeader k="created" label={t("created")} />
+                  {renderSortHeader("reviews", t("reviews"))}
+                  {renderSortHeader("created", t("created"))}
                   <th>{t("flagged")}</th>
                   <th>{t("actions")}</th>
                 </tr>
@@ -244,7 +246,9 @@ export function AdminPlaygroundsTable({
                         {pg.name}
                       </Link>
                     </td>
-                    <td className="text-sm">{pg.surface_type ?? "-"}</td>
+                    <td className="text-sm">
+                      {pg.surface_type ? tSurface(pg.surface_type) : "-"}
+                    </td>
                     <td className="text-sm tabular-nums">{pg.review_count}</td>
                     <td className="text-sm whitespace-nowrap">
                       {dateFmt.format(new Date(pg.created_at))}

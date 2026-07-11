@@ -1,31 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import { useLocalStorageFlag } from "@/lib/useLocalStorageFlag";
 
 const STORAGE_KEY = "pf-cookies-ack-v1";
 
 export function CookieBanner() {
   const t = useTranslations("cookies");
-  const [acknowledged, setAcknowledged] = useState(true);
-
-  useEffect(() => {
-    try {
-      setAcknowledged(localStorage.getItem(STORAGE_KEY) === "1");
-    } catch {
-      setAcknowledged(true);
-    }
-  }, []);
-
-  function accept() {
-    try {
-      localStorage.setItem(STORAGE_KEY, "1");
-    } catch {
-      // ignore
-    }
-    setAcknowledged(true);
-  }
+  const [acknowledged, accept] = useLocalStorageFlag(STORAGE_KEY);
 
   if (acknowledged) return null;
 

@@ -34,11 +34,8 @@ export function QuickAddForm({ locale }: { locale: string }) {
   // Live duplicate check whenever the pin moves (debounced).
   const checkSeq = useRef(0);
   useEffect(() => {
-    if (!location) {
-      setNearby([]);
-      return;
-    }
     const seq = ++checkSeq.current;
+    if (!location) return;
     const handle = setTimeout(async () => {
       const result = await nearbyPlaygroundsAction(location.lat, location.lng);
       if (seq === checkSeq.current) setNearby(result);
@@ -127,7 +124,7 @@ export function QuickAddForm({ locale }: { locale: string }) {
         <LocationPickerClient value={location} onChange={setLocation} />
       </div>
 
-      {nearby.length > 0 && (
+      {location !== null && nearby.length > 0 && (
         <div role="alert" className="alert alert-warning items-start gap-2 text-sm">
           <AlertTriangle className="size-4 shrink-0" aria-hidden />
           <div>

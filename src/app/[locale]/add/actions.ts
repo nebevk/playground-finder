@@ -2,10 +2,14 @@
 
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { verifyTurnstile } from "@/lib/turnstile";
 
 const SURFACE_TYPES = ["tartan", "sand", "grass", "gravel"] as const;
 const FEATURE_KEYS = ["is_fenced", "has_shade", "has_water", "has_toilets", "has_parking"] as const;
 const MAX_PHOTOS = 8;
+// Mirror the storage bucket policy (supabase/config.toml): 3 MiB, images only.
+const MAX_PHOTO_BYTES = 3 * 1024 * 1024;
+const ALLOWED_PHOTO_TYPES = new Set(["image/png", "image/jpeg", "image/webp"]);
 
 export type AddState = { error?: string } | undefined;
 
@@ -31,6 +35,7 @@ export async function createPlaygroundAction(
 
   if (!Number.isFinite(lat) || !Number.isFinite(lng)) return { error: "no_location" };
   if (!name) return { error: "no_name" };
+  if (!(await verifyTurnstile(formData))) return { error: "turnstile_failed" };
 
   // Validate photos BEFORE inserting the playground row, so a rejected upload never
   // strands an orphaned playground.
@@ -39,6 +44,9 @@ export async function createPlaygroundAction(
     .filter((f): f is File => f instanceof File && f.size > 0);
   if (photos.length > MAX_PHOTOS) return { error: "too_many_photos" };
   if (photos.length > 0 && !user.email_confirmed_at) return { error: "verify_email" };
+  if (photos.some((f) => !ALLOWED_PHOTO_TYPES.has(f.type) || f.size > MAX_PHOTO_BYTES)) {
+    return { error: "upload_failed" };
+  }
 
   const features = Object.fromEntries(
     FEATURE_KEYS.map((k) => [k, formData.get(k) === "on"]),

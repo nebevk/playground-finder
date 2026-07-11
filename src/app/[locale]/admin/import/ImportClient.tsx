@@ -58,6 +58,7 @@ function indexHeaders(header: string[]): Record<string, number> {
 
 export function ImportClient({ locale }: { locale: string }) {
   const t = useTranslations("admin.import");
+  const tSurface = useTranslations("filters.surfaceOption");
   const { showToast } = useToast();
   const fileRef = useRef<HTMLInputElement | null>(null);
   const [importing, startImport] = useTransition();
@@ -302,7 +303,7 @@ export function ImportClient({ locale }: { locale: string }) {
                     </td>
                     <td className="text-xs">
                       {(SURFACE_TYPES as readonly string[]).includes(c.surface_type)
-                        ? c.surface_type
+                        ? tSurface(c.surface_type)
                         : "-"}
                     </td>
                     <td className="text-xs">

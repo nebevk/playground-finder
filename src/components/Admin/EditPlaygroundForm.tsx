@@ -29,8 +29,10 @@ export function EditPlaygroundForm({
   trigger: ReactNode;
 }) {
   const t = useTranslations("admin.playgrounds");
+  const tFields = useTranslations("add.step2");
   const tFeat = useTranslations("add.step2.featureOptions");
   const tSurf = useTranslations("add.step2.surfaceOptions");
+  const tCommon = useTranslations("common");
   const id = useId();
   const ref = useRef<HTMLDialogElement | null>(null);
 
@@ -68,7 +70,7 @@ export function EditPlaygroundForm({
             </label>
 
             <label className="form-control">
-              <span className="label-text mb-1">Description</span>
+              <span className="label-text mb-1">{tFields("description")}</span>
               <textarea
                 name="description"
                 rows={3}
@@ -94,7 +96,7 @@ export function EditPlaygroundForm({
             </label>
 
             <fieldset>
-              <legend className="label-text mb-1">Features</legend>
+              <legend className="label-text mb-1">{tFields("features")}</legend>
               <div className="grid grid-cols-2 gap-2">
                 {FEATURE_KEYS.map((key) => (
                   <label key={key} className="flex cursor-pointer items-center gap-2">
@@ -116,7 +118,7 @@ export function EditPlaygroundForm({
                 onClick={() => ref.current?.close()}
                 className="btn btn-ghost btn-sm"
               >
-                Cancel
+                {tCommon("cancel")}
               </button>
               <button type="submit" className="btn btn-primary btn-sm">
                 {t("save")}
@@ -125,7 +127,7 @@ export function EditPlaygroundForm({
           </form>
         </div>
         <form method="dialog" className="modal-backdrop">
-          <button>close</button>
+          <button aria-label={tCommon("close")} />
         </form>
       </dialog>
     </>

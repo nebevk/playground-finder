@@ -12,6 +12,27 @@ import { RatingSummary } from "@/components/RatingSummary";
 import { RecordView } from "@/components/RecordView";
 import { EmptyState } from "@/components/EmptyState";
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; id: string }>;
+}) {
+  const { id } = await params;
+  const playground = await getPlaygroundById(id);
+  if (!playground) return {};
+
+  const [hero] = playground.photos;
+  return {
+    title: playground.name,
+    description: playground.description ?? undefined,
+    openGraph: {
+      title: playground.name,
+      description: playground.description ?? undefined,
+      ...(hero ? { images: [{ url: hero.url }] } : {}),
+    },
+  };
+}
+
 export default async function PlaygroundDetailPage({
   params,
 }: {

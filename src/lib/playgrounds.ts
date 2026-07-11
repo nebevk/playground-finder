@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { createClient } from "./supabase/server";
 import type {
   MapPlayground,
@@ -89,7 +90,8 @@ export async function getMostViewedPlaygrounds(limit = 3): Promise<MapPlayground
   });
 }
 
-export async function getPlaygroundById(id: string): Promise<PlaygroundDetail | null> {
+// cache() dedupes the fetch between generateMetadata and the page render.
+export const getPlaygroundById = cache(async (id: string): Promise<PlaygroundDetail | null> => {
   const supabase = await createClient();
 
   const { data, error } = await supabase
@@ -116,4 +118,4 @@ export async function getPlaygroundById(id: string): Promise<PlaygroundDetail | 
     : [];
 
   return { ...base, equipment, photos };
-}
+});

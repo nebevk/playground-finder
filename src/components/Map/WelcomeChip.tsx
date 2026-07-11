@@ -1,44 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { X } from "lucide-react";
+import { useLocalStorageFlag } from "@/lib/useLocalStorageFlag";
 
 const STORAGE_KEY = "kje-so-igrala-map-welcome-v1";
 
 export function WelcomeChip({ dismissed }: { dismissed: boolean }) {
   const t = useTranslations("map");
-  const [show, setShow] = useState(false);
+  const [seen, markSeen] = useLocalStorageFlag(STORAGE_KEY);
 
+  // Interacting with the map (dismissed) counts as having seen the hint.
   useEffect(() => {
-    try {
-      if (localStorage.getItem(STORAGE_KEY) !== "1") setShow(true);
-    } catch {
-      // ignore
-    }
-  }, []);
+    if (dismissed) markSeen();
+  }, [dismissed, markSeen]);
 
-  useEffect(() => {
-    if (dismissed && show) {
-      try {
-        localStorage.setItem(STORAGE_KEY, "1");
-      } catch {
-        // ignore
-      }
-      setShow(false);
-    }
-  }, [dismissed, show]);
-
-  function close() {
-    try {
-      localStorage.setItem(STORAGE_KEY, "1");
-    } catch {
-      // ignore
-    }
-    setShow(false);
-  }
-
-  if (!show) return null;
+  if (seen) return null;
 
   return (
     <div
@@ -49,7 +27,7 @@ export function WelcomeChip({ dismissed }: { dismissed: boolean }) {
       <span>{t("welcome")}</span>
       <button
         type="button"
-        onClick={close}
+        onClick={markSeen}
         aria-label={t("dismiss")}
         className="btn btn-ghost btn-xs btn-circle -mr-2"
       >

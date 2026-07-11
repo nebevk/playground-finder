@@ -1,11 +1,17 @@
 import type { MetadataRoute } from "next";
+import { getTranslations } from "next-intl/server";
+import { routing } from "@/i18n/routing";
 
-export default function manifest(): MetadataRoute.Manifest {
+// A single manifest is generated for the primary locale. Branding comes from
+// i18n keys so the working name stays swappable (see CLAUDE.md).
+export default async function manifest(): Promise<MetadataRoute.Manifest> {
+  const t = await getTranslations({ locale: routing.defaultLocale, namespace: "app" });
+
   return {
-    name: "Kje so igrala?",
-    short_name: "Igrala",
-    description: "Odkrij otroška igrišča po Sloveniji.",
-    start_url: "/",
+    name: t("name"),
+    short_name: t("shortName"),
+    description: t("slogan"),
+    start_url: `/${routing.defaultLocale}`,
     display: "standalone",
     orientation: "portrait",
     background_color: "#faf7fb",
@@ -18,9 +24,21 @@ export default function manifest(): MetadataRoute.Manifest {
         purpose: "any",
       },
       {
-        src: "/icon.svg",
-        sizes: "any",
-        type: "image/svg+xml",
+        src: "/icon-192.png",
+        sizes: "192x192",
+        type: "image/png",
+        purpose: "any",
+      },
+      {
+        src: "/icon-512.png",
+        sizes: "512x512",
+        type: "image/png",
+        purpose: "any",
+      },
+      {
+        src: "/icon-512.png",
+        sizes: "512x512",
+        type: "image/png",
         purpose: "maskable",
       },
     ],

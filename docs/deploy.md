@@ -122,7 +122,7 @@ Until then, you can disable email confirmation for testing: **Authentication →
 - Widget mode: **Managed** (recommended)
 - Save the **Site Key** (public) and **Secret Key** (private)
 
-The `<Turnstile />` component already reads `NEXT_PUBLIC_TURNSTILE_SITE_KEY`. Server-side verification isn't wired yet — when you're ready, verify the token in `signupAction` and `createPlaygroundAction` by POSTing to `https://challenges.cloudflare.com/turnstile/v0/siteverify`.
+The `<Turnstile />` component reads `NEXT_PUBLIC_TURNSTILE_SITE_KEY`, and server-side verification (`src/lib/turnstile.ts`) runs in `signupAction`, `forgotPasswordAction`, and `createPlaygroundAction` whenever `TURNSTILE_SECRET_KEY` is set. Set **both** keys or neither: with only the site key, the widget renders but tokens are not enforced.
 
 ---
 
@@ -137,9 +137,17 @@ The `<Turnstile />` component already reads `NEXT_PUBLIC_TURNSTILE_SITE_KEY`. Se
 NEXT_PUBLIC_SUPABASE_URL=https://<your-project-ref>.supabase.co
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=<publishable key from 1d>
 SUPABASE_SECRET_KEY=<service_role key from 1d>
+NEXT_PUBLIC_SITE_URL=https://<your-project>.vercel.app
 NEXT_PUBLIC_TURNSTILE_SITE_KEY=<from step 2, or leave blank>
 TURNSTILE_SECRET_KEY=<from step 2, or leave blank>
+NEXT_PUBLIC_PRIVACY_EMAIL=<monitored GDPR contact inbox, optional>
 ```
+
+> **`NEXT_PUBLIC_SITE_URL` matters:** it is the origin used in signup-confirmation
+> and password-reset emails and in SEO metadata. If unset, the app falls back to
+> Vercel's production domain (`VERCEL_PROJECT_PRODUCTION_URL`), and to
+> `http://localhost:3000` only in local dev. Set it explicitly once you have a
+> custom domain.
 
 5. Click **Deploy**. First build takes ~3 min.
 6. Visit the deploy URL — you should see `/sl` with the map and 10 seed playgrounds.
@@ -210,13 +218,13 @@ Every `git push` to your default branch triggers a new Vercel deploy automatical
 These are deliberately left until after initial testing:
 - **SMTP provider** for auth emails (free tier limit is tiny)
 - **Custom domain** on Vercel (free, 2 clicks once you have a domain)
-- **Turnstile server-side verification** (the widget renders but tokens aren't verified yet)
 - **Observability**: Sentry / Axiom / Vercel Analytics
 - **Database backups**: Supabase free tier has 7-day point-in-time recovery — fine for testing, consider upgrading before any real data matters
 - **Content moderation for photos**: currently relies on user reports + admin review. At scale you'd want automated NSFW/face detection.
 - **Rate limiting** on submissions (Turnstile helps, but add server-side limits too)
 - **Playground view counter is ungated** — `increment_playground_views` is granted to `anon` with no dedup, so the public "Most popular" ranking is gameable by looping the RPC. Acceptable for alpha (impact is a reordered vanity list); when hardening abuse-resistance, dedup per session/IP (a `views` table with a unique key + `ON CONFLICT`) or switch the ranking to a less spammable signal.
-- **Error pages** (a friendly `not-found.tsx` and `error.tsx`)
+
+Resolved since alpha: Turnstile server-side verification, localized `not-found.tsx` / `error.tsx`, password reset flow, `/terms` page, sitemap/robots/OG metadata.
 
 ---
 

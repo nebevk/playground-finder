@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import { navItems, isNavItemActive } from "./nav-items";
 import { BrandStack } from "./Brand";
+import { LocaleSwitcher } from "./LocaleSwitcher";
 import { KOFI_URL } from "@/lib/links";
 
 export function SideNav() {
@@ -37,6 +38,9 @@ export function SideNav() {
       </ul>
 
       <div className="mt-auto flex flex-col gap-3 p-3">
+        <div className="flex justify-center">
+          <LocaleSwitcher />
+        </div>
         <a
           href={KOFI_URL}
           target="_blank"
@@ -53,6 +57,10 @@ export function SideNav() {
           <span aria-hidden>·</span>
           <Link href="/privacy" className="link link-hover">
             {t("nav.privacy")}
+          </Link>
+          <span aria-hidden>·</span>
+          <Link href="/terms" className="link link-hover">
+            {t("nav.terms")}
           </Link>
         </div>
         <p className="text-center text-xs text-base-content/50">{t("nav.copyright")}</p>

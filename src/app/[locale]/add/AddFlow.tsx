@@ -253,6 +253,7 @@ export function AddFlow({ locale, emailVerified }: { locale: string; emailVerifi
           {state.error === "no_location" && t("errors.noLocation")}
           {state.error === "no_name" && t("errors.noName")}
           {state.error === "upload_failed" && t("errors.uploadFailed")}
+          {state.error === "turnstile_failed" && t("errors.turnstile")}
           {state.error === "verify_email" && t("step3.verifyEmail")}
           {state.error === "too_many_photos" && t("step3.tooMany", { max: MAX_PHOTOS })}
           {(state.error === "generic" || state.error === "auth_required") && t("errors.generic")}

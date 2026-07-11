@@ -3,11 +3,15 @@
 import { useActionState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { loginAction, type AuthState } from "../actions";
+import { Turnstile } from "@/components/Turnstile";
+import { forgotPasswordAction, type AuthState } from "../actions";
 
-export function LoginForm({ locale }: { locale: string }) {
+export function ForgotPasswordForm({ locale }: { locale: string }) {
   const t = useTranslations("auth");
-  const [state, action, pending] = useActionState<AuthState, FormData>(loginAction, undefined);
+  const [state, action, pending] = useActionState<AuthState, FormData>(
+    forgotPasswordAction,
+    undefined,
+  );
 
   return (
     <form action={action} className="flex flex-col gap-4">
@@ -25,36 +29,31 @@ export function LoginForm({ locale }: { locale: string }) {
         />
       </label>
 
-      <label className="floating-label">
-        <span>{t("password")}</span>
-        <input
-          name="password"
-          type="password"
-          required
-          minLength={6}
-          autoComplete="current-password"
-          className="input input-bordered w-full"
-          placeholder={t("password")}
-        />
-      </label>
-
-      <Link href="/forgot-password" className="link link-hover -mt-2 self-end text-sm">
-        {t("forgotPassword")}
-      </Link>
-
-      {state?.error && (
+      {state?.error === "turnstile_failed" && (
+        <p role="alert" className="text-sm text-error">
+          {t("turnstileFailed")}
+        </p>
+      )}
+      {state?.error && state.error !== "turnstile_failed" && (
         <p role="alert" className="text-sm text-error">
           {t("errorGeneric")}
         </p>
       )}
+      {state?.info === "check_email" && (
+        <p role="status" className="text-sm text-success">
+          {t("resetEmailSent")}
+        </p>
+      )}
+
+      <Turnstile />
 
       <button type="submit" disabled={pending} className="btn btn-primary">
         {pending && <span className="loading loading-spinner loading-sm" aria-hidden />}
-        {t("submitLogin")}
+        {t("submitForgot")}
       </button>
 
-      <Link href="/signup" className="link link-hover text-sm text-center">
-        {t("switchToSignup")}
+      <Link href="/login" className="link link-hover text-sm text-center">
+        {t("backToLogin")}
       </Link>
     </form>
   );

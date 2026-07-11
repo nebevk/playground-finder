@@ -24,6 +24,7 @@ export function ReportButton({
   size?: "xs" | "sm";
 }) {
   const t = useTranslations("detail");
+  const tCommon = useTranslations("common");
   const dialogId = useId();
   const dialogRef = useRef<HTMLDialogElement | null>(null);
   const [reason, setReason] = useState<Reason>("spam");
@@ -111,7 +112,7 @@ export function ReportButton({
           </form>
         </div>
         <form method="dialog" className="modal-backdrop">
-          <button>close</button>
+          <button aria-label={tCommon("close")} />
         </form>
       </dialog>
     </>

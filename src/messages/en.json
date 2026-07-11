@@ -1,6 +1,7 @@
 {
   "app": {
     "name": "Kje so igrala?",
+    "shortName": "Igrala",
     "slogan": "Discover playgrounds across Slovenia"
   },
   "nav": {
@@ -12,6 +13,8 @@
     "support": "Support",
     "about": "About",
     "privacy": "Privacy",
+    "terms": "Terms",
+    "language": "Language",
     "copyright": "© 2026 Nejc Bevk"
   },
   "about": {
@@ -207,8 +210,18 @@
       "title": "Data processors",
       "supabase": "Supabase: database and authentication hosting",
       "vercel": "Vercel: application hosting",
+      "vercelAnalytics": "Vercel Analytics: anonymous, cookieless page-view statistics",
       "cloudflare": "Cloudflare: spam protection (Turnstile)",
-      "simpleAnalytics": "Simple Analytics: privacy-friendly visitor statistics (no cookies, no personal data)"
+      "simpleAnalytics": "Simple Analytics: privacy-friendly visitor statistics (no cookies, no personal data)",
+      "kofi": "Ko-fi: voluntary donations (external site, opens only when you tap the support link)"
+    },
+    "location": {
+      "title": "Your location",
+      "body": "If you use the \"Locate me\" feature, your position is processed only in your browser to move the map. It is never sent to our servers or stored."
+    },
+    "retention": {
+      "title": "Data retention",
+      "body": "Your data is kept as long as your account exists. When you delete your account, your profile, reviews, photos, favorites and reports are permanently removed; playgrounds you submitted remain without your authorship. Technical server logs are kept by our hosting providers for a short period (up to 30 days)."
     },
     "rights": {
       "title": "Your rights",
@@ -363,6 +376,7 @@
       "noLocation": "Pick a location on the map first.",
       "noName": "Enter a name for the playground.",
       "uploadFailed": "Photo upload failed.",
+      "turnstile": "Spam check failed. Please try again.",
       "generic": "Could not save. Please try again."
     },
     "success": "Playground added!"
@@ -387,7 +401,12 @@
     "deleteCancel": "Cancel",
     "deleting": "Deleting…",
     "deleteError": "Could not delete your account. Please try again.",
-    "adminLink": "Admin"
+    "adminLink": "Admin",
+    "language": "Language",
+    "verifyBanner": "Your email is not verified yet. Photo uploads are disabled until you confirm the link we sent you.",
+    "resendVerification": "Resend verification email",
+    "resendSuccess": "Verification email sent. Check your inbox.",
+    "resendError": "Couldn't send the email right now. Please try again later."
   },
   "auth": {
     "loginTitle": "Log in",
@@ -396,11 +415,65 @@
     "password": "Password",
     "submitLogin": "Log in",
     "submitSignup": "Create account",
-    "consent": "I agree to the <privacyLink>Privacy Policy</privacyLink> and Terms of Use.",
+    "consent": "I agree to the <privacyLink>Privacy Policy</privacyLink> and <termsLink>Terms of Use</termsLink>.",
     "consentRequired": "You must accept the privacy policy to continue.",
+    "ageConsent": "I am at least 15 years old.",
+    "ageRequired": "You must be at least 15 years old to create an account.",
     "switchToSignup": "Don't have an account? Sign up.",
     "switchToLogin": "Already have an account? Log in.",
     "checkEmail": "Check your email for a confirmation link.",
-    "errorGeneric": "Sign-in failed. Check your details and try again."
+    "errorGeneric": "Sign-in failed. Check your details and try again.",
+    "forgotPassword": "Forgot password?",
+    "forgotTitle": "Reset password",
+    "forgotIntro": "Enter your email and we'll send you a link to set a new password.",
+    "submitForgot": "Send reset link",
+    "resetEmailSent": "If an account exists for that email, a reset link is on its way.",
+    "backToLogin": "Back to log in",
+    "resetTitle": "Set a new password",
+    "newPassword": "New password",
+    "confirmPassword": "Repeat new password",
+    "passwordMismatch": "Passwords don't match.",
+    "submitReset": "Save new password",
+    "resetLinkInvalid": "This reset link is invalid or has expired. Request a new one.",
+    "turnstileFailed": "Spam check failed. Please try again."
+  },
+  "terms": {
+    "title": "Terms of Use",
+    "lastUpdated": "Last updated: July 2026",
+    "intro": "By using this app you agree to these terms. The app is a free, community-driven directory of playgrounds in Slovenia, provided as-is by an individual maintainer.",
+    "content": {
+      "title": "Your content",
+      "body": "You are responsible for the content you submit (playgrounds, reviews, photos). Only upload photos you took yourself, and never photos with identifiable faces of children. By submitting content you grant us a non-exclusive right to display it in the app."
+    },
+    "conduct": {
+      "title": "Acceptable use",
+      "body": "Don't post spam, misleading information, or content that violates anyone's privacy or rights. Content can be reported by other users; content with multiple reports is reviewed and may be removed."
+    },
+    "moderation": {
+      "title": "Moderation",
+      "body": "We may edit, flag, or remove any content and suspend accounts that repeatedly break these rules."
+    },
+    "liability": {
+      "title": "No warranty",
+      "body": "Playground information is community-contributed and may be inaccurate or outdated. Always assess the safety of a playground yourself. We accept no liability for damages arising from use of the app."
+    },
+    "changes": {
+      "title": "Changes",
+      "body": "We may update these terms; significant changes will be announced in the app. Continued use after a change means you accept the updated terms."
+    },
+    "contact": {
+      "title": "Contact",
+      "body": "Questions about these terms? Contact us at {email}."
+    }
+  },
+  "common": {
+    "close": "Close",
+    "cancel": "Cancel",
+    "notFoundTitle": "Page not found",
+    "notFoundBody": "The page you're looking for doesn't exist or has been moved.",
+    "notFoundCta": "Back to home",
+    "errorTitle": "Something went wrong",
+    "errorBody": "An unexpected error occurred. Please try again.",
+    "errorRetry": "Try again"
   }
 }
