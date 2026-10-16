@@ -16,7 +16,9 @@ export async function loginAction(_prev: AuthState, formData: FormData): Promise
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword({ email, password });
 
-  if (error) return { error: error.message };
+  // Unconfirmed addresses can't sign in (email confirmations are on); say so, rather than
+  // a generic "check your details" that sends people retyping a correct password.
+  if (error) return { error: error.code === "email_not_confirmed" ? "email_not_confirmed" : "generic" };
   redirect(`/${locale}/profile`);
 }
 

@@ -1,7 +1,5 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
-
-// Same monitored inbox as the privacy page.
-const CONTACT_EMAIL = process.env.NEXT_PUBLIC_PRIVACY_EMAIL ?? "ne.bevk@gmail.com";
+import { getPrivacyEmail } from "@/lib/site";
 
 const SECTIONS = ["content", "conduct", "moderation", "liability", "changes"] as const;
 
@@ -42,7 +40,7 @@ export default async function TermsPage({
 
       <section>
         <h2 className="mb-2 text-xl font-semibold">{t("contact.title")}</h2>
-        <p className="text-base-content/80">{t("contact.body", { email: CONTACT_EMAIL })}</p>
+        <p className="text-base-content/80">{t("contact.body", { email: getPrivacyEmail() })}</p>
       </section>
     </article>
   );

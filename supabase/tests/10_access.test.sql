@@ -239,6 +239,30 @@ select is(
 );
 reset role;
 
+-- Owners can read their own flagged rows (right of access: "Export my data"); others can't.
+select pg_temp.act_as(pg_temp.id('owner'));
+select is(
+  (select count(*)::int from public.playgrounds where id = '00000000-0000-0000-0000-0000000000a2')
+  + (select count(*)::int from public.photos where storage_path like '%/a1/flagged.jpg'),
+  2,
+  '[GDPR-06] owners can read their own flagged playgrounds and photos'
+);
+select pg_temp.act_as(pg_temp.id('r1'));
+select is(
+  (select count(*)::int from public.reviews where id = '00000000-0000-0000-0000-0000000000b2'),
+  1,
+  '[GDPR-06] owners can read their own flagged reviews'
+);
+select pg_temp.act_as(pg_temp.id('r2'));
+select is(
+  (select count(*)::int from public.playgrounds where id = '00000000-0000-0000-0000-0000000000a2')
+  + (select count(*)::int from public.reviews where id = '00000000-0000-0000-0000-0000000000b2')
+  + (select count(*)::int from public.photos where storage_path like '%/a1/flagged.jpg'),
+  0,
+  '[FR-COM-06] other users still cannot read flagged playgrounds, reviews or photos'
+);
+reset role;
+
 -- favourites are private
 select pg_temp.act_as(pg_temp.id('owner'));
 insert into public.favorites (user_id, playground_id) values (pg_temp.id('owner'), '00000000-0000-0000-0000-0000000000a1');

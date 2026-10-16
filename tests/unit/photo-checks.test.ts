@@ -1,5 +1,15 @@
 import { describe, expect, it } from "vitest";
-import { hasEmbeddedMetadata, sniffImageType } from "@/lib/photo-checks";
+import {
+  hasEmbeddedMetadata,
+  MAX_PHOTOS,
+  MAX_TOTAL_PHOTO_BYTES,
+  PHOTO_TARGET_BYTES,
+  sniffImageType,
+} from "@/lib/photo-checks";
+
+it("[FR-ADD-03] the per-photo target lets the maximum number of photos fit one submission", () => {
+  expect(MAX_PHOTOS * PHOTO_TARGET_BYTES).toBeLessThanOrEqual(MAX_TOTAL_PHOTO_BYTES);
+});
 
 const bytes = (...parts: (number[] | string)[]) =>
   new Uint8Array(parts.flatMap((p) => (typeof p === "string" ? [...p].map((c) => c.charCodeAt(0)) : p)));

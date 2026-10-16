@@ -112,6 +112,34 @@ test("[FR-ADD-03] several real-size photos can be added in one submission", asyn
   await expect(page.getByRole("dialog").getByText(name)).toBeVisible();
 });
 
+test("[FR-ADD-03] all 8 photos fit one submission, even large ones", async ({ page }) => {
+  // 8 photos × several encode attempts each: more than the default 30 s under load.
+  test.setTimeout(120_000);
+  await login(page);
+  await page.goto("/sl/add");
+  await page.locator(".leaflet-container").first().click({ position: { x: 180, y: 160 } });
+  await page.getByRole("button", { name: sl.add.next }).click();
+  const name = `E2E 8 fotografij ${Date.now()}`;
+  await page.getByPlaceholder(sl.add.step2.namePlaceholder).fill(name);
+  await page.getByRole("button", { name: sl.add.next }).click();
+
+  // Random noise is the worst case for compression (real photos shrink far more easily).
+  const files = Array.from({ length: 8 }, (_, i) => ({
+    name: `big${i}.png`,
+    mimeType: "image/png",
+    buffer: noisePng(1200, 900),
+  }));
+  await page.locator('input[type="file"][multiple]').setInputFiles(files);
+  await expect(page.getByText(sl.add.step3.selected.replace("{count}", "8").replace("{max}", "8"))).toBeVisible({
+    timeout: 60_000,
+  });
+  await expect(page.getByText(sl.add.step3.tooLarge.split("(")[0].trim())).toHaveCount(0);
+
+  await page.getByRole("button", { name: sl.add.submit }).click();
+  await expect(page).toHaveURL(/\/sl\/map/, { timeout: 30_000 });
+  await expect(page.getByRole("dialog").getByText(name)).toBeVisible();
+});
+
 test("[FR-COM-04] a signed-in user can report a playground, with a privacy-violation reason", async ({ page }) => {
   await login(page);
   await page.goto(await playgroundPath());

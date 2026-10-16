@@ -66,6 +66,11 @@ describe("Turnstile server-side verification", () => {
     expect(await verifyTurnstile(form("tok"))).toBe(false);
   });
 
-  // Known gap (backlog BL-05): today a missing secret in production lets everything through.
-  it.todo("[NFR-SEC-02] rejects submissions in production when the site key is set but the secret is missing");
+  it("[NFR-SEC-02] fails closed in production when the widget is enabled but the secret is missing", async () => {
+    vi.stubEnv("NODE_ENV", "production");
+    vi.stubEnv("NEXT_PUBLIC_TURNSTILE_SITE_KEY", "0x4AAA");
+    vi.stubEnv("TURNSTILE_SECRET_KEY", "");
+    expect(await verifyTurnstile(form("tok"))).toBe(false);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
 });

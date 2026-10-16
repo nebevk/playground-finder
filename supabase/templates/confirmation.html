@@ -1,0 +1,17 @@
+<!--
+  Signup confirmation email (Supabase Auth → Email Templates → Confirm signup).
+  Local: wired in supabase/config.toml. Production: paste this body into the dashboard (ops 0006).
+
+  Token-hash link instead of Supabase's default PKCE link, so it works in any browser
+  (mail apps, another device). /auth/confirm verifies it and signs the user in.
+  No locale in the path: the app redirects /auth/confirm to the visitor's language.
+-->
+<h2>Potrdi svoj e-poštni naslov</h2>
+<p>Hvala za registracijo! Za potrditev e-poštnega naslova tapni spodnjo povezavo.</p>
+<p><a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email">Potrdi e-poštni naslov</a></p>
+<p>Če se nisi registriral/-a, to sporočilo prezri.</p>
+<hr />
+<h2>Confirm your email address</h2>
+<p>Thanks for signing up! Tap the link below to confirm your email address.</p>
+<p><a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email">Confirm email address</a></p>
+<p>If you didn't sign up, you can ignore this email.</p>

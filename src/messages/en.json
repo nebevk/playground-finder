@@ -409,7 +409,8 @@
     "verifyBanner": "Your email is not verified yet. Photo uploads are disabled until you confirm the link we sent you.",
     "resendVerification": "Resend verification email",
     "resendSuccess": "Verification email sent. Check your inbox.",
-    "resendError": "Couldn't send the email right now. Please try again later."
+    "resendError": "Couldn't send the email right now. Please try again later.",
+    "emailConfirmed": "Your email address is confirmed. Welcome!"
   },
   "auth": {
     "loginTitle": "Log in",
@@ -440,7 +441,8 @@
     "resetLinkInvalid": "This reset link is invalid or has expired. Request a new one.",
     "turnstileFailed": "Spam check failed. Please try again.",
     "samePassword": "Your new password must be different from your current one.",
-    "linkInvalid": "The link from your email is invalid or has expired. Log in, or request a new link."
+    "linkInvalid": "The link from your email is invalid or has expired. Log in, or request a new link.",
+    "emailNotConfirmed": "Please confirm your email address first: we sent you a link when you signed up."
   },
   "terms": {
     "title": "Terms of Use",

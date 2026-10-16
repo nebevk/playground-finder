@@ -11,10 +11,13 @@ import { LocaleSwitcher } from "@/components/LocaleSwitcher";
 
 export default async function ProfilePage({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string }>;
+  searchParams: Promise<{ confirmed?: string }>;
 }) {
   const { locale } = await params;
+  const { confirmed } = await searchParams;
   setRequestLocale(locale);
   const t = await getTranslations("profile");
 
@@ -62,6 +65,12 @@ export default async function ProfilePage({
           </p>
         )}
       </header>
+
+      {confirmed === "1" && user.email_confirmed_at && (
+        <div role="status" className="alert alert-success text-sm">
+          {t("emailConfirmed")}
+        </div>
+      )}
 
       {!user.email_confirmed_at && (
         <div role="alert" className="alert alert-warning items-start text-sm">

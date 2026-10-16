@@ -33,7 +33,7 @@ Conventions and the ID scheme are in [README.md](README.md). Status last reviewe
 |---|---|---|---|---|
 | FR-ADD-01 | Only signed-in users can add a playground. Enforced on the page, in the Server Action and by RLS. | Must | Done | unit, db |
 | FR-ADD-02 | Adding takes 3 steps: (1) pin the location on a map, (2) name (required), description, surface, features, (3) photos. | Must | Done | e2e |
-| FR-ADD-03 | Photo rules: at most 8 per submission and **3.5 MB in total**, PNG/JPEG/WebP judged by file contents (not the claimed type), at most 3 MiB each (also enforced by the storage bucket), re-encoded on the device before upload. | Must | Done — the multi-photo 1 MB limit bug is fixed in ops 0003 ([ADR-0002](../adr/0002-photo-pipeline.md)) | unit, db, e2e |
+| FR-ADD-03 | Photo rules: at most 8 per submission and **3.5 MB in total**, PNG/JPEG/WebP judged by file contents (not the claimed type), at most 3 MiB each (also enforced by the storage bucket), re-encoded on the device before upload, shrunk to ≤ 420 KB each so all 8 always fit. | Must | Done — multi-photo bug fixed in ops 0003 ([ADR-0002](../adr/0002-photo-pipeline.md)); adaptive sizing in ops 0006 | unit, db, e2e |
 | FR-ADD-04 | Uploading photos requires a verified email, **enforced by the database and storage policies**, not only by the app. | Must | Done — Server Action, `photos` insert policy and Storage insert policy (ops 0002) | unit, db, e2e |
 | FR-ADD-05 | After submitting, the user lands on the map focused on the new playground, with a success message. | Should | Done | e2e |
 | FR-ADD-06 | Users can add photos to an existing playground (the unverified-email message already promises "add photos later"). | Should | Not started | e2e |
@@ -56,7 +56,7 @@ Conventions and the ID scheme are in [README.md](README.md). Status last reviewe
 | ID | Requirement | Pri | Status | Verify |
 |---|---|---|---|---|
 | FR-ACC-01 | Sign up with email + password. A profile with a unique username is created automatically. | Must | Done | db |
-| FR-ACC-02 | Email verification link, plus a "resend" button on the profile. An unusable link shows a message instead of a silent login page. | Must | Done — the link signs the user in only in the browser that signed up (BL-49) | e2e, manual |
+| FR-ACC-02 | Email verification link that works in any browser or device and signs the user in, plus a "resend" button on the profile. An unusable link, or logging in before confirming, gets a clear message. | Must | Done — token-hash confirmation template (ops 0006) | e2e, manual |
 | FR-ACC-03 | Log in and log out. | Must | Done | e2e |
 | FR-ACC-04 | Password reset by email that does not reveal whether an address is registered. The link works in any browser or device and isn't used up by email link scanners; an invalid or expired link, or reusing the current password, gets a clear message. | Must | Done — token-hash email template (ops 0005) | unit, e2e |
 

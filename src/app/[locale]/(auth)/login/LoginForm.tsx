@@ -44,7 +44,7 @@ export function LoginForm({ locale }: { locale: string }) {
 
       {state?.error && (
         <p role="alert" className="text-sm text-error">
-          {t("errorGeneric")}
+          {state.error === "email_not_confirmed" ? t("emailNotConfirmed") : t("errorGeneric")}
         </p>
       )}
 

@@ -115,14 +115,14 @@ Until then, you can disable email confirmation for testing: **Authentication →
 
 ---
 
-## Step 2 — (Optional) Cloudflare Turnstile (~5 min)
+## Step 2 — Cloudflare Turnstile (~5 min, required for production)
 
 - Go to [dash.cloudflare.com/?to=/:account/turnstile](https://dash.cloudflare.com/?to=/:account/turnstile) → **Add Site**
 - Domain: your Vercel URL (and `localhost` if you want it in dev)
 - Widget mode: **Managed** (recommended)
 - Save the **Site Key** (public) and **Secret Key** (private)
 
-The `<Turnstile />` component reads `NEXT_PUBLIC_TURNSTILE_SITE_KEY`, and server-side verification (`src/lib/turnstile.ts`) runs in `signupAction`, `forgotPasswordAction`, and `createPlaygroundAction` whenever `TURNSTILE_SECRET_KEY` is set. Set **both** keys or neither: with only the site key, the widget renders but tokens are not enforced.
+The `<Turnstile />` component reads `NEXT_PUBLIC_TURNSTILE_SITE_KEY`, and server-side verification (`src/lib/turnstile.ts`) runs in `signupAction`, `forgotPasswordAction`, and `createPlaygroundAction` whenever `TURNSTILE_SECRET_KEY` is set. Production needs **both** keys: Vercel production builds fail without them (see below), and a site key without a secret makes form submissions fail closed.
 
 ---
 
@@ -138,9 +138,9 @@ NEXT_PUBLIC_SUPABASE_URL=https://<your-project-ref>.supabase.co
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=<publishable key from 1d>
 SUPABASE_SECRET_KEY=<service_role key from 1d>
 NEXT_PUBLIC_SITE_URL=https://<your-project>.vercel.app
-NEXT_PUBLIC_TURNSTILE_SITE_KEY=<from step 2, or leave blank>
-TURNSTILE_SECRET_KEY=<from step 2, or leave blank>
-NEXT_PUBLIC_PRIVACY_EMAIL=<monitored GDPR contact inbox, optional>
+NEXT_PUBLIC_TURNSTILE_SITE_KEY=<from step 2>
+TURNSTILE_SECRET_KEY=<from step 2>
+NEXT_PUBLIC_PRIVACY_EMAIL=<monitored GDPR contact inbox>
 ```
 
 > **`NEXT_PUBLIC_SITE_URL` matters:** it is the origin used in signup-confirmation
@@ -148,6 +148,12 @@ NEXT_PUBLIC_PRIVACY_EMAIL=<monitored GDPR contact inbox, optional>
 > Vercel's production domain (`VERCEL_PROJECT_PRODUCTION_URL`), and to
 > `http://localhost:3000` only in local dev. Set it explicitly once you have a
 > custom domain.
+
+> **Production builds check their configuration.** On Vercel production (`VERCEL_ENV=production`)
+> the build fails if any of `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`,
+> `SUPABASE_SECRET_KEY`, `NEXT_PUBLIC_PRIVACY_EMAIL`, `NEXT_PUBLIC_TURNSTILE_SITE_KEY` or
+> `TURNSTILE_SECRET_KEY` is missing (`src/lib/env-checks.ts`). The previous deployment stays live;
+> the build log lists what to add. Previews and local builds aren't checked.
 
 5. Click **Deploy**. First build takes ~3 min.
 6. Visit the deploy URL — you should see `/sl` with the map and 10 seed playgrounds.

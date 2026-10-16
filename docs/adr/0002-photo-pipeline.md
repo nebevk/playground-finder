@@ -1,6 +1,6 @@
 # ADR-0002: Photo pipeline — server-validated uploads, private bucket, signed URLs
 
-**Status:** Proposed
+**Status:** Accepted (live since ops 0003/0004, 2026-10-16)
 **Date:** 2026-10-16
 **Deciders:** Nejc Bevk (owner)
 

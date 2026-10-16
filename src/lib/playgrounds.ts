@@ -55,7 +55,9 @@ function toMapPlayground(row: GeoRow): MapPlayground | null {
 
 export async function getMapPlaygrounds(): Promise<MapPlayground[]> {
   const supabase = await createClient();
-  const { data, error } = await supabase.from("playgrounds_geo").select(MAP_SELECT);
+  // Public listings filter flagged rows explicitly: RLS also lets owners (and admins) read
+  // their flagged rows, which must not leak into what everyone sees.
+  const { data, error } = await supabase.from("playgrounds_geo").select(MAP_SELECT).eq("flagged", false);
   if (error) throw error;
   return (data ?? []).flatMap((r) => {
     const m = toMapPlayground(r as GeoRow);
@@ -63,12 +65,13 @@ export async function getMapPlaygrounds(): Promise<MapPlayground[]> {
   });
 }
 
-// Most recently added playgrounds (non-flagged via RLS) for the home welcome screen.
+// Most recently added playgrounds (not flagged) for the home welcome screen.
 export async function getLatestPlaygrounds(limit = 3): Promise<MapPlayground[]> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("playgrounds_geo")
     .select(MAP_SELECT)
+    .eq("flagged", false)
     .order("created_at", { ascending: false })
     .limit(limit);
   if (error) return [];
@@ -84,6 +87,7 @@ export async function getMostViewedPlaygrounds(limit = 3): Promise<MapPlayground
   const { data, error } = await supabase
     .from("playgrounds_geo")
     .select(MAP_SELECT)
+    .eq("flagged", false)
     .gt("view_count", 0)
     .order("view_count", { ascending: false })
     .limit(limit);
@@ -102,6 +106,7 @@ export const getPlaygroundById = cache(async (id: string): Promise<PlaygroundDet
     .from("playgrounds_geo")
     .select(`${MAP_SELECT}, equipment`)
     .eq("id", id)
+    .eq("flagged", false)
     .maybeSingle();
 
   const base = data ? toMapPlayground(data as GeoRow) : null;
@@ -111,6 +116,7 @@ export const getPlaygroundById = cache(async (id: string): Promise<PlaygroundDet
     .from("photos")
     .select("id, storage_path")
     .eq("playground_id", id)
+    .eq("flagged", false)
     .order("created_at")
     .order("storage_path");
 

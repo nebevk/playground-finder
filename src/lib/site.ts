@@ -13,3 +13,9 @@ export function getSiteUrl(): string {
 
   return "http://localhost:3000";
 }
+
+// Public GDPR contact for data requests (GDPR-10). Required on Vercel production builds
+// (src/lib/env-checks.ts); elsewhere a clearly fake placeholder so local and preview builds work.
+export function getPrivacyEmail(): string {
+  return process.env.NEXT_PUBLIC_PRIVACY_EMAIL?.trim() || "privacy@example.invalid";
+}

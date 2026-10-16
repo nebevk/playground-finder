@@ -3,14 +3,15 @@ const SITEVERIFY_URL = "https://challenges.cloudflare.com/turnstile/v0/siteverif
 // Server-side verification of a Cloudflare Turnstile token submitted with a form.
 // The widget injects a hidden `cf-turnstile-response` input into its parent form.
 //
-// When TURNSTILE_SECRET_KEY is not configured the check passes, so environments
-// without Turnstile (local dev, previews) keep working. When it IS configured,
-// a missing or invalid token fails the check.
+// Without any Turnstile keys the check passes, so local dev, CI and previews keep working
+// (Vercel production builds refuse to deploy without them, src/lib/env-checks.ts).
+// With the widget enabled but no secret, it fails closed: the form can't be verified.
 export async function verifyTurnstile(formData: FormData): Promise<boolean> {
   const secret = process.env.TURNSTILE_SECRET_KEY;
   if (!secret) {
     if (process.env.NODE_ENV === "production" && process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY) {
-      console.warn("verifyTurnstile: TURNSTILE_SECRET_KEY missing; skipping verification");
+      console.error("verifyTurnstile: widget enabled but TURNSTILE_SECRET_KEY is missing — rejecting");
+      return false;
     }
     return true;
   }

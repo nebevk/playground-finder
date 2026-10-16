@@ -7,6 +7,8 @@ export const MAX_PHOTO_BYTES = 3 * 1024 * 1024;
 // All photos travel in one Server Action request: stay under its 4 MB body limit
 // (next.config.ts), which itself stays under Vercel's 4.5 MB function limit.
 export const MAX_TOTAL_PHOTO_BYTES = 3.5 * 1024 * 1024;
+// The browser shrinks each photo to at most this, so MAX_PHOTOS always fit the total (BL-50).
+export const PHOTO_TARGET_BYTES = 420 * 1024;
 
 export type PhotoType = "image/png" | "image/jpeg" | "image/webp";
 

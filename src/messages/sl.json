@@ -409,7 +409,8 @@
     "verifyBanner": "Tvoj e-poštni naslov še ni potrjen. Nalaganje fotografij bo mogoče, ko potrdiš povezavo, ki smo ti jo poslali.",
     "resendVerification": "Ponovno pošlji potrditveno e-pošto",
     "resendSuccess": "Potrditvena e-pošta je poslana. Preveri nabiralnik.",
-    "resendError": "E-pošte trenutno ni mogoče poslati. Poskusi znova pozneje."
+    "resendError": "E-pošte trenutno ni mogoče poslati. Poskusi znova pozneje.",
+    "emailConfirmed": "E-poštni naslov je potrjen. Dobrodošel/-a!"
   },
   "auth": {
     "loginTitle": "Prijava",
@@ -440,7 +441,8 @@
     "resetLinkInvalid": "Povezava za ponastavitev ni veljavna ali je potekla. Zahtevaj novo.",
     "turnstileFailed": "Preverjanje proti neželeni vsebini ni uspelo. Poskusi znova.",
     "samePassword": "Novo geslo mora biti drugačno od trenutnega.",
-    "linkInvalid": "Povezava iz e-pošte ni veljavna ali je potekla. Prijavi se ali zahtevaj novo povezavo."
+    "linkInvalid": "Povezava iz e-pošte ni veljavna ali je potekla. Prijavi se ali zahtevaj novo povezavo.",
+    "emailNotConfirmed": "Najprej potrdi e-poštni naslov: povezavo smo ti poslali ob registraciji."
   },
   "terms": {
     "title": "Pogoji uporabe",

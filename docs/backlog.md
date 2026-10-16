@@ -10,9 +10,6 @@ Work that's done in the repo but still has to reach production is tracked by its
 
 | # | Item | Moves | Size |
 |---|---|---|---|
-| BL-04 | Let owners see their own flagged rows (`flagged = false or user_id = auth.uid()` select policies), so "Export my data" includes them. | GDPR-06 | S |
-| BL-05 | Turnstile fails closed: when `NEXT_PUBLIC_TURNSTILE_SITE_KEY` is set but `TURNSTILE_SECRET_KEY` is missing in production, reject submissions. | NFR-SEC-02 | S |
-| BL-06 | Set `NEXT_PUBLIC_PRIVACY_EMAIL` in Vercel to a dedicated inbox and remove the personal Gmail fallback from `/privacy` and `/terms`. | GDPR-10 | S |
 | BL-07 | Implement [ADR-0001](adr/0001-map-data-loading.md): cached, slimmed map snapshot with tag invalidation and a payload budget test. | NFR-PERF-01, NFR-PERF-02 | M |
 | BL-09 | Move to Node 22 or 24 LTS in local dev, CI and Vercel; pin it with `engines.node` and `.nvmrc`. Afterwards bump Vitest 4 → 5. | NFR-OPS-02 | S |
 
@@ -22,7 +19,6 @@ Work that's done in the repo but still has to reach production is tracked by its
 |---|---|---|---|
 | BL-10 | Notify admins when content is auto-flagged, and consider a minimum account age before reports count. Verified-only counting shipped in ops 0002. | NFR-SEC-06 | S |
 | BL-47 | Move the remaining app-only write rules into the database: at most 8 photos per playground per user (trigger), and a non-empty, length-capped name and description (check constraints). | NFR-SEC-07 | S |
-| BL-49 | Signup confirmation still uses Supabase's default PKCE link: opened in another browser it confirms the email but doesn't sign the user in (they now see a message and log in). Move it to a token-hash template like password reset (ops 0005). | FR-ACC-02 | S |
 | BL-12 | Add a Report button to the hero (first) photo. | FR-COM-04 | S |
 | BL-48 | Moderation queue: show flagged photos as previews (signed with the service role, admins only) instead of a file path. Since ops 0004 the bucket is private, so until then admins review flagged photos in Supabase's storage browser. | FR-ADM-02 | S |
 | BL-13 | Show a message when "Locate me" fails or permission is denied. | FR-MAP-02 | S |

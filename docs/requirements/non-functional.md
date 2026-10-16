@@ -23,7 +23,7 @@ Conventions and the ID scheme are in [README.md](README.md). Status last reviewe
 | ID | Requirement | Pri | Status | Verify |
 |---|---|---|---|---|
 | NFR-SEC-01 | Row Level Security is enabled on every table in the `public` schema. | Must | Done | db |
-| NFR-SEC-02 | Cloudflare Turnstile is verified server-side on public submission forms (signup, password reset, add playground). In production, a missing secret key **blocks** submissions instead of letting them through. | Must | Partial — a missing secret lets everything through, with only a warning | unit |
+| NFR-SEC-02 | Cloudflare Turnstile is verified server-side on public submission forms (signup, password reset, add playground). In production, a missing secret key **blocks** submissions instead of letting them through. | Must | Done — fails closed; Vercel production builds require both keys (ops 0006) | unit |
 | NFR-SEC-03 | Responses send security headers: `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`, `Strict-Transport-Security` and a `Content-Security-Policy`. | Should | Partial — no CSP | e2e |
 | NFR-SEC-04 | Server-side rate limits on submissions (signup, add playground, review, report). | Should | Not started | manual |
 | NFR-SEC-05 | Users cannot write moderation or privilege columns (`is_admin`, `flagged`, `helpful_count`). Admin actions run server-side behind `requireAdmin()`. | Must | Done | db |

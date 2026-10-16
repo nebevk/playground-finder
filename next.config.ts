@@ -2,8 +2,17 @@ import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 import { fileURLToPath } from "node:url";
 import { dirname } from "node:path";
+import { productionEnvProblems } from "./src/lib/env-checks";
 
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
+
+// Fail Vercel production deploys on missing configuration (src/lib/env-checks.ts).
+if (process.env.VERCEL_ENV === "production") {
+  const problems = productionEnvProblems(process.env);
+  if (problems.length > 0) {
+    throw new Error(`Production environment is misconfigured:\n- ${problems.join("\n- ")}`);
+  }
+}
 
 const projectRoot = dirname(fileURLToPath(import.meta.url));
 
