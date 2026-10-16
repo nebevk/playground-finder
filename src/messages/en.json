@@ -438,7 +438,9 @@
     "passwordMismatch": "Passwords don't match.",
     "submitReset": "Save new password",
     "resetLinkInvalid": "This reset link is invalid or has expired. Request a new one.",
-    "turnstileFailed": "Spam check failed. Please try again."
+    "turnstileFailed": "Spam check failed. Please try again.",
+    "samePassword": "Your new password must be different from your current one.",
+    "linkInvalid": "The link from your email is invalid or has expired. Log in, or request a new link."
   },
   "terms": {
     "title": "Terms of Use",

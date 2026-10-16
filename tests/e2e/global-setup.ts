@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import { E2E_LOGOUT_USER, E2E_USER } from "./fixtures";
+import { E2E_LOGOUT_USER, E2E_RESET_USER, E2E_USER } from "./fixtures";
 
 // Creates the verified test users once per run. Refuses to touch anything but a local
 // Supabase, because these tests create accounts and playgrounds.
@@ -17,7 +17,7 @@ export default async function globalSetup() {
   await waitForStack(url);
 
   const admin = createClient(url, secret, { auth: { persistSession: false, autoRefreshToken: false } });
-  for (const user of [E2E_USER, E2E_LOGOUT_USER]) {
+  for (const user of [E2E_USER, E2E_LOGOUT_USER, E2E_RESET_USER]) {
     const { error } = await admin.auth.admin.createUser({
       email: user.email,
       password: user.password,

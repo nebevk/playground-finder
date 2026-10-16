@@ -56,9 +56,9 @@ Conventions and the ID scheme are in [README.md](README.md). Status last reviewe
 | ID | Requirement | Pri | Status | Verify |
 |---|---|---|---|---|
 | FR-ACC-01 | Sign up with email + password. A profile with a unique username is created automatically. | Must | Done | db |
-| FR-ACC-02 | Email verification link, plus a "resend" button on the profile. | Must | Done | manual |
+| FR-ACC-02 | Email verification link, plus a "resend" button on the profile. An unusable link shows a message instead of a silent login page. | Must | Done — the link signs the user in only in the browser that signed up (BL-49) | e2e, manual |
 | FR-ACC-03 | Log in and log out. | Must | Done | e2e |
-| FR-ACC-04 | Password reset by email that does not reveal whether an address is registered. | Must | Done | manual |
+| FR-ACC-04 | Password reset by email that does not reveal whether an address is registered. The link works in any browser or device and isn't used up by email link scanners; an invalid or expired link, or reusing the current password, gets a clear message. | Must | Done — token-hash email template (ops 0005) | unit, e2e |
 
 ## Admin (`FR-ADM`)
 

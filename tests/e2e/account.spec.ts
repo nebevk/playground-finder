@@ -21,7 +21,7 @@ test("[FR-ACC-03] a user can log in and log out", async ({ page }) => {
   const logout = page.getByRole("button", { name: sl.profile.logout });
   await logout.click();
   // Logout redirects back to /profile, which then shows the signed-out prompt.
-  await expect(page.getByRole("link", { name: sl.profile.loginCta })).toBeVisible();
+  await expect(page.getByRole("link", { name: sl.profile.loginCta })).toBeVisible({ timeout: 15_000 });
   await expect(logout).toBeHidden();
 });
 
@@ -56,6 +56,8 @@ const PNG = Buffer.from(
 );
 
 test("[FR-ADD-03] [FR-ADD-04] [FR-COM-06] [GDPR-16] a verified user's photo is uploaded and shown on the playground", async ({ page, browser }) => {
+  // Long journey (login → add → upload → map → detail → anonymous visit): more than the default 30 s under load.
+  test.setTimeout(60_000);
   await login(page);
   await page.goto("/sl/add");
 

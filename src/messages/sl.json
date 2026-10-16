@@ -438,7 +438,9 @@
     "passwordMismatch": "Gesli se ne ujemata.",
     "submitReset": "Shrani novo geslo",
     "resetLinkInvalid": "Povezava za ponastavitev ni veljavna ali je potekla. Zahtevaj novo.",
-    "turnstileFailed": "Preverjanje proti neželeni vsebini ni uspelo. Poskusi znova."
+    "turnstileFailed": "Preverjanje proti neželeni vsebini ni uspelo. Poskusi znova.",
+    "samePassword": "Novo geslo mora biti drugačno od trenutnega.",
+    "linkInvalid": "Povezava iz e-pošte ni veljavna ali je potekla. Prijavi se ali zahtevaj novo povezavo."
   },
   "terms": {
     "title": "Pogoji uporabe",

@@ -17,6 +17,30 @@ export const E2E_LOGOUT_USER = {
   password: "e2e-Password-123",
 };
 
+// Separate account for password-reset tests, which change the password.
+export const E2E_RESET_USER = {
+  email: "e2e-reset@example.com",
+  password: "e2e-Password-123",
+};
+
+// Local auth emails land in Mailpit (supabase/config.toml [inbucket]). Returns the first link
+// in the newest email to `to` that arrived after `since`.
+export async function emailLink(to: string, since: Date, timeoutMs = 15_000): Promise<string> {
+  const api = "http://127.0.0.1:54324/api/v1";
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    const res = await fetch(`${api}/search?query=${encodeURIComponent(`to:"${to}"`)}&limit=1`);
+    const [latest] = ((await res.json()) as { messages: { ID: string; Created: string }[] }).messages;
+    if (latest && new Date(latest.Created) >= since) {
+      const msg = (await (await fetch(`${api}/message/${latest.ID}`)).json()) as { HTML: string };
+      const href = /href="([^"]+)"/.exec(msg.HTML)?.[1];
+      if (href) return href.replace(/&amp;/g, "&");
+    }
+    await new Promise((r) => setTimeout(r, 500));
+  }
+  throw new Error(`e2e: no email to ${to} arrived in Mailpit`);
+}
+
 // Seed playground with every feature set (supabase/seed.sql), for deterministic detail pages.
 export const SEEDED_PLAYGROUND = "Tivoli Park Playground";
 

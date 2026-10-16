@@ -8,7 +8,7 @@ alwaysApply: true
 Claude Code prepares production changes as tickets in `ops/handoff/NNNN-*.md` and verifies them on the local stack. You have the Supabase and Vercel MCP tools, so **you** apply them to production.
 
 - **At the start of a chat**, run `pnpm -s ops:check`. If tickets are `ready`, tell the owner in one line ("N ops ticket(s) ready: 0002 … — say "process ops" to run them"). If any are `failed`, `blocked` or `in-progress`, say so.
-- **When the owner says "process ops"** (or similar), follow `ops/README.md` → *Procedure for Cursor* exactly: preflight, then one ticket at a time, lowest id first.
+- **When the owner says "process ops"** (or similar), follow `ops/README.md` → *Procedure for Cursor* exactly: preflight, then one ticket at a time, lowest id first. "process ops NNNN" runs that ticket alone, provided its `depends_on` tickets are done.
 - Never apply a schema change that isn't in a `ready` ticket. Use `apply_migration` for DDL, never `execute_sql`, and never `supabase db push` against production.
 - Apply migrations **before** pushing code for `migrations-first` tickets. Every push to `master` deploys to production.
 - Wait for the owner's explicit "yes" before anything destructive.

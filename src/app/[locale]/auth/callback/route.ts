@@ -19,5 +19,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     if (!error) return NextResponse.redirect(`${origin}${next}`);
   }
 
-  return NextResponse.redirect(`${origin}/${locale}/login`);
+  // Missing or failed code: typically the link was opened in a different browser than the one
+  // that requested it (PKCE), or it expired. Say so instead of a silent login page.
+  return NextResponse.redirect(`${origin}/${locale}/login?error=link_invalid`);
 }

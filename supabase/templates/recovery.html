@@ -1,0 +1,18 @@
+<!--
+  Password-reset email (Supabase Auth → Email Templates → Reset Password).
+  Local: wired in supabase/config.toml. Production: paste this body into the dashboard (ops 0005).
+
+  The link carries a token hash instead of Supabase's default PKCE link, so it works in any
+  browser (mail apps, another device). The app verifies the token only when the new password
+  is submitted, so link scanners that pre-open emails can't use it up.
+  No locale in the path: the app redirects /reset-password to the visitor's language.
+-->
+<h2>Ponastavitev gesla</h2>
+<p>Za nastavitev novega gesla tapni spodnjo povezavo. Povezava velja eno uro.</p>
+<p><a href="{{ .SiteURL }}/reset-password?token_hash={{ .TokenHash }}&type=recovery">Nastavi novo geslo</a></p>
+<p>Če ponastavitve nisi zahteval/-a, to sporočilo prezri.</p>
+<hr />
+<h2>Reset your password</h2>
+<p>Tap the link below to set a new password. It's valid for one hour.</p>
+<p><a href="{{ .SiteURL }}/reset-password?token_hash={{ .TokenHash }}&type=recovery">Set a new password</a></p>
+<p>If you didn't ask for this, you can ignore this email.</p>

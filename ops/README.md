@@ -43,6 +43,8 @@ draft ──► ready ──► in-progress ──► done
 
 ### Per ticket (lowest id first)
 
+The owner can name a ticket to run out of order ("process ops 0005"). That's allowed when every ticket in its `depends_on` is `done`. A `blocked` ticket doesn't stop unrelated tickets the owner names.
+
 1. Set `status: in-progress` and add a timestamped "started" line to the Result log.
 2. If `destructive: true`, quote the statements and wait for the owner's confirmation.
 3. Run **Production steps** in the order the ticket's `order` says:

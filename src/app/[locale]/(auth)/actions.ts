@@ -5,7 +5,8 @@ import { createClient } from "@/lib/supabase/server";
 import { getSiteUrl } from "@/lib/site";
 import { verifyTurnstile } from "@/lib/turnstile";
 
-export type AuthState = { error?: string; info?: string } | undefined;
+// `verified`: a recovery token was already used up (and the user signed in) by this form.
+export type AuthState = { error?: string; info?: string; verified?: boolean } | undefined;
 
 export async function loginAction(_prev: AuthState, formData: FormData): Promise<AuthState> {
   const email = String(formData.get("email") ?? "");
@@ -65,8 +66,11 @@ export async function forgotPasswordAction(
   if (!(await verifyTurnstile(formData))) return { error: "turnstile_failed" };
 
   const supabase = await createClient();
+  // The email's link comes from the recovery template (supabase/templates/recovery.html):
+  // site URL + token hash, no PKCE, so it works in any browser. redirectTo only feeds
+  // Supabase's default template.
   await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${getSiteUrl()}/${locale}/auth/callback?next=/${locale}/reset-password`,
+    redirectTo: `${getSiteUrl()}/${locale}/reset-password`,
   });
 
   // Always report success so the form can't be used to probe which emails exist.
@@ -79,21 +83,32 @@ export async function updatePasswordAction(
 ): Promise<AuthState> {
   const password = String(formData.get("password") ?? "");
   const confirm = String(formData.get("confirm") ?? "");
+  const tokenHash = String(formData.get("token_hash") ?? "");
   const locale = String(formData.get("locale") ?? "sl");
 
+  // Check the input first, so a typo doesn't use up the one-time link.
   if (password.length < 6) return { error: "password_too_short" };
   if (password !== confirm) return { error: "password_mismatch" };
 
   const supabase = await createClient();
+
+  // The recovery link carries a one-time token. It's verified only now, on submit: email
+  // scanners that pre-open links can't use it up, and no PKCE verifier cookie is needed,
+  // so the link works in any browser. Verifying signs in the link's owner.
+  let verified = false;
+  if (tokenHash) {
+    const { error } = await supabase.auth.verifyOtp({ type: "recovery", token_hash: tokenHash });
+    if (error) return { error: "link_invalid" };
+    verified = true;
+  }
+
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  // The recovery link established a session via /auth/callback; without one the
-  // link was invalid or expired.
   if (!user) return { error: "session_expired" };
 
   const { error } = await supabase.auth.updateUser({ password });
-  if (error) return { error: error.message };
+  if (error) return { error: error.code === "same_password" ? "same_password" : "generic", verified };
 
   redirect(`/${locale}/profile`);
 }

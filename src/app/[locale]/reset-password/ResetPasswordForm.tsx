@@ -5,16 +5,19 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { updatePasswordAction, type AuthState } from "../(auth)/actions";
 
-export function ResetPasswordForm({ locale }: { locale: string }) {
+export function ResetPasswordForm({ locale, tokenHash }: { locale: string; tokenHash: string | null }) {
   const t = useTranslations("auth");
   const [state, action, pending] = useActionState<AuthState, FormData>(
     updatePasswordAction,
     undefined,
   );
+  const linkProblem = state?.error === "link_invalid" || state?.error === "session_expired";
 
   return (
     <form action={action} className="flex flex-col gap-4">
       <input type="hidden" name="locale" value={locale} />
+      {/* Once a submit has used up the token, retries rely on the session it created. */}
+      {tokenHash && !state?.verified && <input type="hidden" name="token_hash" value={tokenHash} />}
 
       <label className="floating-label">
         <span>{t("newPassword")}</span>
@@ -47,7 +50,12 @@ export function ResetPasswordForm({ locale }: { locale: string }) {
           {t("passwordMismatch")}
         </p>
       )}
-      {state?.error === "session_expired" && (
+      {state?.error === "same_password" && (
+        <p role="alert" className="text-sm text-error">
+          {t("samePassword")}
+        </p>
+      )}
+      {linkProblem && (
         <p role="alert" className="text-sm text-error">
           {t("resetLinkInvalid")}{" "}
           <Link href="/forgot-password" className="link">
@@ -56,8 +64,9 @@ export function ResetPasswordForm({ locale }: { locale: string }) {
         </p>
       )}
       {state?.error &&
+        !linkProblem &&
         state.error !== "password_mismatch" &&
-        state.error !== "session_expired" && (
+        state.error !== "same_password" && (
           <p role="alert" className="text-sm text-error">
             {t("errorGeneric")}
           </p>

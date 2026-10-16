@@ -3,17 +3,23 @@ import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { ResetPasswordForm } from "./ResetPasswordForm";
 
-// Landing page for the password-recovery email link. The link goes through
-// /auth/callback which exchanges the code for a session, then redirects here.
+// Landing page for the password-recovery email link: /reset-password?token_hash=…&type=recovery
+// (supabase/templates/recovery.html). The token is NOT verified here: a GET can come from an
+// email scanner, which would use it up. It's verified when the form is submitted.
+// A signed-in user without a token (e.g. via an old /auth/callback link) can also set a password.
 export default async function ResetPasswordPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string }>;
+  searchParams: Promise<{ token_hash?: string; type?: string }>;
 }) {
   const { locale } = await params;
+  const { token_hash, type } = await searchParams;
   setRequestLocale(locale);
   const t = await getTranslations("auth");
 
+  const tokenHash = type === "recovery" && token_hash ? token_hash : null;
   const supabase = await createClient();
   const {
     data: { user },
@@ -22,8 +28,8 @@ export default async function ResetPasswordPage({
   return (
     <section className="mx-auto max-w-sm p-4 pt-8">
       <h1 className="mb-6 text-2xl font-bold">{t("resetTitle")}</h1>
-      {user ? (
-        <ResetPasswordForm locale={locale} />
+      {tokenHash || user ? (
+        <ResetPasswordForm locale={locale} tokenHash={tokenHash} />
       ) : (
         <div className="flex flex-col gap-4">
           <div role="alert" className="alert alert-warning text-sm">

@@ -3,7 +3,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const supabase = {
-  auth: { getUser: vi.fn(), signUp: vi.fn() },
+  auth: { getUser: vi.fn(), signUp: vi.fn(), verifyOtp: vi.fn(), updateUser: vi.fn() },
   from: vi.fn(),
   storage: { from: vi.fn() },
 };
@@ -20,7 +20,7 @@ vi.mock("next/navigation", () => ({
   }),
 }));
 
-const { signupAction } = await import("@/app/[locale]/(auth)/actions");
+const { signupAction, updatePasswordAction } = await import("@/app/[locale]/(auth)/actions");
 const { createPlaygroundAction } = await import("@/app/[locale]/add/actions");
 const { verifyTurnstile } = await import("@/lib/turnstile");
 
@@ -82,6 +82,40 @@ describe("signup", () => {
     expect(Date.parse(data.consent_privacy_at)).not.toBeNaN();
     expect(data.consent_policy_version).toMatch(/^\d{4}-\d{2}$/);
     expect(data.age_confirmed).toBe(true);
+  });
+});
+
+describe("password reset", () => {
+  const valid = { password: "new-secret-1", confirm: "new-secret-1", token_hash: "th_123", locale: "sl" };
+
+  beforeEach(() => {
+    supabase.auth.verifyOtp.mockResolvedValue({ error: null });
+    supabase.auth.getUser.mockResolvedValue({ data: { user: { id: "u1" } } });
+    supabase.auth.updateUser.mockResolvedValue({ error: null });
+  });
+
+  it("[FR-ACC-04] checks the new password before using up the one-time link", async () => {
+    expect(await updatePasswordAction(undefined, fd({ ...valid, confirm: "typo" }))).toEqual({
+      error: "password_mismatch",
+    });
+    expect(supabase.auth.verifyOtp).not.toHaveBeenCalled();
+  });
+
+  it("[FR-ACC-04] verifies the link's token on submit, then sets the password", async () => {
+    await expect(updatePasswordAction(undefined, fd(valid))).rejects.toMatchObject({ url: "/sl/profile" });
+    expect(supabase.auth.verifyOtp).toHaveBeenCalledWith({ type: "recovery", token_hash: "th_123" });
+    expect(supabase.auth.updateUser).toHaveBeenCalledWith({ password: "new-secret-1" });
+  });
+
+  it("[FR-ACC-04] reports an invalid or already used link without touching the password", async () => {
+    supabase.auth.verifyOtp.mockResolvedValue({ error: { code: "otp_expired" } });
+    expect(await updatePasswordAction(undefined, fd(valid))).toEqual({ error: "link_invalid" });
+    expect(supabase.auth.updateUser).not.toHaveBeenCalled();
+  });
+
+  it("[FR-ACC-04] explains a new password equal to the old one, and lets the form retry without the token", async () => {
+    supabase.auth.updateUser.mockResolvedValue({ error: { code: "same_password" } });
+    expect(await updatePasswordAction(undefined, fd(valid))).toEqual({ error: "same_password", verified: true });
   });
 });
 
