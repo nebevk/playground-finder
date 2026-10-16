@@ -1,7 +1,7 @@
 ---
 id: 0002
 title: Enforce photo, vote and report rules in the database
-status: ready
+status: in-progress
 order: migrations-first
 destructive: false
 migrations: [20261016090000_trust_boundary_rls.sql]
@@ -103,4 +103,11 @@ update storage.buckets set file_size_limit = 10485760 where id = 'playground-pho
 
 ## Result log (Cursor)
 
-- 
+- **2026-10-16T07:56Z** started (status → in-progress). Preflight: clean tree after commit `8ac7a0e`; `pnpm ops:check` pass; prod deploy `READY` (`dpl_7zuLkzhnvoAmauJZtH5bxbThSyXx`, SHA `55364ab`); drift OK — `trust_boundary_rls` not yet in prod.
+- **Applied** `apply_migration` name=`trust_boundary_rls`. Prod recorded version `20261016075718` / name `trust_boundary_rls`.
+- **Verify policies** — 3 rows as expected:
+  - `public.photos` / `photos_insert_authed`: `with_check` includes `private.is_verified()` and `storage_path ~~ … || '/%'`
+  - `public.review_helpful` / `review_helpful_insert_own`: includes `NOT (EXISTS …)`
+  - `storage.objects` / `playground_photos_insert_authed`: includes `foldername` + `is_verified`
+- **Verify `private.is_verified()`** — `prosecdef=true`, `proconfig={search_path=""}`, `authenticated_can_execute=true`. Pass.
+- **Verify auto-flag + bucket** — `verified_only_count=true`, `bucket_limit=3145728`. Pass.
