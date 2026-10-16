@@ -85,3 +85,4 @@ drop policy if exists "photos_select_own" on public.photos;
 - **Extra:** `/sl/privacy` contains `ne.bevk@gmail.com`. Ticket expected `grep -ci gmail → 0`, but owner chose a Gmail contact — count is 2 (expected for this address). `/sl/auth/confirm?token_hash=x&type=email` → `/sl/login?error=link_invalid`. Pass.
 - **Advisors (security)** — same baseline as prior tickets; no new warnings.
 - **2026-10-16T21:01Z** status → `blocked`: owner must paste Confirm signup template, then run signup-on-phone test (and optional 8-photo test).
+- **2026-10-16T21:07Z** owner confirmed Confirm signup template updated (subject + body from `supabase/templates/confirmation.html`). Still waiting on phone signup test (and optional 8-photo test).
