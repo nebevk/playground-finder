@@ -1,7 +1,7 @@
 ---
 id: 0002
 title: Enforce photo, vote and report rules in the database
-status: in-progress
+status: done
 order: migrations-first
 destructive: false
 migrations: [20261016090000_trust_boundary_rls.sql]
@@ -111,3 +111,8 @@ update storage.buckets set file_size_limit = 10485760 where id = 'playground-pho
   - `storage.objects` / `playground_photos_insert_authed`: includes `foldername` + `is_verified`
 - **Verify `private.is_verified()`** — `prosecdef=true`, `proconfig={search_path=""}`, `authenticated_can_execute=true`. Pass.
 - **Verify auto-flag + bucket** — `verified_only_count=true`, `bucket_limit=3145728`. Pass.
+- **Push** — `8ac7a0e` (migration + tests/docs) and `9b98881` (ops log). Migration applied **before** push (migrations-first).
+- **Vercel** — production `READY` for SHA `9b98881`, deploy `dpl_DDyXMgyeihk1HfESZFZJxNiGiu6a`. Inspector: https://vercel.com/kvebens-projects/playground-finder/DDyXMgyeihk1HfESZFZJxNiGiu6a
+- **Smoke** — all `smokePaths` HTTP 200: `/sl`, `/sl/map`, `/sl/privacy`, `/en/privacy`, `/sitemap.xml`.
+- **Advisors (security)** — same as ticket 0001 baseline; **no new warnings**. Still present: `increment_playground_views` anon/authenticated SECURITY DEFINER (intentional), `auth_leaked_password_protection` disabled (owner dashboard). `private.is_verified()` did not trigger lint 0028/0029.
+- **2026-10-16T07:59Z** status → `done`.
