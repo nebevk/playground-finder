@@ -23,12 +23,14 @@
 | GDPR-06 | **Export my data** downloads JSON with the account, consent metadata, profile and all of the user's content, **including flagged items**. | Must | Partial — RLS hides the user's own flagged rows from the export | manual |
 | GDPR-07 | The photo upload step shows, in Slovenian: *"Prosimo, ne objavljajte fotografij, na katerih so prepoznavni obrazi otrok."* (English: "Please do not post photos with identifiable faces of children.") | Must | Done | unit, e2e |
 | GDPR-08 | Report reasons include **privacy violation**. | Must | Done | db |
-| GDPR-09 | Uploaded photos have EXIF metadata (including GPS) removed. | Must | Partial — skipped when a file is small, when re-encoding makes it larger, or when resizing fails; nothing strips it on the server | manual |
+| GDPR-09 | Uploaded photos have EXIF metadata (including GPS) removed. | Must | Done — the browser always re-encodes and never sends an original; the server rejects files with EXIF/XMP; clients can't write to the bucket directly (ops 0003/0004, [ADR-0002](../adr/0002-photo-pipeline.md)) | unit, db |
 | GDPR-10 | `/privacy` exists in `sl` and `en`. It names every processor (Supabase, Vercel, Cloudflare, Simple Analytics, Ko-fi) and gives a monitored contact address for data requests. | Must | Done — the contact falls back to a personal Gmail address if `NEXT_PUBLIC_PRIVACY_EMAIL` is unset | e2e |
 | GDPR-11 | `/terms` says users are responsible for what they upload and must not upload photos of people without consent. | Must | Done | e2e |
 | GDPR-12 | Only essential cookies, with a simple notice. No tracking cookies; any analytics are cookieless and listed on `/privacy`. | Must | Done | e2e |
 | GDPR-13 | The user's GPS position is requested only when they act (Locate me, pin location) and is never stored. Only the playground's pinned location is saved. | Must | Done | manual |
-| GDPR-14 | Flagged photos reported as a privacy violation stop being publicly downloadable as soon as they are flagged. | Must | Not started — the bucket is public, so files stay reachable by URL (see FR-COM-06) | db |
+| GDPR-14 | Flagged photos reported as a privacy violation stop being publicly downloadable as soon as they are flagged. | Must | Done — private bucket; no new URLs once flagged, and URLs already issued expire within 1 hour (ops 0003/0004) | db |
+| GDPR-15 | When an admin deletes a photo or a playground, the photo **files** are deleted from storage too, not just the database rows. | Must | Done — ops 0003 | unit |
+| GDPR-16 | User-uploaded photos are never used as link-preview (Open Graph) images: other platforms would cache copies beyond our moderation and deletion. | Must | Done — ops 0003 | e2e |
 
 ## Processors
 

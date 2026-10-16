@@ -42,7 +42,6 @@ select is(
 );
 
 -- [FR-COM-06] [GDPR-14] flagged photo files must not stay publicly downloadable.
-select todo('BL-03: bucket is public, so flagged files stay reachable by URL', 1);
 select is(
   (select public from storage.buckets where id = 'playground-photos'),
   false,

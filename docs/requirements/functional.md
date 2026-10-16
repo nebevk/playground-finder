@@ -33,7 +33,7 @@ Conventions and the ID scheme are in [README.md](README.md). Status last reviewe
 |---|---|---|---|---|
 | FR-ADD-01 | Only signed-in users can add a playground. Enforced on the page, in the Server Action and by RLS. | Must | Done | unit, db |
 | FR-ADD-02 | Adding takes 3 steps: (1) pin the location on a map, (2) name (required), description, surface, features, (3) photos. | Must | Done | e2e |
-| FR-ADD-03 | Photo rules: at most 8 per submission, PNG/JPEG/WebP only, at most 3 MiB each (also enforced by the storage bucket), downscaled on the device before upload. | Must | Done | unit, db, e2e |
+| FR-ADD-03 | Photo rules: at most 8 per submission and **3.5 MB in total**, PNG/JPEG/WebP judged by file contents (not the claimed type), at most 3 MiB each (also enforced by the storage bucket), re-encoded on the device before upload. | Must | Done — the multi-photo 1 MB limit bug is fixed in ops 0003 ([ADR-0002](../adr/0002-photo-pipeline.md)) | unit, db, e2e |
 | FR-ADD-04 | Uploading photos requires a verified email, **enforced by the database and storage policies**, not only by the app. | Must | Done — Server Action, `photos` insert policy and Storage insert policy (ops 0002) | unit, db, e2e |
 | FR-ADD-05 | After submitting, the user lands on the map focused on the new playground, with a success message. | Should | Done | e2e |
 | FR-ADD-06 | Users can add photos to an existing playground (the unverified-email message already promises "add photos later"). | Should | Not started | e2e |
@@ -48,7 +48,7 @@ Conventions and the ID scheme are in [README.md](README.md). Status last reviewe
 | FR-COM-03 | "Helpful" vote: one per user per review, not on your own review, with the count kept in sync automatically. | Should | Done — self-votes blocked by RLS (ops 0002) | db |
 | FR-COM-04 | Signed-in users can report a playground, review or photo with reason *spam*, *incorrect info*, *privacy violation* or *other*; one report per user per target. | Must | Partial — the first (hero) photo has no Report button | db, e2e |
 | FR-COM-05 | 3 or more reports automatically flag the target for admin review. | Must | Done | db |
-| FR-COM-06 | Flagged content is hidden from the public: database rows **and** photo files. | Must | Partial — rows are hidden by RLS, but files in the public bucket stay reachable by URL | db |
+| FR-COM-06 | Flagged content is hidden from the public: database rows **and** photo files. | Must | Done — rows hidden by RLS; files are served only through 1-hour signed URLs, issued only while neither the photo nor its playground is flagged (ops 0003/0004) | db, e2e |
 | FR-COM-07 | The profile lists the user's own contributions (playgrounds, reviews, photos), including flagged ones with their status. | Should | Not started | e2e |
 
 ## Accounts (`FR-ACC`)

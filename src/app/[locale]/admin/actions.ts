@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { getAdminActionContext } from "@/lib/admin";
+import { photoPathsFor, removePhotoFiles } from "@/lib/photo-storage";
 
 const TARGETS = ["playground", "review", "photo"] as const;
 type Target = (typeof TARGETS)[number];
@@ -83,11 +84,18 @@ export async function deleteFlaggedAction(formData: FormData) {
   const locale = String(formData.get("locale") ?? "sl");
   if (!TARGETS.includes(target) || !id) return;
 
+  const paths =
+    target === "photo"
+      ? await photoPathsFor(ctx.admin, { photoIds: [id] })
+      : target === "playground"
+        ? await photoPathsFor(ctx.admin, { playgroundIds: [id] })
+        : [];
   const { error } = await ctx.admin.from(tableFor(target)).delete().eq("id", id);
   if (error) {
     console.error("deleteFlaggedAction failed", error);
     return;
   }
+  await removePhotoFiles(ctx.admin, paths);
   revalidatePath(`/${locale}/admin/moderation`);
   revalidatePath(`/${locale}/admin`);
 }
@@ -138,11 +146,13 @@ export async function deletePlaygroundAction(formData: FormData) {
   const locale = String(formData.get("locale") ?? "sl");
   if (!id) return;
 
+  const paths = await photoPathsFor(ctx.admin, { playgroundIds: [id] });
   const { error } = await ctx.admin.from("playgrounds").delete().eq("id", id);
   if (error) {
     console.error("deletePlaygroundAction failed", error);
     return;
   }
+  await removePhotoFiles(ctx.admin, paths);
   revalidatePath(`/${locale}/admin/playgrounds`);
   revalidatePath(`/${locale}`);
 }
@@ -157,11 +167,13 @@ export async function bulkDeletePlaygroundsAction(
   const ctx = await getAdminActionContext();
   if (!ctx || ids.length === 0) return { ok: false, count: 0 };
 
+  const paths = await photoPathsFor(ctx.admin, { playgroundIds: ids });
   const { error } = await ctx.admin.from("playgrounds").delete().in("id", ids);
   if (error) {
     console.error("bulkDeletePlaygroundsAction failed", error);
     return { ok: false, count: 0 };
   }
+  await removePhotoFiles(ctx.admin, paths);
   revalidatePath(`/${locale}/admin/playgrounds`);
   revalidatePath(`/${locale}/admin`);
   revalidatePath(`/${locale}`);

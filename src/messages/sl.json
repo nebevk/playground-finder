@@ -370,14 +370,17 @@
       "selected": "Izbranih fotografij: {count} / {max}",
       "processing": "Pripravljam fotografije…",
       "totalSize": "{kb} KB skupaj",
-      "tooMany": "Naložiš lahko največ {max} fotografij. Ostale so bile preskočene."
+      "tooMany": "Naložiš lahko največ {max} fotografij. Ostale so bile preskočene.",
+      "processingFailed": "Nekaterih fotografij ni bilo mogoče pripraviti, zato niso dodane. Poskusi z drugo fotografijo (JPG, PNG ali WebP).",
+      "tooLarge": "Fotografije so skupaj prevelike (največ {mb} MB), zato nekatere niso dodane."
     },
     "errors": {
       "noLocation": "Najprej izberi lokacijo na zemljevidu.",
       "noName": "Vnesi ime igrišča.",
       "uploadFailed": "Nalaganje fotografije ni uspelo.",
       "turnstile": "Preverjanje proti neželeni vsebini ni uspelo. Poskusi znova.",
-      "generic": "Shranjevanje ni uspelo. Poskusi znova."
+      "generic": "Shranjevanje ni uspelo. Poskusi znova.",
+      "photoMetadata": "Fotografija vsebuje skrite podatke, na primer lokacijo. Izberi jo znova tukaj, da jih odstranimo."
     },
     "success": "Igrišče dodano!"
   },

@@ -7,8 +7,12 @@ const supabase = {
   from: vi.fn(),
   storage: { from: vi.fn() },
 };
+// Service-role client: the only one that may write to the photo bucket (ADR-0002).
+const bucket = { upload: vi.fn(), remove: vi.fn() };
+const adminClient = { storage: { from: vi.fn(() => bucket) } };
 
 vi.mock("@/lib/supabase/server", () => ({ createClient: async () => supabase }));
+vi.mock("@/lib/supabase/admin", () => ({ createAdminClient: () => adminClient }));
 vi.mock("@/lib/turnstile", () => ({ verifyTurnstile: vi.fn(async () => true) }));
 vi.mock("next/navigation", () => ({
   redirect: vi.fn((url: string) => {
@@ -31,13 +35,22 @@ function fd(fields: Record<string, string | File | File[]>) {
 const without = <T extends object>(obj: T, key: keyof T) =>
   Object.fromEntries(Object.entries(obj).filter(([k]) => k !== key));
 
-const photo = (bytes = 1024, type = "image/jpeg") =>
-  new File([new Uint8Array(bytes)], "p.jpg", { type });
+// A JPEG of `size` bytes: SOI + JFIF header (+ optional EXIF segment), zero-padded.
+function jpeg(size = 1024, { exif = false } = {}) {
+  const head = [0xff, 0xd8, 0xff, 0xe0, 0x00, 0x10, ...Array.from("JFIF\0"), 1, 1, 0, 0, 1, 0, 1, 0, 0];
+  const exifSeg = exif ? [0xff, 0xe1, 0x00, 0x0a, ...Array.from("Exif\0\0"), 0x4d, 0x4d] : [];
+  const bytes = new Uint8Array(size);
+  bytes.set([...head, ...exifSeg, 0xff, 0xda].map((c) => (typeof c === "string" ? c.charCodeAt(0) : c)));
+  return bytes;
+}
+const photo = (bytes: Uint8Array<ArrayBuffer> = jpeg(), type = "image/jpeg") =>
+  new File([bytes], "p.jpg", { type });
 
 beforeEach(() => {
   vi.clearAllMocks();
   vi.mocked(verifyTurnstile).mockResolvedValue(true);
   supabase.auth.signUp.mockResolvedValue({ error: null });
+  bucket.upload.mockResolvedValue({ error: null });
 });
 
 describe("signup", () => {
@@ -80,8 +93,9 @@ describe("add playground", () => {
   function mockInsertOk() {
     const single = vi.fn().mockResolvedValue({ data: { id: "pg1" }, error: null });
     const insert = vi.fn(() => ({ select: () => ({ single }) }));
-    supabase.from.mockReturnValue({ insert });
-    return insert;
+    const photoInsert = vi.fn().mockResolvedValue({ error: null });
+    supabase.from.mockImplementation((table: string) => ({ insert: table === "photos" ? photoInsert : insert }));
+    return Object.assign(insert, { photoInsert });
   }
 
   it("[FR-ADD-01] rejects anonymous submissions", async () => {
@@ -106,16 +120,48 @@ describe("add playground", () => {
     expect(supabase.from).not.toHaveBeenCalled();
   });
 
-  it("[FR-ADD-03] rejects photos over 3 MiB or in formats other than PNG/JPEG/WebP", async () => {
+  it("[FR-ADD-03] rejects photos over 3 MiB or whose bytes aren't PNG/JPEG/WebP, whatever they claim", async () => {
     supabase.auth.getUser.mockResolvedValue({ data: { user: verified } });
-    const tooBig = photo(3 * 1024 * 1024 + 1);
-    const gif = photo(1024, "image/gif");
-    for (const bad of [tooBig, gif]) {
+    const tooBig = photo(jpeg(3 * 1024 * 1024 + 1));
+    const gifClaimingPng = photo(new TextEncoder().encode("GIF89a\x01\0\x01\0"), "image/png");
+    for (const bad of [tooBig, gifClaimingPng]) {
       expect(await createPlaygroundAction(undefined, fd({ ...valid, photos: [bad] }))).toEqual({
         error: "upload_failed",
       });
     }
     expect(supabase.from).not.toHaveBeenCalled();
+    expect(bucket.upload).not.toHaveBeenCalled();
+  });
+
+  it("[FR-ADD-03] rejects submissions over 3.5 MB in total", async () => {
+    supabase.auth.getUser.mockResolvedValue({ data: { user: verified } });
+    const photos = [photo(jpeg(2 * 1024 * 1024)), photo(jpeg(2 * 1024 * 1024))];
+    expect(await createPlaygroundAction(undefined, fd({ ...valid, photos }))).toEqual({ error: "photos_too_large" });
+    expect(supabase.from).not.toHaveBeenCalled();
+  });
+
+  it("[GDPR-09] rejects photos that still carry EXIF metadata, which can hold GPS", async () => {
+    supabase.auth.getUser.mockResolvedValue({ data: { user: verified } });
+    expect(await createPlaygroundAction(undefined, fd({ ...valid, photos: [photo(jpeg(1024, { exif: true }))] }))).toEqual({
+      error: "photo_metadata",
+    });
+    expect(supabase.from).not.toHaveBeenCalled();
+    expect(bucket.upload).not.toHaveBeenCalled();
+  });
+
+  it("[FR-ADD-04] [GDPR-09] uploads a clean photo with the service role into the user's own folder", async () => {
+    supabase.auth.getUser.mockResolvedValue({ data: { user: verified } });
+    const insert = mockInsertOk();
+    await expect(createPlaygroundAction(undefined, fd({ ...valid, photos: [photo()] }))).rejects.toMatchObject({
+      url: "/sl/map?added=pg1",
+    });
+
+    const [path, body, opts] = bucket.upload.mock.calls[0];
+    expect(path).toMatch(/^u1\/pg1\/0-[0-9a-f-]{36}\.jpg$/);
+    expect(body).toBeInstanceOf(Uint8Array);
+    expect(opts).toMatchObject({ contentType: "image/jpeg", upsert: false });
+    // The row goes in with the user's own client, so RLS still checks it.
+    expect(insert.photoInsert).toHaveBeenCalledWith({ playground_id: "pg1", user_id: "u1", storage_path: path });
   });
 
   it("[FR-ADD-04] rejects photos from a user whose email is not verified", async () => {

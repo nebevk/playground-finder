@@ -6,13 +6,16 @@ import { Camera, Images, X } from "lucide-react";
 import { LocationPickerClient } from "@/components/Map/LocationPickerClient";
 import { Turnstile } from "@/components/Turnstile";
 import { resizeImage } from "@/lib/image";
+import { MAX_PHOTOS, MAX_TOTAL_PHOTO_BYTES } from "@/lib/photo-checks";
 import { createPlaygroundAction, type AddState } from "./actions";
 
 const SURFACE_OPTIONS = ["tartan", "sand", "grass", "gravel"] as const;
 const FEATURE_KEYS = ["is_fenced", "has_shade", "has_water", "has_toilets", "has_parking"] as const;
-const MAX_PHOTOS = 8;
+const MAX_TOTAL_MB = MAX_TOTAL_PHOTO_BYTES / 1024 / 1024;
 
 type LatLng = { lat: number; lng: number };
+type PhotoNotice = { tooMany: boolean; failed: boolean; tooLarge: boolean };
+const NO_NOTICE: PhotoNotice = { tooMany: false, failed: false, tooLarge: false };
 
 export function AddFlow({ locale, emailVerified }: { locale: string; emailVerified: boolean }) {
   const t = useTranslations("add");
@@ -24,7 +27,7 @@ export function AddFlow({ locale, emailVerified }: { locale: string; emailVerifi
   const [features, setFeatures] = useState<Record<string, boolean>>({});
   const [photos, setPhotos] = useState<File[]>([]);
   const [processing, setProcessing] = useState(false);
-  const [photosTruncated, setPhotosTruncated] = useState(false);
+  const [notice, setNotice] = useState<PhotoNotice>(NO_NOTICE);
 
   async function addPhotos(e: React.ChangeEvent<HTMLInputElement>) {
     const incoming = Array.from(e.target.files ?? []);
@@ -34,15 +37,29 @@ export function AddFlow({ locale, emailVerified }: { locale: string; emailVerifi
 
     const room = MAX_PHOTOS - photos.length;
     const accepted = incoming.slice(0, Math.max(0, room));
-    setPhotosTruncated(incoming.length > accepted.length);
-    if (accepted.length === 0) return;
+    const next: PhotoNotice = { ...NO_NOTICE, tooMany: incoming.length > accepted.length };
+    if (accepted.length === 0) return setNotice(next);
 
     setProcessing(true);
     try {
-      const resized = await Promise.all(
-        accepted.map((f) => resizeImage(f).catch(() => f)),
-      );
-      setPhotos((prev) => [...prev, ...resized]);
+      // Never fall back to the original file: it may carry GPS metadata (GDPR-09).
+      const results = await Promise.allSettled(accepted.map((f) => resizeImage(f)));
+      const resized = results.flatMap((r) => (r.status === "fulfilled" ? [r.value] : []));
+      next.failed = resized.length < accepted.length;
+
+      // All photos go in one request, so keep the total within the server's budget.
+      const fitting: File[] = [];
+      let total = photos.reduce((sum, p) => sum + p.size, 0);
+      for (const file of resized) {
+        if (total + file.size > MAX_TOTAL_PHOTO_BYTES) {
+          next.tooLarge = true;
+          continue;
+        }
+        total += file.size;
+        fitting.push(file);
+      }
+      setPhotos((prev) => [...prev, ...fitting]);
+      setNotice(next);
     } finally {
       setProcessing(false);
     }
@@ -50,7 +67,7 @@ export function AddFlow({ locale, emailVerified }: { locale: string; emailVerifi
 
   function removePhoto(index: number) {
     setPhotos((prev) => prev.filter((_, i) => i !== index));
-    setPhotosTruncated(false);
+    setNotice(NO_NOTICE);
   }
 
   const [state, action, pending] = useActionState<AddState, FormData>(
@@ -238,9 +255,19 @@ export function AddFlow({ locale, emailVerified }: { locale: string; emailVerifi
                 </>
               )}
 
-              {photosTruncated && (
+              {notice.tooMany && (
                 <p role="alert" className="text-sm text-warning">
                   {t("step3.tooMany", { max: MAX_PHOTOS })}
+                </p>
+              )}
+              {notice.failed && (
+                <p role="alert" className="text-sm text-warning">
+                  {t("step3.processingFailed")}
+                </p>
+              )}
+              {notice.tooLarge && (
+                <p role="alert" className="text-sm text-warning">
+                  {t("step3.tooLarge", { mb: MAX_TOTAL_MB })}
                 </p>
               )}
             </>
@@ -256,6 +283,8 @@ export function AddFlow({ locale, emailVerified }: { locale: string; emailVerifi
           {state.error === "turnstile_failed" && t("errors.turnstile")}
           {state.error === "verify_email" && t("step3.verifyEmail")}
           {state.error === "too_many_photos" && t("step3.tooMany", { max: MAX_PHOTOS })}
+          {state.error === "photos_too_large" && t("step3.tooLarge", { mb: MAX_TOTAL_MB })}
+          {state.error === "photo_metadata" && t("errors.photoMetadata")}
           {(state.error === "generic" || state.error === "auth_required") && t("errors.generic")}
         </p>
       )}

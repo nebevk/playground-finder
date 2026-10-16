@@ -23,6 +23,13 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: projectRoot,
   },
+  experimental: {
+    serverActions: {
+      // The add flow sends up to 8 photos (≤ 3.5 MB in total, src/lib/photo-checks.ts) in one
+      // Server Action request. The default is 1 MB; Vercel Functions cap request bodies at 4.5 MB.
+      bodySizeLimit: "4mb",
+    },
+  },
   images: {
     remotePatterns: supabaseHost
       ? [

@@ -14,14 +14,14 @@ export type ResizeOptions = {
  * Downscales an image to `maxDim` on the longest side, re-encodes via canvas
  * (which strips EXIF including GPS), and returns a new File.
  *
- * Returns the original file unchanged if it's already smaller than `maxDim`
- * and under 400 KB — no point recompressing a tiny image.
+ * Always re-encodes, even small images: the original may carry GPS metadata (GDPR-09).
+ * Throws if the browser can't decode or encode it; callers must not fall back to the original.
  */
 export async function resizeImage(file: File, opts: ResizeOptions = {}): Promise<File> {
   if (typeof window === "undefined") {
     throw new Error("resizeImage is client-only");
   }
-  if (!file.type.startsWith("image/")) return file;
+  if (!file.type.startsWith("image/")) throw new Error("not_an_image");
 
   const maxDim = opts.maxDim ?? 1600;
   const quality = opts.quality ?? 0.82;
@@ -29,11 +29,6 @@ export async function resizeImage(file: File, opts: ResizeOptions = {}): Promise
 
   const bitmap = await createImageBitmap(file, { imageOrientation: "from-image" });
   const longest = Math.max(bitmap.width, bitmap.height);
-
-  if (longest <= maxDim && file.size < 400 * 1024) {
-    bitmap.close();
-    return file;
-  }
 
   const scale = longest > maxDim ? maxDim / longest : 1;
   const w = Math.max(1, Math.round(bitmap.width * scale));
@@ -60,9 +55,7 @@ export async function resizeImage(file: File, opts: ResizeOptions = {}): Promise
 
   if (!blob) throw new Error("encode_failed");
 
-  // If our output is somehow larger than the source, keep the source.
-  if (blob.size >= file.size) return file;
-
+  // Keep the re-encoded output even when it's larger than the source: only it is metadata-free.
   const ext = blob.type === "image/webp" ? "webp" : "jpg";
   const baseName = file.name.replace(/\.[^.]+$/, "") || "photo";
   return new File([blob], `${baseName}.${ext}`, {

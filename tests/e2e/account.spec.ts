@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { E2E_LOGOUT_USER, login, playgroundPath, sl } from "./fixtures";
+import { E2E_LOGOUT_USER, login, noisePng, playgroundPath, sl } from "./fixtures";
 
 test("[GDPR-01] signup consent is unchecked by default and required", async ({ page }) => {
   await page.goto("/sl/signup");
@@ -45,7 +45,7 @@ test("[FR-ADD-02] [FR-ADD-05] [GDPR-07] add a playground in three steps", async 
   await page.getByRole("button", { name: sl.add.submit }).click();
 
   // Lands on the map focused on the new playground.
-  await expect(page).toHaveURL(/\/sl\/map/);
+  await expect(page).toHaveURL(/\/sl\/map/, { timeout: 20_000 });
   await expect(page.getByRole("dialog").getByText(name)).toBeVisible();
 });
 
@@ -55,7 +55,7 @@ const PNG = Buffer.from(
   "base64",
 );
 
-test("[FR-ADD-03] [FR-ADD-04] a verified user's photo is uploaded and shown on the playground", async ({ page }) => {
+test("[FR-ADD-03] [FR-ADD-04] [FR-COM-06] [GDPR-16] a verified user's photo is uploaded and shown on the playground", async ({ page, browser }) => {
   await login(page);
   await page.goto("/sl/add");
 
@@ -69,11 +69,45 @@ test("[FR-ADD-03] [FR-ADD-04] a verified user's photo is uploaded and shown on t
   await page.locator('input[type="file"][multiple]').setInputFiles({ name: "p.png", mimeType: "image/png", buffer: PNG });
   await page.getByRole("button", { name: sl.add.submit }).click();
 
-  await expect(page).toHaveURL(/\/sl\/map/);
+  await expect(page).toHaveURL(/\/sl\/map/, { timeout: 20_000 });
   const sheet = page.getByRole("dialog");
   await expect(sheet.getByText(name)).toBeVisible();
   await sheet.locator('a[href*="/playground/"]').first().click();
-  await expect(page.locator('img[src*="playground-photos"]').first()).toBeVisible();
+  // Private bucket: shown through a short-lived signed URL, not a public one.
+  const img = page.locator('img[src*="playground-photos"]').first();
+  await expect(img).toBeVisible();
+  await expect(img).toHaveAttribute("src", /\/object\/sign\/playground-photos\/.+\?token=/);
+  // Never offered to link previews (GDPR-16).
+  await expect(page.locator('meta[property="og:image"][content*="playground-photos"]')).toHaveCount(0);
+
+  // Anonymous visitors get a signed URL too (signed under the anon role's storage policy).
+  const anon = await browser.newContext();
+  const anonPage = await anon.newPage();
+  await anonPage.goto(page.url());
+  await expect(anonPage.locator('img[src*="/object/sign/playground-photos/"]').first()).toBeVisible();
+  await anon.close();
+});
+
+test("[FR-ADD-03] several real-size photos can be added in one submission", async ({ page }) => {
+  await login(page);
+  await page.goto("/sl/add");
+  await page.locator(".leaflet-container").first().click({ position: { x: 170, y: 150 } });
+  await page.getByRole("button", { name: sl.add.next }).click();
+  const name = `E2E 4 fotografije ${Date.now()}`;
+  await page.getByPlaceholder(sl.add.step2.namePlaceholder).fill(name);
+  await page.getByRole("button", { name: sl.add.next }).click();
+
+  // Four ~360 KB photos (~1.4 MB in total), each within the per-photo rules.
+  const files = Array.from({ length: 4 }, (_, i) => ({
+    name: `p${i}.png`,
+    mimeType: "image/png",
+    buffer: noisePng(400, 300),
+  }));
+  await page.locator('input[type="file"][multiple]').setInputFiles(files);
+  await page.getByRole("button", { name: sl.add.submit }).click();
+
+  await expect(page).toHaveURL(/\/sl\/map/, { timeout: 20_000 });
+  await expect(page.getByRole("dialog").getByText(name)).toBeVisible();
 });
 
 test("[FR-COM-04] a signed-in user can report a playground, with a privacy-violation reason", async ({ page }) => {

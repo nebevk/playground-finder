@@ -21,14 +21,14 @@ export async function generateMetadata({
   const playground = await getPlaygroundById(id);
   if (!playground) return {};
 
-  const [hero] = playground.photos;
+  // No user photos as preview images: link previews copy them onto other platforms' servers,
+  // beyond moderation and deletion (GDPR-16). The site-wide preview image applies instead.
   return {
     title: playground.name,
     description: playground.description ?? undefined,
     openGraph: {
       title: playground.name,
       description: playground.description ?? undefined,
-      ...(hero ? { images: [{ url: hero.url }] } : {}),
     },
   };
 }

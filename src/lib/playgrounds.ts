@@ -1,4 +1,5 @@
 import { cache } from "react";
+import { PHOTO_BUCKET } from "./photo-storage";
 import { createClient } from "./supabase/server";
 import type {
   MapPlayground,
@@ -8,6 +9,9 @@ import type {
 } from "./playground-types";
 
 export * from "./playground-types";
+
+// A flagged photo stays viewable for at most this long by someone who already loaded the page.
+const PHOTO_URL_TTL_SECONDS = 60 * 60;
 
 const MAP_SELECT =
   "id, name, description, lat, lng, is_fenced, has_shade, has_water, has_toilets, has_parking, surface_type, review_count, avg_rating, view_count";
@@ -106,12 +110,23 @@ export const getPlaygroundById = cache(async (id: string): Promise<PlaygroundDet
   const { data: photoRows } = await supabase
     .from("photos")
     .select("id, storage_path")
-    .eq("playground_id", id);
+    .eq("playground_id", id)
+    .order("created_at")
+    .order("storage_path");
 
-  const photos: PlaygroundPhoto[] = (photoRows ?? []).map((p) => ({
-    id: p.id,
-    url: supabase.storage.from("playground-photos").getPublicUrl(p.storage_path).data.publicUrl,
-  }));
+  // Private bucket (ADR-0002): short-lived signed URLs, created with the visitor's own client
+  // so the storage select policy decides — it only covers photos that aren't flagged.
+  const paths = (photoRows ?? []).map((p) => p.storage_path);
+  const { data: signed } = paths.length
+    ? await supabase.storage.from(PHOTO_BUCKET).createSignedUrls(paths, PHOTO_URL_TTL_SECONDS)
+    : { data: [] };
+  const urlByPath = new Map(
+    (signed ?? []).flatMap((s) => (s.path && s.signedUrl && !s.error ? [[s.path, s.signedUrl] as const] : [])),
+  );
+  const photos: PlaygroundPhoto[] = (photoRows ?? []).flatMap((p) => {
+    const url = urlByPath.get(p.storage_path);
+    return url ? [{ id: p.id, url }] : [];
+  });
 
   const equipment = Array.isArray(data.equipment)
     ? data.equipment.filter((x): x is string => typeof x === "string")

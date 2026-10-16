@@ -197,11 +197,12 @@ select lives_ok(
          pg_temp.id('owner'), pg_temp.id('owner') || '/a1/0.jpg'),
   '[FR-ADD-04] [NFR-SEC-07] a verified user can add a photo row in their own folder'
 );
-select lives_ok(
+select throws_ok(
   format($$ insert into storage.objects (bucket_id, name, owner_id)
             values ('playground-photos', %L, %L) $$,
          pg_temp.id('owner') || '/a1/0.jpg', pg_temp.id('owner')),
-  '[FR-ADD-04] [NFR-SEC-07] a verified user can upload a file into their own folder'
+  '42501', null,
+  '[GDPR-09] clients cannot write to the photo bucket directly, even verified users in their own folder'
 );
 select pg_temp.act_as(pg_temp.id('r2'));
 select throws_ok(
@@ -217,6 +218,24 @@ select throws_ok(
          pg_temp.id('owner') || '/a1/1.jpg', pg_temp.id('r2')),
   '42501', null,
   '[NFR-SEC-07] a user cannot upload into another user''s folder'
+);
+reset role;
+
+-- Reading a file (which is what creating a signed URL needs) only while neither the photo
+-- nor its playground is flagged. Files are written as postgres: clients can't write them.
+insert into storage.objects (bucket_id, name, owner_id) values
+  ('playground-photos', pg_temp.id('owner') || '/a1/0.jpg', pg_temp.id('owner')),
+  ('playground-photos', pg_temp.id('owner') || '/a1/flagged.jpg', pg_temp.id('owner')),
+  ('playground-photos', pg_temp.id('owner') || '/a2/0.jpg', pg_temp.id('owner'));
+insert into public.photos (playground_id, user_id, storage_path, flagged) values
+  ('00000000-0000-0000-0000-0000000000a1', pg_temp.id('owner'), pg_temp.id('owner') || '/a1/flagged.jpg', true),
+  ('00000000-0000-0000-0000-0000000000a2', pg_temp.id('owner'), pg_temp.id('owner') || '/a2/0.jpg', false);
+select pg_temp.act_as_anon();
+select is(
+  (select array_agg(name order by name) from storage.objects
+    where bucket_id = 'playground-photos' and name like pg_temp.id('owner') || '/%'),
+  array[pg_temp.id('owner') || '/a1/0.jpg'],
+  '[FR-COM-06] [GDPR-14] visitors can read only photos that aren''t flagged, on playgrounds that aren''t flagged'
 );
 reset role;
 

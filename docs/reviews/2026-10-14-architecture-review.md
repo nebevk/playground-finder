@@ -108,6 +108,17 @@ The e2e run also surfaced three new low-severity items: the cookie notice covers
 
 **#5 (deploy coupling)** is now partly addressed by the [ops handoff](../../ops/README.md). Migrations reach production only through tickets that Cursor applies via MCP **before** pushing code; checksums guarantee the applied SQL is what was tested locally; every Cursor run starts with a drift check. **#18 (e2e in CI)** is addressed: CI now has an `e2e` job, green on its first GitHub run (2026-10-16).
 
+## Addendum — 2026-10-16, photo pipeline
+
+**Correction to #1.** The finding said `next/image` caches optimized photo copies for ≥ 4 hours. That was wrong for this code: photos are rendered with a plain `<img>`, so no optimizer copies exist. The core of #1 (flagged and deleted photos stay public by URL) was right.
+
+Working on #1 and #2 ([ADR-0002](../adr/0002-photo-pipeline.md)) turned up two more problems, both now fixed in ops 0003:
+
+- **Multi-photo submissions failed.** Server Actions accept 1 MB by default, and the add flow sends every photo in one request. Four normal photos (~1.4 MB) failed with `Body exceeded 1 MB limit`. Reproduced in e2e. This explains why production had no photos.
+- **"Deleted" photos stayed public.** Admin delete removed photo rows but not the files.
+
+Status: #1 and #2 are addressed by ops 0003 (expand: server-validated uploads, signed URLs) and ops 0004 (contract: private bucket, no client writes).
+
 ## Revisit this review when
 
 - the dataset passes 5,000 playgrounds or the map snapshot passes 1 MB (ADR-0001's triggers), or

@@ -370,14 +370,17 @@
       "selected": "Selected photos: {count} / {max}",
       "processing": "Preparing photos…",
       "totalSize": "{kb} KB total",
-      "tooMany": "You can upload up to {max} photos. The rest were skipped."
+      "tooMany": "You can upload up to {max} photos. The rest were skipped.",
+      "processingFailed": "Some photos couldn't be prepared, so they weren't added. Try another photo (JPG, PNG or WebP).",
+      "tooLarge": "The photos are too large in total (max {mb} MB), so some weren't added."
     },
     "errors": {
       "noLocation": "Pick a location on the map first.",
       "noName": "Enter a name for the playground.",
       "uploadFailed": "Photo upload failed.",
       "turnstile": "Spam check failed. Please try again.",
-      "generic": "Could not save. Please try again."
+      "generic": "Could not save. Please try again.",
+      "photoMetadata": "A photo contains hidden data, such as its location. Select it again here so we can remove it."
     },
     "success": "Playground added!"
   },
