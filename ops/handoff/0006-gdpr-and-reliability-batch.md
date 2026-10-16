@@ -1,7 +1,7 @@
 ---
 id: 0006
 title: 8 photos fit, complete data export, deploy guard, signup link in any browser
-status: blocked
+status: done
 order: code-first
 destructive: false
 migrations: [20261016140000_owners_see_own_flagged.sql]
@@ -86,3 +86,4 @@ drop policy if exists "photos_select_own" on public.photos;
 - **Advisors (security)** — same baseline as prior tickets; no new warnings.
 - **2026-10-16T21:01Z** status → `blocked`: owner must paste Confirm signup template, then run signup-on-phone test (and optional 8-photo test).
 - **2026-10-16T21:07Z** owner confirmed Confirm signup template updated (subject + body from `supabase/templates/confirmation.html`). Still waiting on phone signup test (and optional 8-photo test).
+- **2026-10-16T21:10Z** owner confirmed signup confirmation email received and test account deleted. Optional 8-photo test not run. status → `done`.
