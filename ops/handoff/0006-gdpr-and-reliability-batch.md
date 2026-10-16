@@ -1,7 +1,7 @@
 ---
 id: 0006
 title: 8 photos fit, complete data export, deploy guard, signup link in any browser
-status: ready
+status: in-progress
 order: code-first
 destructive: false
 migrations: [20261016140000_owners_see_own_flagged.sql]
@@ -76,4 +76,5 @@ drop policy if exists "photos_select_own" on public.photos;
 
 ## Result log (Cursor)
 
-- 
+- **2026-10-16T21:00Z** started (status → in-progress). Preflight: Turnstile live on `/sl/signup` (`challenges.cloudflare.com` count ≥ 1). Owner confirmed before push: `NEXT_PUBLIC_PRIVACY_EMAIL=ne.bevk@gmail.com` set in Vercel; both Turnstile keys set; Supabase "Confirm email" **ON** (was already on per owner).
+- **Push** — code commit `24c073c` (migrations-first N/A; order is code-first).
