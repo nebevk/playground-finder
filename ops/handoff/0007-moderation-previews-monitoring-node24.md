@@ -1,7 +1,7 @@
 ---
 id: 0007
 title: Moderation photo previews, error tracking, FK indexes, Node 24
-status: in-progress
+status: blocked
 order: migrations-first
 destructive: false
 migrations: [20261016200000_index_foreign_keys.sql]
@@ -72,3 +72,5 @@ drop index if exists public.favorites_playground_id_idx, public.photos_user_id_i
 
 - **2026-10-16T22:03Z** started (status → in-progress). Preflight: clean after `875e12d`; prod deploy `READY` (`476c1d8`); drift OK — `index_foreign_keys` not in prod.
 - **Applied** `index_foreign_keys`. Verify: all 5 indexes present. Performance advisors: `unindexed_foreign_keys` **gone** (remaining: unused_index INFO including the new indexes, multiple_permissive_policies WARN).
+- **2026-10-16T22:08Z** pushed `c0a1a81`. Deploy `dpl_3iziUwm7KCAc9rFvQmY2mUmfby1m` → `READY` (~66s). First Node 24 build: Vercel accepted `engines.node: 24.x` with no version rejection; `@sentry/nextjs` 11.8.0 installed; `/admin/sentry-test` route present. Smoke: `/sl`, `/sl/map`, `/sl/privacy`, `/en/privacy`, `/sitemap.xml` all 200. Privacy processors list does **not** show Sentry yet (DSN unset; "Sentry" only appears in bundled i18n). Security advisors unchanged from prior tickets: WARN `anon`/`authenticated_security_definer_function_executable` on `increment_playground_views`; WARN `auth_leaked_password_protection` (owner dashboard).
+- **Blocked** on owner Sentry EU setup (step 4–5): create org in **EU (Frankfurt)** (DSN host `*.de.sentry.io`), Next.js project, enable *Prevent Storing of IP Addresses*, set Vercel Production `NEXT_PUBLIC_SENTRY_DSN`, **redeploy**, then as admin hit `/sl/admin/sentry-test` and confirm the issue (no IP / no user). Optional: check `/sl/admin/moderation` photo previews if anything is flagged. Say **"process ops"** (or confirm done) to finish steps 6–8.
