@@ -96,7 +96,10 @@
       },
       "reportedBy": "Prijavil",
       "dismiss": "Zavrni prijavo",
-      "flagNow": "Označi vsebino"
+      "flagNow": "Označi vsebino",
+      "photoAlt": "Prijavljena fotografija",
+      "openPhoto": "Odpri v polni velikosti",
+      "photoMissing": "Datoteke fotografije ni več v shrambi."
     },
     "playgrounds": {
       "title": "Vsa igrišča",
@@ -213,7 +216,8 @@
       "vercelAnalytics": "Vercel Analytics: anonimna statistika ogledov strani brez piškotkov",
       "cloudflare": "Cloudflare: zaščita pred neželeno vsebino (Turnstile)",
       "simpleAnalytics": "Simple Analytics: statistika obiska, prijazna do zasebnosti (brez piškotkov in brez osebnih podatkov)",
-      "kofi": "Ko-fi: prostovoljni prispevki (zunanja stran, odpre se le ob kliku na povezavo za podporo)"
+      "kofi": "Ko-fi: prostovoljni prispevki (zunanja stran, odpre se le ob kliku na povezavo za podporo)",
+      "sentry": "Sentry: poročila o napakah v aplikaciji, brez osebnih podatkov (strežniki v EU)"
     },
     "location": {
       "title": "Tvoja lokacija",

@@ -1,4 +1,4 @@
-import type { createAdminClient } from "./supabase/admin";
+import { createAdminClient } from "./supabase/admin";
 
 type AdminClient = ReturnType<typeof createAdminClient>;
 
@@ -17,6 +17,17 @@ export async function photoPathsFor(
     : await query.in("playground_id", by.playgroundIds ?? []);
   if (error) console.error("photoPathsFor failed", error);
   return (data ?? []).map((p) => p.storage_path);
+}
+
+// Previews for the moderation queue, including flagged photos, which the visitor-facing
+// storage policy never signs. Service role: call only behind requireAdmin() (BL-48).
+export async function adminPhotoPreviewUrls(paths: string[], ttlSeconds = 600): Promise<Map<string, string>> {
+  if (paths.length === 0) return new Map();
+  const { data, error } = await createAdminClient().storage.from(PHOTO_BUCKET).createSignedUrls(paths, ttlSeconds);
+  if (error) console.error("adminPhotoPreviewUrls failed", error);
+  return new Map(
+    (data ?? []).flatMap((s) => (s.path && s.signedUrl && !s.error ? [[s.path, s.signedUrl] as const] : [])),
+  );
 }
 
 // Rows are already gone when this runs. A file that fails to delete is unreachable

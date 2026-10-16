@@ -7,8 +7,8 @@ Conventions and the ID scheme are in [README.md](README.md). Status last reviewe
 | ID | Requirement | Pri | Status | Verify |
 |---|---|---|---|---|
 | NFR-UX-01 | Mobile-first: every public page works at 375 px width with no horizontal scrolling. | Must | Done | e2e |
-| NFR-UX-02 | Touch targets are at least 44×44 px. The bottom navigation is always reachable on mobile. | Must | Done | e2e |
-| NFR-A11Y-01 | WCAG 2.1 AA basics: every page has one `h1`, controls have accessible names, everything is reachable by keyboard, text contrast ≥ 4.5:1. | Should | Partial — not audited | manual |
+| NFR-UX-02 | Touch targets are at least 44×44 px. The bottom navigation is always reachable on mobile. | Must | Partial — the dock passes, but the map sheet, filter drawer, controls dial, SL/EN switch and checkbox rows are 24–40 px ([design critique](../reviews/2026-10-16-design-critique.md), BL-58) | e2e |
+| NFR-A11Y-01 | WCAG 2.1 AA basics: every page has one `h1`, controls have accessible names, everything is reachable by keyboard, text contrast ≥ 4.5:1. | Should | Partial — design critique 2026-10-16 found contrast failures in the info, success, warning and error tokens (3.1–4.3:1) and unnamed map markers (BL-57, BL-66) | manual |
 
 ## Localization (`NFR-I18N`)
 
@@ -35,6 +35,7 @@ Conventions and the ID scheme are in [README.md](README.md). Status last reviewe
 | ID | Requirement | Pri | Status | Verify |
 |---|---|---|---|---|
 | NFR-PERF-01 | Map data comes from a shared cache that is refreshed on writes, not from a full-table query on every page view. See [ADR-0001](../adr/0001-map-data-loading.md). | Should | Not started | unit |
+| NFR-PERF-03 | Every foreign key is indexed, so cascading deletes (account deletion) and per-user lookups stay fast. | Should | Done — ops 0007 | db |
 | NFR-PERF-02 | The map snapshot stays ≤ 1 MB of raw JSON at 5,000 playgrounds ([ADR-0001](../adr/0001-map-data-loading.md)). | Should | Not started | unit |
 
 ## Platform (`NFR-PWA`, `NFR-SEO`, `NFR-OPS`)
@@ -46,5 +47,6 @@ Conventions and the ID scheme are in [README.md](README.md). Status last reviewe
 | NFR-SEO-01 | `sitemap.xml` lists public pages and playgrounds; `robots.txt` blocks `/admin`. | Should | Done | e2e |
 | NFR-SEO-02 | Every public page has its own title and description, plus `hreflang` alternates for `sl` and `en`. | Should | Partial — only detail, about and terms pages set metadata; no `hreflang` | e2e |
 | NFR-OPS-01 | All migrations apply cleanly to an empty database (`pnpm db:reset`), and DB tests pass in CI. | Must | Done | db |
-| NFR-OPS-02 | Local development, CI and Vercel use the same supported Node.js LTS version. | Should | Partial — local Node is 20 (end of life since April 2026) | manual |
+| NFR-OPS-02 | Local development, CI and Vercel use the same supported Node.js LTS version. | Should | Partial — Node 24 LTS pinned for Vercel (`engines`), CI and `.nvmrc` (ops 0007); the local machine still runs Node 20 | manual |
 | NFR-OPS-03 | The production schema never lags the deployed code. Migrations are backward-compatible (expand, then contract) and go through [ops tickets](../../ops/README.md) that apply them before the code is pushed. Every new migration has a ticket, and a migration is never edited after verification. | Should | Partial — the handoff and `pnpm ops:check` (in CI) exist; the production baseline is unconfirmed until ticket 0001 runs | manual |
+| NFR-OPS-04 | Server and browser errors in production reach an error tracker (Sentry, EU region): errors only, no personal data, one-time tokens in URLs scrubbed. Phones don't download the SDK unless it's configured. Admins can trigger a test error at `/admin/sentry-test`. | Should | Done — live once `NEXT_PUBLIC_SENTRY_DSN` is set (ops 0007) | unit, e2e |

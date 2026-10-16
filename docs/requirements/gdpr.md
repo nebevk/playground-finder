@@ -24,7 +24,7 @@
 | GDPR-07 | The photo upload step shows, in Slovenian: *"Prosimo, ne objavljajte fotografij, na katerih so prepoznavni obrazi otrok."* (English: "Please do not post photos with identifiable faces of children.") | Must | Done | unit, e2e |
 | GDPR-08 | Report reasons include **privacy violation**. | Must | Done | db |
 | GDPR-09 | Uploaded photos have EXIF metadata (including GPS) removed. | Must | Done — the browser always re-encodes and never sends an original; the server rejects files with EXIF/XMP; clients can't write to the bucket directly (ops 0003/0004, [ADR-0002](../adr/0002-photo-pipeline.md)) | unit, db |
-| GDPR-10 | `/privacy` exists in `sl` and `en`. It names every processor (Supabase, Vercel, Cloudflare, Simple Analytics, Ko-fi) and gives a monitored contact address for data requests. | Must | Done — `NEXT_PUBLIC_PRIVACY_EMAIL` is required: Vercel production builds fail without it (ops 0006) | unit, e2e |
+| GDPR-10 | `/privacy` exists in `sl` and `en`. It names every processor (Supabase, Vercel, Cloudflare, Simple Analytics, Ko-fi) and gives a monitored contact address for data requests. | Must | Partial — content and contact are done (ops 0006), but phones have no route to `/privacy` once the cookie notice is dismissed (BL-62) | unit, e2e |
 | GDPR-11 | `/terms` says users are responsible for what they upload and must not upload photos of people without consent. | Must | Done | e2e |
 | GDPR-12 | Only essential cookies, with a simple notice. No tracking cookies; any analytics are cookieless and listed on `/privacy`. | Must | Done | e2e |
 | GDPR-13 | The user's GPS position is requested only when they act (Locate me, pin location) and is never stored. Only the playground's pinned location is saved. | Must | Done | manual |
@@ -41,6 +41,7 @@
 | Cloudflare | Turnstile spam protection | |
 | Simple Analytics | Visitor statistics (cookieless) | Third-party script loaded on every page |
 | Ko-fi | Voluntary donations | External; only opened by the user |
+| Sentry | Error reports: errors only, no IPs/cookies/user identity, one-time tokens scrubbed | EU region (`*.de.sentry.io`); listed on `/privacy` only when `NEXT_PUBLIC_SENTRY_DSN` is set |
 
 ## Implementation notes
 

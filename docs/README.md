@@ -5,7 +5,7 @@
 | [requirements/](requirements/) | **What the app must do** — functional, non-functional and GDPR requirements, each with a stable ID, status and how it's tested |
 | [backlog.md](backlog.md) | **What's next** — prioritized open work, linked to requirement IDs |
 | [adr/](adr/) | **Why it's built this way** — architecture decision records |
-| [reviews/](reviews/) | Point-in-time architecture reviews — latest: [2026-10-14](reviews/2026-10-14-architecture-review.md) |
+| [reviews/](reviews/) | Point-in-time reviews — [architecture 2026-10-14](reviews/2026-10-14-architecture-review.md), [design critique 2026-10-16](reviews/2026-10-16-design-critique.md) |
 | [deploy.md](deploy.md) | Provisioning Supabase + Vercel, environment variables, rollback |
 | [../ops/](../ops/README.md) | **Shipping to production** — the Claude Code → Cursor handoff: migration/deploy tickets that Cursor executes via Supabase + Vercel MCP |
 | [plan.md](plan.md) | Original vision, build phases and initial schema (historical — requirements and backlog are now the source of truth) |

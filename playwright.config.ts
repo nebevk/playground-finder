@@ -1,5 +1,6 @@
 import { defineConfig, devices } from "@playwright/test";
 import { config as loadEnv } from "dotenv";
+import { SENTRY_SINK } from "./tests/e2e/sentry-sink";
 
 // Same env as `pnpm dev`; global-setup refuses to run against a non-local Supabase.
 loadEnv({ path: ".env.local" });
@@ -13,6 +14,11 @@ export default defineConfig({
   // The default (half the cores) starts up to 8 browsers next to Docker's VM and the
   // Next server; on a typical dev laptop that swaps and pages time out.
   workers: process.env.CI ? 2 : 3,
+  // Most tests are whole journeys (sign in → act → verify) against a production build; under
+  // parallel load they can exceed the 30 s default without anything being wrong.
+  timeout: 60_000,
+  // Pages stream from several sequential Supabase calls; 5 s is tight on a busy laptop.
+  expect: { timeout: 10_000 },
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? [["github"], ["html", { open: "never" }]] : "list",
@@ -43,5 +49,10 @@ export default defineConfig({
     url: `http://localhost:${PORT}/sl`,
     reuseExistingServer: !process.env.CI,
     timeout: 300_000,
+    // Error reports go to the local stand-in for Sentry (tests/e2e/sentry-sink.ts).
+    env: {
+      ...(Object.fromEntries(Object.entries(process.env).filter(([, v]) => v !== undefined)) as Record<string, string>),
+      NEXT_PUBLIC_SENTRY_DSN: SENTRY_SINK.dsn,
+    },
   },
 });

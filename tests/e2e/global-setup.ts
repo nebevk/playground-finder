@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
-import { E2E_LOGOUT_USER, E2E_RESET_USER, E2E_USER } from "./fixtures";
+import { E2E_ADMIN_USER, E2E_LOGOUT_USER, E2E_RESET_USER, E2E_USER } from "./fixtures";
+import { startSentrySink } from "./sentry-sink";
 
 // Creates the verified test users once per run. Refuses to touch anything but a local
 // Supabase, because these tests create accounts and playgrounds.
@@ -17,7 +18,7 @@ export default async function globalSetup() {
   await waitForStack(url);
 
   const admin = createClient(url, secret, { auth: { persistSession: false, autoRefreshToken: false } });
-  for (const user of [E2E_USER, E2E_LOGOUT_USER, E2E_RESET_USER]) {
+  for (const user of [E2E_USER, E2E_LOGOUT_USER, E2E_RESET_USER, E2E_ADMIN_USER]) {
     const { error } = await admin.auth.admin.createUser({
       email: user.email,
       password: user.password,
@@ -27,12 +28,22 @@ export default async function globalSetup() {
     if (error && !/already been registered|already exists/i.test(error.message)) throw error;
   }
 
+  // Clients can't write is_admin (column grants); the service role can.
+  const { data: users, error: listErr } = await admin.auth.admin.listUsers({ perPage: 1000 });
+  if (listErr) throw listErr;
+  const adminId = users.users.find((u) => u.email === E2E_ADMIN_USER.email)?.id;
+  const { error: promoteErr } = await admin.from("profiles").update({ is_admin: true }).eq("id", adminId!);
+  if (promoteErr) throw promoteErr;
+
   // Prove Auth actually issues sessions before tests start signing in.
   const anon = createClient(url, process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
   const { error } = await anon.auth.signInWithPassword(E2E_USER);
   if (error) throw new Error(`e2e: test user cannot sign in: ${error.message}`);
+
+  // Receives the app's error reports for the duration of the run; returned as teardown.
+  return startSentrySink();
 }
 
 // `pnpm db:reset` restarts the Auth and REST containers after it reports success; requests

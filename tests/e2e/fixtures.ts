@@ -17,6 +17,12 @@ export const E2E_LOGOUT_USER = {
   password: "e2e-Password-123",
 };
 
+// Admin account (profiles.is_admin is set by global-setup with the service role).
+export const E2E_ADMIN_USER = {
+  email: "e2e-admin@example.com",
+  password: "e2e-Password-123",
+};
+
 // Separate account for password-reset tests, which change the password.
 export const E2E_RESET_USER = {
   email: "e2e-reset@example.com",

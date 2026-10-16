@@ -96,7 +96,10 @@
       },
       "reportedBy": "Reported by",
       "dismiss": "Dismiss report",
-      "flagNow": "Flag now"
+      "flagNow": "Flag now",
+      "photoAlt": "Reported photo",
+      "openPhoto": "Open full size",
+      "photoMissing": "The photo file is no longer in storage."
     },
     "playgrounds": {
       "title": "All playgrounds",
@@ -213,7 +216,8 @@
       "vercelAnalytics": "Vercel Analytics: anonymous, cookieless page-view statistics",
       "cloudflare": "Cloudflare: spam protection (Turnstile)",
       "simpleAnalytics": "Simple Analytics: privacy-friendly visitor statistics (no cookies, no personal data)",
-      "kofi": "Ko-fi: voluntary donations (external site, opens only when you tap the support link)"
+      "kofi": "Ko-fi: voluntary donations (external site, opens only when you tap the support link)",
+      "sentry": "Sentry: error reports from the app, without personal data (EU servers)"
     },
     "location": {
       "title": "Your location",

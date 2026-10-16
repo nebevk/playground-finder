@@ -40,6 +40,8 @@ export default async function PrivacyPage({
           <li>{t("processors.cloudflare")}</li>
           <li>{t("processors.simpleAnalytics")}</li>
           <li>{t("processors.kofi")}</li>
+          {/* Listed only where error tracking is actually configured (NFR-OPS-04). */}
+          {process.env.NEXT_PUBLIC_SENTRY_DSN && <li>{t("processors.sentry")}</li>}
         </ul>
       </section>
 

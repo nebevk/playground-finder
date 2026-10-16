@@ -2,6 +2,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { requireAdmin } from "@/lib/admin";
+import { adminPhotoPreviewUrls } from "@/lib/photo-storage";
 import { EmptyState } from "@/components/EmptyState";
 import {
   approveFlaggedAction,
@@ -15,7 +16,12 @@ type FlaggedItem = {
   id: string;
   label: string;
   detail: string | null;
+  photo?: PhotoPreview;
 };
+
+// Admins must see a reported photo to judge it (e.g. a child's face): photos are private, so
+// previews are short-lived URLs signed with the service role (BL-48).
+type PhotoPreview = { url: string | null; path: string; playgroundId: string };
 
 type ReportRow = {
   id: string;
@@ -24,6 +30,7 @@ type ReportRow = {
   reason: string;
   created_at: string;
   reporter: string;
+  photo?: PhotoPreview;
 };
 
 export default async function ModerationPage({
@@ -46,6 +53,20 @@ export default async function ModerationPage({
       .order("created_at", { ascending: false }),
   ]);
 
+  // Photos to preview: flagged ones, and photos with reports below the auto-flag threshold.
+  const reportedPhotoIds = (reportsRes.data ?? []).filter((r) => r.target_type === "photo").map((r) => r.target_id);
+  const { data: reportedPhotos } = reportedPhotoIds.length
+    ? await supabase.from("photos").select("id, storage_path, playground_id").in("id", reportedPhotoIds)
+    : { data: [] };
+  const photoRows = [...(ph.data ?? []), ...(reportedPhotos ?? [])];
+  const urls = await adminPhotoPreviewUrls([...new Set(photoRows.map((p) => p.storage_path))]);
+  const previewById = new Map(
+    photoRows.map((p) => [
+      p.id,
+      { url: urls.get(p.storage_path) ?? null, path: p.storage_path, playgroundId: p.playground_id },
+    ]),
+  );
+
   const items: FlaggedItem[] = [
     ...(pg.data ?? []).map((r) => ({
       target_type: "playground" as const,
@@ -62,8 +83,9 @@ export default async function ModerationPage({
     ...(ph.data ?? []).map((r) => ({
       target_type: "photo" as const,
       id: r.id,
-      label: r.storage_path,
-      detail: `${t("moderation.type.playground")} ${r.playground_id}`,
+      label: t("moderation.type.photo"),
+      detail: r.storage_path,
+      photo: previewById.get(r.id),
     })),
   ];
 
@@ -76,6 +98,7 @@ export default async function ModerationPage({
       reason: r.reason,
       created_at: r.created_at,
       reporter: profile?.username ?? "",
+      photo: r.target_type === "photo" ? previewById.get(r.target_id) : undefined,
     };
   });
 
@@ -107,6 +130,7 @@ export default async function ModerationPage({
                     {item.detail && (
                       <p className="mt-1 text-sm text-base-content/70 break-all">{item.detail}</p>
                     )}
+                    {item.photo && <PhotoThumb photo={item.photo} t={t} />}
                   </div>
                   <div className="flex gap-2">
                     <form action={approveFlaggedAction}>
@@ -152,6 +176,7 @@ export default async function ModerationPage({
                     <p className="mt-1 text-xs text-base-content/60">
                       {t("moderation.reportedBy")}: <span className="font-mono">{r.reporter}</span>
                     </p>
+                    {r.photo && <PhotoThumb photo={r.photo} t={t} />}
                     {r.target_type === "playground" && (
                       <Link
                         href={`/playground/${r.target_id}`}
@@ -185,5 +210,34 @@ export default async function ModerationPage({
         )}
       </section>
     </section>
+  );
+}
+
+function PhotoThumb({
+  photo,
+  t,
+}: {
+  photo: PhotoPreview;
+  t: Awaited<ReturnType<typeof getTranslations<"admin">>>;
+}) {
+  return (
+    <div className="mt-2 flex flex-col gap-1">
+      {photo.url ? (
+        <a href={photo.url} target="_blank" rel="noopener noreferrer" className="block w-fit">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={photo.url}
+            alt={t("moderation.photoAlt")}
+            className="h-40 max-w-full rounded-box border border-base-300 object-contain"
+          />
+          <span className="link link-primary text-xs">{t("moderation.openPhoto")}</span>
+        </a>
+      ) : (
+        <p className="text-xs text-base-content/60">{t("moderation.photoMissing")}</p>
+      )}
+      <Link href={`/playground/${photo.playgroundId}`} className="link link-hover text-xs">
+        {t("moderation.type.playground")} →
+      </Link>
+    </div>
   );
 }

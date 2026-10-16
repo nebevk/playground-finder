@@ -11,7 +11,7 @@ Work that's done in the repo but still has to reach production is tracked by its
 | # | Item | Moves | Size |
 |---|---|---|---|
 | BL-07 | Implement [ADR-0001](adr/0001-map-data-loading.md): cached, slimmed map snapshot with tag invalidation and a payload budget test. | NFR-PERF-01, NFR-PERF-02 | M |
-| BL-09 | Move to Node 22 or 24 LTS in local dev, CI and Vercel; pin it with `engines.node` and `.nvmrc`. Afterwards bump Vitest 4 → 5. | NFR-OPS-02 | S |
+| BL-09 | Upgrade the local machine to Node 24 (`nvm install 24` then `nvm use 24`, as administrator); Vercel, CI and `.nvmrc` are already on 24 (ops 0007). Then bump Vitest 4 → 5. | NFR-OPS-02 | S |
 
 ## Next — expected features and hardening
 
@@ -20,8 +20,6 @@ Work that's done in the repo but still has to reach production is tracked by its
 | BL-10 | Notify admins when content is auto-flagged, and consider a minimum account age before reports count. Verified-only counting shipped in ops 0002. | NFR-SEC-06 | S |
 | BL-47 | Move the remaining app-only write rules into the database: at most 8 photos per playground per user (trigger), and a non-empty, length-capped name and description (check constraints). | NFR-SEC-07 | S |
 | BL-12 | Add a Report button to the hero (first) photo. | FR-COM-04 | S |
-| BL-48 | Moderation queue: show flagged photos as previews (signed with the service role, admins only) instead of a file path. Since ops 0004 the bucket is private, so until then admins review flagged photos in Supabase's storage browser. | FR-ADM-02 | S |
-| BL-13 | Show a message when "Locate me" fails or permission is denied. | FR-MAP-02 | S |
 | BL-14 | Let users edit their own review. | FR-COM-02 | S |
 | BL-15 | Favourites: add/remove on the sheet and detail page, list on the profile. | FR-PG-04 | M |
 | BL-16 | "My contributions" on the profile, including flagged items and their status. | FR-COM-07 | M |
@@ -35,6 +33,30 @@ Work that's done in the repo but still has to reach production is tracked by its
 | BL-42 | At 375 px the cookie notice sits on top of the map's controls button (locate / zoom / filters) until it's dismissed. Move it above the button or shrink it on `/map`. Found by e2e. | NFR-UX-02 | S |
 | BL-43 | Decide the logout scope. `signOut()` defaults to `global`, so "Odjava" on one device signs the user out everywhere. Keep it, or use `scope: "local"`. Found by e2e. | FR-ACC-03 | S |
 | BL-44 | Missing pages return HTTP 200 (soft 404): `[locale]/loading.tsx` streams before `notFound()`. They do carry `noindex`. Move `loading.tsx` into the routes that need it so missing playgrounds return a real 404. | NFR-SEO-01 | S |
+
+## Design & UX
+
+From the [2026-10-16 design critique](reviews/2026-10-16-design-critique.md), which has screenshots, rationale and exact values. ★ = one of its top-5 priorities.
+
+| # | Item | Moves | Size |
+|---|---|---|---|
+| BL-51 | ★ Map: always-visible 48 px **locate** button above the controls button, a "you are here" dot with an accuracy circle, and an error message when location fails (absorbs BL-13). | FR-MAP-02 | S |
+| BL-52 | ★ Map: one-tap **Filtri** button with an active-count badge, taken out of the controls dial. | FR-MAP-05, FR-MAP-08 | S |
+| BL-53 | ★ **Distance** ("1,2 km") on the sheet and home cards, computed in the browser and never stored; "V bližini" (*nearby*) order on Home after locating. | FR-MAP-09, GDPR-13 | M |
+| BL-54 | Non-modal bottom sheet: highlight and pan the selected pin above it, tap another pin to swap, 44 px actions. | FR-MAP-04 | M |
+| BL-55 | ★ Return to the original page after sign-in, sign-up and email confirmation (`next`, relative paths only, reusing the callback's check). | FR-ACC-03 | S |
+| BL-56 | ★ Empty states with one action: merged reviews state with "Napiši prvo mnenje" (*write the first review*), a compact photo state (CTA once BL-17 ships), and features instead of "Še ni ocen" on cards. | FR-PG-01 | S |
+| BL-57 | ★ Theme contrast: info/success/warning/error lightness to the computed values, secondary text ≥ `/60`, input borders ≥ `/50`. | NFR-A11Y-01 | S |
+| BL-58 | ★ Touch-target pass: `--size-field: 0.275rem`, no `btn-sm`/`btn-xs` on touch actions, `min-h-11` checkbox rows; extend the `[NFR-UX-02]` test beyond the dock (sheet, drawer, dial, add flow). | NFR-UX-02 | M |
+| BL-59 | One FeatureChip with icons (toggle and static variants), square-cornered checkboxes (they look like radio buttons today), and unknown features shown as "ni podatka" (*no data*). | FR-MAP-05, FR-ADD-02 | M |
+| BL-60 | Add flow step 1: show existing playgrounds on the picker, warn about one within ~50 m, sticky action bar above the dock, no raw coordinates. | FR-ADD-02 | M |
+| BL-61 | Add flow polish: "(neobvezno)" in labels, validate on tap, outline photo pickers, DaisyUI 5 `fieldset` markup (the v4 `form-control`/`label-text` classes do nothing). | FR-ADD-02 | S |
+| BL-62 | Mobile nav: turn the "Podpri" tab into "Več" (*more*): O aplikaciji, Zasebnost, Pogoji, Jezik, Podpri. Phones currently can't reach Privacy or Terms once the cookie notice is dismissed. | GDPR-10 | S |
+| BL-63 | ★ Quick fixes: `isolate` on the home map teaser ("Razišči zemljevid" is painted under the map), back links to `/map` (they go Home), labels for the five equipment keys, `whitespace-normal` on the consent labels (they overflow at 375 px), `list-outside` on privacy lists. | FR-MAP-09, FR-PG-01, GDPR-01 | S |
+| BL-64 | Slovenian copy pass: one *ti* voice, gender-neutral strings, »…« quotes, one locate label, "Navodila za pot", "Sporoči napako" for reports, the unused `filters.results` plural. | NFR-I18N-03 | S |
+| BL-65 | Visual consistency: brand pin on the detail and add maps, branded clusters, primary colour for the active nav item, `tabs-box` toggles, `link-primary` text links, a display font with Slovenian letters (Chewy is loaded `latin`-only, so č/š/ž fall back). | — | S |
+| BL-66 | Accessible names: marker titles, `aria-labelledby` on the sheet and filter drawer, numbered "Odstrani fotografijo 2 od 3". | NFR-A11Y-01 | S |
+| BL-67 | Moderation polish: "Odobri" with help text, actions under the preview, no raw storage path, dashboard tiles that link to their queues. | FR-ADM-02 | S |
 
 ## Later
 
@@ -56,11 +78,8 @@ Moved here from the "Known gaps" list in [deploy.md](deploy.md).
 |---|---|---|---|
 | BL-30 | Real SMTP provider for auth emails (Supabase's built-in sender has a tiny hourly limit). | FR-ACC-02 | S |
 | BL-31 | Custom domain on Vercel. Update Supabase auth Site URL and redirect URLs. | — | S |
-| BL-32 | Error tracking and alerting (e.g. Sentry). | — | M |
 | BL-33 | Supabase + Vercel plan review before launch: backup/PITR retention, storage quota for photos, inactivity pausing, image optimization quota. | — | S |
-| BL-34 | Delete the stale `i18n_check.txt` from the repo root (superseded by the `NFR-I18N-02` unit test). | NFR-I18N-02 | S |
 | BL-35 | Use `auth.getClaims()` (local JWT verification) in `src/proxy.ts` and read-only pages instead of `getUser()` on every request; keep `getUser()` for uploads, admin and account deletion. Needs asymmetric signing keys on the project. | — | S |
 | BL-40 | Add `import "server-only"` to `src/lib/supabase/admin.ts` and `server.ts`. | — | S |
 | BL-45 | Enable leaked-password protection (Supabase → Auth → Password security; may need the Pro plan). Security advisor WARN from ops 0001. | — | S |
-| BL-46 | Index the 5 foreign keys the performance advisor flagged (`favorites.playground_id`, `photos.user_id`, `reports.user_id`, `review_helpful.user_id`, `reviews.user_id`); they speed up account deletion cascades. From ops 0001. | — | S |
 | BL-41 | Import-script hygiene: move `@anthropic-ai/sdk`, `cheerio`, `dotenv` to devDependencies; give the scraper a User-Agent with this project's URL and contact; re-evaluate the pinned `claude-opus-4-7` against the current Claude 5 family. | — | S |

@@ -141,6 +141,7 @@ NEXT_PUBLIC_SITE_URL=https://<your-project>.vercel.app
 NEXT_PUBLIC_TURNSTILE_SITE_KEY=<from step 2>
 TURNSTILE_SECRET_KEY=<from step 2>
 NEXT_PUBLIC_PRIVACY_EMAIL=<monitored GDPR contact inbox>
+NEXT_PUBLIC_SENTRY_DSN=<optional: Sentry DSN, EU region>
 ```
 
 > **`NEXT_PUBLIC_SITE_URL` matters:** it is the origin used in signup-confirmation

@@ -34,6 +34,20 @@ select ok(
   '[GDPR-08] reports accept the privacy_violation reason'
 );
 
+-- [NFR-PERF-03] every foreign key has an index (cascading deletes, per-user lookups).
+select is(
+  (select array_agg(c.conrelid::regclass::text || '.' || a.attname order by 1)
+     from pg_constraint c
+     join pg_attribute a on a.attrelid = c.conrelid and a.attnum = c.conkey[1]
+    where c.contype = 'f' and c.connamespace = 'public'::regnamespace
+      and not exists (
+        select 1 from pg_index i
+        where i.indrelid = c.conrelid and i.indkey[0] = c.conkey[1]
+      )),
+  null,
+  '[NFR-PERF-03] every foreign key in public is the leading column of an index'
+);
+
 -- [FR-ADD-03] direct Storage API uploads are capped like the app (3 MiB, images only).
 select is(
   (select row(file_size_limit, allowed_mime_types)::text from storage.buckets where id = 'playground-photos'),
