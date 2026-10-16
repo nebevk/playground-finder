@@ -1,7 +1,7 @@
 ---
 id: 0003
 title: Photo pipeline 1/2 — server-checked uploads and signed URLs (expand)
-status: in-progress
+status: blocked
 order: migrations-first
 destructive: false
 migrations: [20261016110000_photos_read_unflagged.sql]
@@ -88,3 +88,8 @@ drop index if exists public.photos_storage_path_idx;
 - **2026-10-16T08:37Z** started (status → in-progress). Preflight: clean after `9447dd6`; `pnpm ops:check` pass; prod deploy `READY` (`dpl_2wrXwVmZ1YrT4LhYbhBVGK2vU72z`, SHA `40b21e2`); drift OK — `photos_read_unflagged` / `photos_private_bucket` not in prod. `SUPABASE_SECRET_KEY`: could not verify (Vercel MCP env list 403; `vercel` CLI not installed) — admin/delete already depend on it; note if uploads fail.
 - **Applied** `photos_read_unflagged` → prod version `20261016083756`.
 - **Verify** — `read_policy=1`, `path_index=1`. Pass.
+- **Push** — `9447dd6` (code + migrations) then `dc0cd14` (ops log). Migration applied before push.
+- **Vercel** — production `READY` for SHA `dc0cd14`, deploy `dpl_8Jrb92H1VP7qoPVZwy8qkFMZQ3U6`. Inspector: https://vercel.com/kvebens-projects/playground-finder/8Jrb92H1VP7qoPVZwy8qkFMZQ3U6
+- **Smoke** — all `smokePaths` HTTP 200.
+- **Advisors (security)** — same as 0002; no new warnings.
+- **2026-10-16T08:39Z** status → `blocked`: waiting for owner photo check (step 5). Add a test playground at https://playground-finder-seven.vercel.app/sl/add with **3 photos** from a phone, open its detail page and confirm photos show. Keep that playground for ticket 0004. Reply here when done.
