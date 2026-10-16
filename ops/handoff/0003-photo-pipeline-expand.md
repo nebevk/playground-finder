@@ -1,7 +1,7 @@
 ---
 id: 0003
 title: Photo pipeline 1/2 — server-checked uploads and signed URLs (expand)
-status: ready
+status: in-progress
 order: migrations-first
 destructive: false
 migrations: [20261016110000_photos_read_unflagged.sql]
@@ -85,4 +85,6 @@ drop index if exists public.photos_storage_path_idx;
 
 ## Result log (Cursor)
 
-- 
+- **2026-10-16T08:37Z** started (status → in-progress). Preflight: clean after `9447dd6`; `pnpm ops:check` pass; prod deploy `READY` (`dpl_2wrXwVmZ1YrT4LhYbhBVGK2vU72z`, SHA `40b21e2`); drift OK — `photos_read_unflagged` / `photos_private_bucket` not in prod. `SUPABASE_SECRET_KEY`: could not verify (Vercel MCP env list 403; `vercel` CLI not installed) — admin/delete already depend on it; note if uploads fail.
+- **Applied** `photos_read_unflagged` → prod version `20261016083756`.
+- **Verify** — `read_policy=1`, `path_index=1`. Pass.
