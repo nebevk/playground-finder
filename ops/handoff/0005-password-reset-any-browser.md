@@ -1,7 +1,7 @@
 ---
 id: 0005
 title: Password reset link that works in any browser
-status: in-progress
+status: blocked
 order: code-first
 destructive: false
 migrations: []
@@ -65,4 +65,12 @@ Restore Supabase's default *Reset Password* template (dashboard → Email Templa
 
 ## Result log (Cursor)
 
-- 
+- **2026-10-16T10:12Z** started (status → in-progress). Code-first: committed `58ede1c`, pushed with ops log `4a58584`. Preflight: tree cleaned by commit; prior prod deploy was `READY`.
+- **Vercel** — production `READY` for SHA `4a58584`, deploy `dpl_4wVn7XNFAH3mAvNcjDU6LiWP4Ry7`. Inspector: https://vercel.com/kvebens-projects/playground-finder/4wVn7XNFAH3mAvNcjDU6LiWP4Ry7
+- **Smoke** — all `smokePaths` HTTP 200.
+  - `/sl/reset-password?token_hash=x&type=recovery` → 200, page contains `name="token_hash"`.
+  - `/sl/auth/callback?code=x` → redirects to `/sl/login?error=link_invalid`.
+- **2026-10-16T10:13Z** status → `blocked`: Supabase MCP has no Auth email-template API. Owner must:
+  1. Dashboard → Authentication → Email Templates → Reset Password: Subject `Ponastavitev gesla · Reset your password`; Body = full contents of `supabase/templates/recovery.html`.
+  2. Authentication → URL Configuration: Site URL exactly `https://playground-finder-seven.vercel.app` (no trailing slash).
+  3. Test: request reset on laptop at `/sl/forgot-password`, open the email on the phone, set a new password → expect profile page. Then reply so this ticket can be marked done.
