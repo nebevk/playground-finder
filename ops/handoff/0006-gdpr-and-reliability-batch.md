@@ -1,7 +1,7 @@
 ---
 id: 0006
 title: 8 photos fit, complete data export, deploy guard, signup link in any browser
-status: in-progress
+status: blocked
 order: code-first
 destructive: false
 migrations: [20261016140000_owners_see_own_flagged.sql]
@@ -77,4 +77,11 @@ drop policy if exists "photos_select_own" on public.photos;
 ## Result log (Cursor)
 
 - **2026-10-16T21:00Z** started (status → in-progress). Preflight: Turnstile live on `/sl/signup` (`challenges.cloudflare.com` count ≥ 1). Owner confirmed before push: `NEXT_PUBLIC_PRIVACY_EMAIL=ne.bevk@gmail.com` set in Vercel; both Turnstile keys set; Supabase "Confirm email" **ON** (was already on per owner).
-- **Push** — code commit `24c073c` (migrations-first N/A; order is code-first).
+- **Push** — code commit `24c073c`, ops log `4e2d5f0` (code-first).
+- **Vercel** — production `READY` for SHA `4e2d5f0`, deploy `dpl_FCw6MwtSCPQHpM4Yi47qKm4D6QC8`. Env guard passed (no misconfigured failure).
+- **Applied** `owners_see_own_flagged` after code live.
+- **Verify policies** — `photos_select_own`, `playgrounds_select_own`, `reviews_select_own`. Pass.
+- **Smoke** — all `smokePaths` HTTP 200. Turnstile still live on signup.
+- **Extra:** `/sl/privacy` contains `ne.bevk@gmail.com`. Ticket expected `grep -ci gmail → 0`, but owner chose a Gmail contact — count is 2 (expected for this address). `/sl/auth/confirm?token_hash=x&type=email` → `/sl/login?error=link_invalid`. Pass.
+- **Advisors (security)** — same baseline as prior tickets; no new warnings.
+- **2026-10-16T21:01Z** status → `blocked`: owner must paste Confirm signup template, then run signup-on-phone test (and optional 8-photo test).
