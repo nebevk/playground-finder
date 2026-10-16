@@ -19,7 +19,7 @@ Each requirement is one table row:
 | **ID** | Stable, never reused. `FR-<AREA>-NN`, `NFR-<AREA>-NN` or `GDPR-NN`. Delete a requirement by marking it `Dropped`, not by removing the row. |
 | **Requirement** | One testable statement. Acceptance criteria go in the same cell. |
 | **Pri** | `Must` (launch blocker) · `Should` (expected) · `Could` (nice to have) |
-| **Status** | `Done` · `Partial` (with the gap named) · `Not started` · `Dropped` |
+| **Status** | `Done` · `Partial` (with the gap named) · `Not started` · `Dropped`. Status describes the **repository**. Whether a database change is live in production is tracked by its ops ticket ([`ops/handoff/`](../../ops/handoff/)), referenced as e.g. "ops 0002". |
 | **Verify** | How it is checked: `unit` · `db` · `e2e` · `manual` (comma-separated) |
 
 ## Traceability: requirement → test

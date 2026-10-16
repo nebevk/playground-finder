@@ -49,6 +49,33 @@ test("[FR-ADD-02] [FR-ADD-05] [GDPR-07] add a playground in three steps", async 
   await expect(page.getByRole("dialog").getByText(name)).toBeVisible();
 });
 
+// 1×1 PNG: small enough to upload unchanged, real enough for the image pipeline.
+const PNG = Buffer.from(
+  "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=",
+  "base64",
+);
+
+test("[FR-ADD-03] [FR-ADD-04] a verified user's photo is uploaded and shown on the playground", async ({ page }) => {
+  await login(page);
+  await page.goto("/sl/add");
+
+  await page.locator(".leaflet-container").first().click({ position: { x: 160, y: 140 } });
+  await page.getByRole("button", { name: sl.add.next }).click();
+  const name = `E2E foto ${Date.now()}`;
+  await page.getByPlaceholder(sl.add.step2.namePlaceholder).fill(name);
+  await page.getByRole("button", { name: sl.add.next }).click();
+
+  // Goes through the real Storage upload under the database's insert policies.
+  await page.locator('input[type="file"][multiple]').setInputFiles({ name: "p.png", mimeType: "image/png", buffer: PNG });
+  await page.getByRole("button", { name: sl.add.submit }).click();
+
+  await expect(page).toHaveURL(/\/sl\/map/);
+  const sheet = page.getByRole("dialog");
+  await expect(sheet.getByText(name)).toBeVisible();
+  await sheet.locator('a[href*="/playground/"]').first().click();
+  await expect(page.locator('img[src*="playground-photos"]').first()).toBeVisible();
+});
+
 test("[FR-COM-04] a signed-in user can report a playground, with a privacy-violation reason", async ({ page }) => {
   await login(page);
   await page.goto(await playgroundPath());

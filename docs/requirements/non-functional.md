@@ -27,8 +27,8 @@ Conventions and the ID scheme are in [README.md](README.md). Status last reviewe
 | NFR-SEC-03 | Responses send security headers: `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`, `Strict-Transport-Security` and a `Content-Security-Policy`. | Should | Partial — no CSP | e2e |
 | NFR-SEC-04 | Server-side rate limits on submissions (signup, add playground, review, report). | Should | Not started | manual |
 | NFR-SEC-05 | Users cannot write moderation or privilege columns (`is_admin`, `flagged`, `helpful_count`). Admin actions run server-side behind `requireAdmin()`. | Must | Done | db |
-| NFR-SEC-06 | One person cannot hide content alone: auto-flagging (FR-COM-05) only counts reports from verified accounts. | Should | Not started — 3 throwaway accounts can hide any playground | db |
-| NFR-SEC-07 | Every rule the app enforces on writes is also enforced by RLS or constraints, because the API is public. In particular, a photo row may only reference a file in the uploader's own storage folder. | Must | Not started — `photos.storage_path` is unconstrained | db |
+| NFR-SEC-06 | One person cannot hide content alone: auto-flagging (FR-COM-05) only counts reports from verified accounts. | Should | Done — ops 0002 (no minimum account age) | db |
+| NFR-SEC-07 | Every rule the app enforces on writes is also enforced by RLS or constraints, because the API is public. In particular, a photo row may only reference a file in the uploader's own storage folder. | Must | Partial — photo rows and files are tied to the verified uploader's own folder (ops 0002); "at most 8 photos" and "name is not empty" are still app-only (BL-47) | db |
 
 ## Performance (`NFR-PERF`)
 

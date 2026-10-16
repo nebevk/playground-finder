@@ -106,7 +106,7 @@ The DB and e2e suites now run against the local stack (`pnpm test:db`: 37 pass; 
 
 The e2e run also surfaced three new low-severity items: the cookie notice covers the map controls at 375 px (BL-42); logout signs the user out on every device (BL-43); missing pages return HTTP 200 instead of 404 (BL-44).
 
-**#5 (deploy coupling)** is now partly addressed by the [ops handoff](../../ops/README.md). Migrations reach production only through tickets that Cursor applies via MCP **before** pushing code; checksums guarantee the applied SQL is what was tested locally; every Cursor run starts with a drift check. **#18 (e2e in CI)** is addressed: CI now has an `e2e` job (pending its first green run, BL-08).
+**#5 (deploy coupling)** is now partly addressed by the [ops handoff](../../ops/README.md). Migrations reach production only through tickets that Cursor applies via MCP **before** pushing code; checksums guarantee the applied SQL is what was tested locally; every Cursor run starts with a drift check. **#18 (e2e in CI)** is addressed: CI now has an `e2e` job, green on its first GitHub run (2026-10-16).
 
 ## Revisit this review when
 

@@ -161,7 +161,6 @@ select throws_ok(
   '23505', null,
   '[FR-COM-03] one helpful vote per user per review'
 );
-select todo('BL-11: self-votes are blocked only in the UI', 1);
 select throws_ok(
   format($$ insert into public.review_helpful (review_id, user_id)
             values ('00000000-0000-0000-0000-0000000000b3', %L) $$, pg_temp.id('r1')),
@@ -175,14 +174,49 @@ select is(
   '[FR-COM-03] helpful_count is kept in sync by trigger'
 );
 
--- photos need a verified email
+-- photos need a verified email and must live in the uploader's own folder (rows and files)
 select pg_temp.act_as(pg_temp.id('unverified'));
-select todo('BL-01: only the Server Action checks email verification', 1);
 select throws_ok(
   format($$ insert into public.photos (playground_id, user_id, storage_path)
-            values ('00000000-0000-0000-0000-0000000000a1', %L, 'x/y/z.jpg') $$, pg_temp.id('unverified')),
+            values ('00000000-0000-0000-0000-0000000000a1', %L, %L) $$,
+         pg_temp.id('unverified'), pg_temp.id('unverified') || '/a1/0.jpg'),
   '42501', null,
-  '[FR-ADD-04] the database rejects photos from unverified users'
+  '[FR-ADD-04] the database rejects photo rows from unverified users'
+);
+select throws_ok(
+  format($$ insert into storage.objects (bucket_id, name, owner_id)
+            values ('playground-photos', %L, %L) $$,
+         pg_temp.id('unverified') || '/a1/0.jpg', pg_temp.id('unverified')),
+  '42501', null,
+  '[FR-ADD-04] storage rejects photo files from unverified users'
+);
+select pg_temp.act_as(pg_temp.id('owner'));
+select lives_ok(
+  format($$ insert into public.photos (playground_id, user_id, storage_path)
+            values ('00000000-0000-0000-0000-0000000000a1', %L, %L) $$,
+         pg_temp.id('owner'), pg_temp.id('owner') || '/a1/0.jpg'),
+  '[FR-ADD-04] [NFR-SEC-07] a verified user can add a photo row in their own folder'
+);
+select lives_ok(
+  format($$ insert into storage.objects (bucket_id, name, owner_id)
+            values ('playground-photos', %L, %L) $$,
+         pg_temp.id('owner') || '/a1/0.jpg', pg_temp.id('owner')),
+  '[FR-ADD-04] [NFR-SEC-07] a verified user can upload a file into their own folder'
+);
+select pg_temp.act_as(pg_temp.id('r2'));
+select throws_ok(
+  format($$ insert into public.photos (playground_id, user_id, storage_path)
+            values ('00000000-0000-0000-0000-0000000000a1', %L, %L) $$,
+         pg_temp.id('r2'), pg_temp.id('owner') || '/a1/0.jpg'),
+  '42501', null,
+  '[NFR-SEC-07] a photo row cannot point at another user''s file'
+);
+select throws_ok(
+  format($$ insert into storage.objects (bucket_id, name, owner_id)
+            values ('playground-photos', %L, %L) $$,
+         pg_temp.id('owner') || '/a1/1.jpg', pg_temp.id('r2')),
+  '42501', null,
+  '[NFR-SEC-07] a user cannot upload into another user''s folder'
 );
 reset role;
 
@@ -233,6 +267,32 @@ select is(
   (select flagged from public.playgrounds where id = '00000000-0000-0000-0000-0000000000a1'),
   true,
   '[FR-COM-05] the third report flags the target for admin review'
+);
+
+-- Only verified reporters count: 1 unverified + 2 verified reports must not hide Maribor.
+select pg_temp.act_as(pg_temp.id('unverified'));
+insert into public.reports (target_type, target_id, user_id, reason)
+  values ('playground', '00000000-0000-0000-0000-0000000000a3', auth.uid(), 'spam');
+select pg_temp.act_as(pg_temp.id('r1'));
+insert into public.reports (target_type, target_id, user_id, reason)
+  values ('playground', '00000000-0000-0000-0000-0000000000a3', auth.uid(), 'spam');
+select pg_temp.act_as(pg_temp.id('r2'));
+insert into public.reports (target_type, target_id, user_id, reason)
+  values ('playground', '00000000-0000-0000-0000-0000000000a3', auth.uid(), 'spam');
+reset role;
+select is(
+  (select flagged from public.playgrounds where id = '00000000-0000-0000-0000-0000000000a3'),
+  false,
+  '[NFR-SEC-06] reports from unverified accounts do not count toward auto-flagging'
+);
+select pg_temp.act_as(pg_temp.id('r3'));
+insert into public.reports (target_type, target_id, user_id, reason)
+  values ('playground', '00000000-0000-0000-0000-0000000000a3', auth.uid(), 'spam');
+reset role;
+select is(
+  (select flagged from public.playgrounds where id = '00000000-0000-0000-0000-0000000000a3'),
+  true,
+  '[NFR-SEC-06] three verified reports still flag the target'
 );
 
 -- ── admin quick-add duplicate check (as postgres, so flagged rows count too) ─

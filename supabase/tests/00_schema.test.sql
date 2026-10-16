@@ -34,6 +34,13 @@ select ok(
   '[GDPR-08] reports accept the privacy_violation reason'
 );
 
+-- [FR-ADD-03] direct Storage API uploads are capped like the app (3 MiB, images only).
+select is(
+  (select row(file_size_limit, allowed_mime_types)::text from storage.buckets where id = 'playground-photos'),
+  row(3145728::bigint, array['image/png', 'image/jpeg', 'image/webp'])::text,
+  '[FR-ADD-03] the photo bucket accepts only PNG/JPEG/WebP up to 3 MiB'
+);
+
 -- [FR-COM-06] [GDPR-14] flagged photo files must not stay publicly downloadable.
 select todo('BL-03: bucket is public, so flagged files stay reachable by URL', 1);
 select is(
