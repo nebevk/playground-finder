@@ -1,7 +1,7 @@
 ---
 id: 0007
 title: Moderation photo previews, error tracking, FK indexes, Node 24
-status: blocked
+status: done
 order: migrations-first
 destructive: false
 migrations: [20261016200000_index_foreign_keys.sql]
@@ -76,3 +76,4 @@ drop index if exists public.favorites_playground_id_idx, public.photos_user_id_i
 - **Blocked** on owner Sentry EU setup (step 4–5): create org in **EU (Frankfurt)** (DSN host `*.de.sentry.io`), Next.js project, enable *Prevent Storing of IP Addresses*, set Vercel Production `NEXT_PUBLIC_SENTRY_DSN`, **redeploy**, then as admin hit `/sl/admin/sentry-test` and confirm the issue (no IP / no user). Optional: check `/sl/admin/moderation` photo previews if anything is flagged. Say **"process ops"** (or confirm done) to finish steps 6–8.
 - **2026-10-16T22:25Z** Sentry agent plugin installed; MCP authenticated. Org `nejc-bevk` is **EU** (`regionUrl` `https://de.sentry.io`). Created project `playground-finder` (platform `javascript-nextjs`); DSN host is `ingest.de.sentry.io`. App SDK already present (errors-only + scrubbing) — not re-wizarded. Vercel MCP/CLI still **403** on Production env create — owner must set `NEXT_PUBLIC_SENTRY_DSN` in the dashboard (DSN shared in chat), enable *Prevent Storing of IP Addresses*, then **Redeploy**. After that: admin `/sl/admin/sentry-test` and say **process ops**.
 - **2026-10-16T22:32Z** owner said process ops. Redeploy `dpl_7h2ZU4V3KrP4qNoC74UcNviM18ka` → `READY`. Smoke paths 200. `/sl/privacy` now shows Sentry in the processors `<li>` (DSN baked in; DSN not leaked in HTML). Sentry Issues: no events yet. Still **blocked** on step 5: as admin open `/sl/admin/sentry-test`, confirm issue title "Sentry test error…", no IP / no user; also confirm *Prevent Storing of IP Addresses* is on. Then say **process ops** again.
+- **2026-10-16T22:39Z** owner admin hit succeeded. Issue [PLAYGROUND-FINDER-1](https://nejc-bevk.sentry.io/issues/PLAYGROUND-FINDER-1): title matches; Users Impacted **0**; no email/user id; no IP address (only `user.geo`: US). Runtime node v24.21.0. Privacy Sentry `<li>` still present. Smoke 200. Security advisors unchanged (WARN `increment_playground_views` SECURITY DEFINER for anon/authenticated; WARN `auth_leaked_password_protection`). Resolved the test issue. **status → done**.
