@@ -1,7 +1,7 @@
 ---
 id: 0007
 title: Moderation photo previews, error tracking, FK indexes, Node 24
-status: ready
+status: in-progress
 order: migrations-first
 destructive: false
 migrations: [20261016200000_index_foreign_keys.sql]
@@ -70,4 +70,5 @@ drop index if exists public.favorites_playground_id_idx, public.photos_user_id_i
 
 ## Result log (Cursor)
 
-- 
+- **2026-10-16T22:03Z** started (status → in-progress). Preflight: clean after `875e12d`; prod deploy `READY` (`476c1d8`); drift OK — `index_foreign_keys` not in prod.
+- **Applied** `index_foreign_keys`. Verify: all 5 indexes present. Performance advisors: `unindexed_foreign_keys` **gone** (remaining: unused_index INFO including the new indexes, multiple_permissive_policies WARN).
