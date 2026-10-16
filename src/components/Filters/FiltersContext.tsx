@@ -8,6 +8,7 @@ import {
   type MapPlayground,
   type SurfaceType,
 } from "@/lib/playground-types";
+import { matchesFilters } from "@/lib/filters";
 
 type FiltersState = {
   features: Set<FeatureKey>;
@@ -56,11 +57,7 @@ export function FiltersProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const value = useMemo<FiltersContextValue>(() => {
-    const matches = (p: MapPlayground) => {
-      for (const f of features) if (!p[f]) return false;
-      if (surfaces.size > 0 && (!p.surface_type || !surfaces.has(p.surface_type))) return false;
-      return true;
-    };
+    const matches = (p: MapPlayground) => matchesFilters(p, features, surfaces);
 
     return {
       state: { features, surfaces },

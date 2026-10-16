@@ -8,6 +8,12 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:db": "supabase test db",
+    "test:e2e": "playwright test",
+    "test:req": "tsx scripts/req-coverage.ts",
+    "ops:check": "tsx scripts/ops-check.ts",
     "db:start": "supabase start",
     "db:stop": "supabase stop",
     "db:reset": "supabase db reset",
@@ -35,6 +41,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@playwright/test": "^1.64.1",
     "@tailwindcss/postcss": "^4",
     "@types/leaflet": "^1.9.21",
     "@types/leaflet.markercluster": "^1.5.6",
@@ -46,7 +53,8 @@
     "supabase": "^2.92.1",
     "tailwindcss": "^4",
     "tsx": "^4.19.2",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.1.11"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

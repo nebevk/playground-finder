@@ -209,20 +209,13 @@ If you want signup to be invite-only during alpha:
 
 ## Ongoing updates
 
-Every `git push` to your default branch triggers a new Vercel deploy automatically. Schema changes: add a new migration file under `supabase/migrations/` and run `pnpm supabase db push`. **Never edit an existing applied migration** — always create a new one.
+Every `git push` to your default branch triggers a new Vercel deploy automatically. Schema changes go through the **ops handoff** ([ops/README.md](../ops/README.md)): Claude Code writes the migration and a ticket in `ops/handoff/`, verified on the local stack; you say "process ops" in Cursor, which applies the migration via Supabase MCP **before** pushing the code that needs it. Don't run `supabase db push` against production; migrations applied over MCP are recorded under different version numbers. **Never edit an existing applied migration.** Always create a new one (`pnpm ops:check` flags edits).
 
 ---
 
 ## Known gaps before "true" production
 
-These are deliberately left until after initial testing:
-- **SMTP provider** for auth emails (free tier limit is tiny)
-- **Custom domain** on Vercel (free, 2 clicks once you have a domain)
-- **Observability**: Sentry / Axiom / Vercel Analytics
-- **Database backups**: Supabase free tier has 7-day point-in-time recovery — fine for testing, consider upgrading before any real data matters
-- **Content moderation for photos**: currently relies on user reports + admin review. At scale you'd want automated NSFW/face detection.
-- **Rate limiting** on submissions (Turnstile helps, but add server-side limits too)
-- **Playground view counter is ungated** — `increment_playground_views` is granted to `anon` with no dedup, so the public "Most popular" ranking is gameable by looping the RPC. Acceptable for alpha (impact is a reordered vanity list); when hardening abuse-resistance, dedup per session/IP (a `views` table with a unique key + `ON CONFLICT`) or switch the ranking to a less spammable signal.
+Tracked in [backlog.md](backlog.md): SMTP provider (BL-30), custom domain (BL-31), error tracking (BL-32), backups (BL-33), automated photo screening (BL-28), rate limiting (BL-19), and the ungated view counter (BL-27). The view counter's RPC is open to `anon` with no de-duplication, so "most viewed" can be gamed. That's acceptable for alpha because it only reorders a vanity list.
 
 Resolved since alpha: Turnstile server-side verification, localized `not-found.tsx` / `error.tsx`, password reset flow, `/terms` page, sitemap/robots/OG metadata.
 

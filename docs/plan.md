@@ -6,6 +6,8 @@
 
 > 📦 **Going live?** Jump to [Phase 8: Deployment](#phase-8-deployment) or open [docs/deploy.md](deploy.md) directly.
 
+> 🗂 **Historical.** This is the original build plan. Current requirements (with status and tests) are in [requirements/](requirements/), and open work is in [backlog.md](backlog.md).
+
 ---
 
 ## 🚀 Tech Stack

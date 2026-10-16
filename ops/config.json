@@ -1,0 +1,5 @@
+{
+  "baseline": "20260612120000",
+  "productionUrl": "https://playground-finder-seven.vercel.app",
+  "smokePaths": ["/sl", "/sl/map", "/sl/privacy", "/en/privacy", "/sitemap.xml"]
+}
