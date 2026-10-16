@@ -1,7 +1,7 @@
 ---
 id: 0005
 title: Password reset link that works in any browser
-status: blocked
+status: done
 order: code-first
 destructive: false
 migrations: []
@@ -74,3 +74,4 @@ Restore Supabase's default *Reset Password* template (dashboard → Email Templa
   1. Dashboard → Authentication → Email Templates → Reset Password: Subject `Ponastavitev gesla · Reset your password`; Body = full contents of `supabase/templates/recovery.html`.
   2. Authentication → URL Configuration: Site URL exactly `https://playground-finder-seven.vercel.app` (no trailing slash).
   3. Test: request reset on laptop at `/sl/forgot-password`, open the email on the phone, set a new password → expect profile page. Then reply so this ticket can be marked done.
+- **2026-10-16T11:14Z** owner confirmed Site URL already correct; email template updated; phone reset test works. status → `done`.

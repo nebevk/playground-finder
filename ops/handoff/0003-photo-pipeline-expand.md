@@ -1,7 +1,7 @@
 ---
 id: 0003
 title: Photo pipeline 1/2 — server-checked uploads and signed URLs (expand)
-status: blocked
+status: done
 order: migrations-first
 destructive: false
 migrations: [20261016110000_photos_read_unflagged.sql]
@@ -93,3 +93,4 @@ drop index if exists public.photos_storage_path_idx;
 - **Smoke** — all `smokePaths` HTTP 200.
 - **Advisors (security)** — same as 0002; no new warnings.
 - **2026-10-16T08:39Z** status → `blocked`: waiting for owner photo check (step 5). Add a test playground at https://playground-finder-seven.vercel.app/sl/add with **3 photos** from a phone, open its detail page and confirm photos show. Keep that playground for ticket 0004. Reply here when done.
+- **2026-10-16T11:14Z** owner confirmed photos show on the new playground. Photo check query (newest 5): all `image/webp`, paths `<uuid>/<uuid>/<n>-<uuid>.webp`, files present (~645–741 KB each), `flagged=false`. status → `done`.

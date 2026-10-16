@@ -1,7 +1,7 @@
 ---
 id: 0004
 title: Photo pipeline 2/2 — private bucket, no client writes (contract)
-status: ready
+status: blocked
 order: migrations-first
 destructive: false
 migrations: [20261016110100_photos_private_bucket.sql]
@@ -92,4 +92,11 @@ create policy "playground_photos_update_own" on storage.objects
 
 ## Result log (Cursor)
 
-- 
+- **2026-10-16T11:15Z** started after 0003/0005 marked done. Preflight: 0003 `done` and its code is on production master; deploy `READY` (`87cf2fe`).
+- **Before path:** `f20e1439-baad-42d8-bde0-12aaff56075f/b334cb62-2285-44cb-bb5e-f5d625dcbe9c/4-66cbbcda-e9ee-4c69-8f62-9ebb6082ae1a.webp`
+- **Applied** `photos_private_bucket` → prod version `20261016111456`.
+- **Verify** — `bucket_public=false`, `client_write_policies=0`, `read_policy=1`. Pass.
+- **Public URL** — curl → HTTP `400` (not 200). Pass.
+- **Smoke** — all `smokePaths` HTTP 200.
+- **Advisors (security)** — same baseline as 0002/0003; no new warnings.
+- **2026-10-16T11:15Z** status → `blocked`: owner must (1) reload the test playground and confirm photos still show via signed URLs; (2) delete that playground in `/admin/playgrounds`, then reply so the orphan-files query can run.
