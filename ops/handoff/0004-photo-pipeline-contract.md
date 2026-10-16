@@ -1,7 +1,7 @@
 ---
 id: 0004
 title: Photo pipeline 2/2 — private bucket, no client writes (contract)
-status: blocked
+status: done
 order: migrations-first
 destructive: false
 migrations: [20261016110100_photos_private_bucket.sql]
@@ -100,3 +100,4 @@ create policy "playground_photos_update_own" on storage.objects
 - **Smoke** — all `smokePaths` HTTP 200.
 - **Advisors (security)** — same baseline as 0002/0003; no new warnings.
 - **2026-10-16T11:15Z** status → `blocked`: owner must (1) reload the test playground and confirm photos still show via signed URLs; (2) delete that playground in `/admin/playgrounds`, then reply so the orphan-files query can run.
+- **2026-10-16T12:08Z** owner deleted the test playground. After-deletion query: `orphan_files=0` (also `photos=0`, `storage_objects=0`). status → `done`.
