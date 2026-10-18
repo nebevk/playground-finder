@@ -1,7 +1,7 @@
 ---
 id: 0008
 title: Design critique fixes (map, home, add flow, sign-in return, accessibility)
-status: ready
+status: in-progress
 order: any
 destructive: false
 migrations: []
@@ -71,4 +71,4 @@ No database changes. The checks are the smoke tests and owner tests above.
 
 ## Result log (Cursor)
 
-- 
+- **2026-10-18T07:02Z** started (status → in-progress). Preflight: clean; local commit `a7136ac` ahead of origin (design code + this ticket); prod deploy `READY` (`5cdca87`); no migrations (order: any).
