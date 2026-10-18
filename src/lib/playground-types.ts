@@ -11,6 +11,11 @@ export const PLAYGROUND_FEATURE_KEYS = [
 
 export type FeatureKey = (typeof PLAYGROUND_FEATURE_KEYS)[number];
 
+// Equipment values with translations (detail.equipmentOptions); anything else in the jsonb
+// column is not shown until it has a label (BL-18 will constrain the column itself).
+export const EQUIPMENT_KEYS = ["swings", "slides", "zipline", "sandbox", "climbing_wall"] as const;
+export type EquipmentKey = (typeof EQUIPMENT_KEYS)[number];
+
 export type MapPlayground = {
   id: string;
   name: string;

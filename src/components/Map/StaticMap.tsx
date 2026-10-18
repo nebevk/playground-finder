@@ -3,6 +3,7 @@
 import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { fixLeafletDefaultIcons } from "./fix-leaflet-icons";
+import { playgroundMarkerIcon } from "./playground-marker";
 
 fixLeafletDefaultIcons();
 
@@ -29,7 +30,7 @@ export function StaticMap({
       className="h-full w-full"
     >
       <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-      {marker && <Marker position={[lat, lng]} />}
+      {marker && <Marker position={[lat, lng]} icon={playgroundMarkerIcon} />}
     </MapContainer>
   );
 }

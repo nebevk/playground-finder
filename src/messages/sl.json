@@ -15,11 +15,13 @@
     "privacy": "Zasebnost",
     "terms": "Pogoji",
     "language": "Jezik",
-    "copyright": "© 2026 Nejc Bevk"
+    "copyright": "© 2026 Nejc Bevk",
+    "more": "Več",
+    "close": "Zapri"
   },
   "about": {
     "title": "O aplikaciji",
-    "intro": "« Kje so igrala? » je skupnostna aplikacija, ki staršem po Sloveniji pomaga najti popolno otroško igrišče.",
+    "intro": "»Kje so igrala?« je skupnostna aplikacija, ki staršem po Sloveniji pomaga najti popolno otroško igrišče.",
     "what": "Igrišča lahko iščeš na zemljevidu, filtriraš po senci, ograji in pitniku ter prebereš mnenja drugih staršev. Vsak lahko prispeva novo igrišče in tako pomaga skupnosti.",
     "authorTitle": "O meni",
     "authorBody": "Aplikacijo v prostem času razvijam Nejc Bevk. To je moj osebni projekt, ki je nastal iz želje po boljšem pregledu nad igrišči za naše najmlajše.",
@@ -32,8 +34,10 @@
     "intro": "Najdi popolno igrišče za svoje otroke. Filtriraj po senci, ograji in pitniku ter preberi mnenja drugih staršev.",
     "latest": "Najnovejša igrišča",
     "popular": "Najbolj priljubljena",
-    "noLatest": "Še ni igrišč. Bodi prvi in dodaj svojega!",
-    "explore": "Razišči zemljevid"
+    "noLatest": "Še ni igrišč. Dodaj prvo!",
+    "explore": "Razišči zemljevid",
+    "nearby": "V bližini",
+    "findNearby": "Igrišča v bližini"
   },
   "map": {
     "title": "Zemljevid igrišč",
@@ -44,17 +48,22 @@
     "controls": "Možnosti zemljevida",
     "zoomIn": "Približaj",
     "zoomOut": "Oddalji",
-    "useMyLocation": "Uporabi mojo lokacijo",
-    "welcome": "Tapni oznako za podrobnosti.",
+    "useMyLocation": "Poišči mojo lokacijo",
+    "welcome": "Izberi oznako za podrobnosti.",
     "dismiss": "Razumem",
     "addedToast": "Hvala! 🎉 Tvoje igrišče je na zemljevidu.",
-    "directions": "Navodila",
+    "directions": "Navodila za pot",
     "emptyFilteredTitle": "Ni zadetkov",
     "emptyFiltered": "Na tem območju ni igrišč s temi filtri.",
     "emptyFilteredAction": "Počisti filtre",
     "emptyNoneTitle": "Tu še ni igrišč",
-    "emptyNone": "Bodi prvi in dodaj igrišče na tem območju.",
-    "emptyNoneAction": "Dodaj igrišče"
+    "emptyNone": "Dodaj prvo igrišče na tem območju.",
+    "emptyNoneAction": "Dodaj igrišče",
+    "locating": "Iščem tvojo lokacijo…",
+    "locateDenied": "Dostop do lokacije je zavrnjen. Omogoči ga v nastavitvah brskalnika in poskusi znova.",
+    "locateUnavailable": "Lokacije ni bilo mogoče določiti. Poskusi znova.",
+    "youAreHere": "Tvoja lokacija",
+    "distanceAway": "{distance} od tebe"
   },
   "admin": {
     "title": "Administracija",
@@ -76,7 +85,7 @@
     "moderation": {
       "title": "Prijavljena vsebina",
       "empty": "Trenutno ni nič za pregledati.",
-      "approve": "Odobri (počisti zastavico)",
+      "approve": "Odobri",
       "delete": "Izbriši",
       "type": {
         "playground": "Igrišče",
@@ -99,7 +108,8 @@
       "flagNow": "Označi vsebino",
       "photoAlt": "Prijavljena fotografija",
       "openPhoto": "Odpri v polni velikosti",
-      "photoMissing": "Datoteke fotografije ni več v shrambi."
+      "photoMissing": "Datoteke fotografije ni več v shrambi.",
+      "approveHelp": "»Odobri« počisti oznako in prijave; vsebina je spet vidna vsem."
     },
     "playgrounds": {
       "title": "Vsa igrišča",
@@ -130,7 +140,8 @@
       "bulkError": "Dejanje ni uspelo. Poskusi znova.",
       "prev": "Prejšnja",
       "next": "Naslednja",
-      "pageInfo": "{page} / {total}"
+      "pageInfo": "{page} / {total}",
+      "shownCount": "Prikazanih: {count}"
     },
     "quality": {
       "title": "Kakovost podatkov",
@@ -192,20 +203,20 @@
     "notConfigured": "Cloudflare Turnstile ni nastavljen (razvojni način)."
   },
   "cookies": {
-    "message": "Uporabljamo nujne piškotke, da ostaneš prijavljen.",
+    "message": "Uporabljamo le nujne piškotke za ohranjanje prijave.",
     "learnMore": "Več o tem",
     "accept": "Razumem"
   },
   "privacy": {
     "title": "Politika zasebnosti",
     "lastUpdated": "Zadnja posodobitev: april 2026",
-    "intro": "Ta politika opisuje, kako zbiramo in uporabljamo vaše podatke v skladu z GDPR in ZVOP-2.",
+    "intro": "Ta politika opisuje, kako zbiramo in uporabljamo tvoje podatke v skladu z GDPR in ZVOP-2.",
     "dataCollected": {
       "title": "Katere podatke zbiramo",
       "items": [
         "E-poštni naslov in geslo (za prijavo)",
         "Uporabniško ime (izpeljano iz e-poštnega naslova)",
-        "Vsebino, ki jo objavite (igrišča, mnenja, fotografije)",
+        "Vsebino, ki jo objaviš (igrišča, mnenja, fotografije)",
         "Nujne sejne piškotke za prijavo"
       ]
     },
@@ -221,27 +232,27 @@
     },
     "location": {
       "title": "Tvoja lokacija",
-      "body": "Če uporabiš funkcijo »Najdi me«, se tvoj položaj obdela samo v brskalniku za premik zemljevida. Nikoli se ne pošlje na naše strežnike in se ne shranjuje."
+      "body": "Če uporabiš »Poišči mojo lokacijo«, se tvoj položaj obdela samo v brskalniku: za premik zemljevida in izračun razdalj do igrišč. Nikoli se ne pošlje na naše strežnike in se ne shranjuje."
     },
     "retention": {
       "title": "Hramba podatkov",
-      "body": "Tvoje podatke hranimo, dokler obstaja tvoj račun. Ob izbrisu računa se profil, mnenja, fotografije, priljubljene in prijave trajno odstranijo; igrišča, ki si jih dodal, ostanejo brez tvojega avtorstva. Tehnične strežniške dnevnike naši gostitelji hranijo krajši čas (do 30 dni)."
+      "body": "Tvoje podatke hranimo, dokler obstaja tvoj račun. Ob izbrisu računa se profil, mnenja, fotografije, priljubljene in prijave trajno odstranijo; igrišča, ki jih objaviš, ostanejo brez tvojega avtorstva. Tehnične strežniške dnevnike naši gostitelji hranijo krajši čas (do 30 dni)."
     },
     "rights": {
-      "title": "Vaše pravice",
+      "title": "Tvoje pravice",
       "items": [
-        "Pravica do vpogleda: v profilu si lahko prenesete svoje podatke.",
-        "Pravica do izbrisa: v profilu lahko izbrišete svoj račun.",
-        "Pravica do ugovora: pišite nam."
+        "Pravica do vpogleda: v profilu si lahko preneseš svoje podatke.",
+        "Pravica do izbrisa: v profilu lahko izbrišeš svoj račun.",
+        "Pravica do ugovora: piši nam."
       ]
     },
     "photos": {
       "title": "Fotografije otrok",
-      "body": "Prepoznavni obrazi otrok niso dovoljeni. Neprimerno vsebino lahko prijavite z gumbom Prijavi."
+      "body": "Prepoznavni obrazi otrok niso dovoljeni. Neprimerno vsebino lahko sporočiš z gumbom »Sporoči«."
     },
     "contact": {
       "title": "Kontakt",
-      "body": "Za vprašanja glede zasebnosti nam pišite na {email}."
+      "body": "Za vprašanja glede zasebnosti nam piši na {email}."
     }
   },
   "filters": {
@@ -264,13 +275,13 @@
       "gravel": "Gramoz"
     },
     "clear": "Počisti",
-    "apply": "Pokaži ({count})",
+    "apply": "Pokaži {results}",
     "results": "{count, plural, one {# igrišče} two {# igrišči} few {# igrišča} other {# igrišč}}"
   },
   "detail": {
     "notFound": "Igrišče ni bilo najdeno.",
     "backToMap": "Nazaj na zemljevid",
-    "directions": "Navodila do igrišča",
+    "directions": "Navodila za pot",
     "noRatingsYet": "Še ni ocen",
     "reviewsCount": "{count, plural, one {# mnenje} two {# mnenji} few {# mnenja} other {# mnenj}}",
     "features": "Lastnosti",
@@ -279,9 +290,9 @@
     "photos": "Fotografije",
     "noPhotos": "Še ni fotografij.",
     "coordinates": "Koordinate",
-    "report": "Prijavi",
+    "report": "Sporoči",
     "reviews": "Mnenja",
-    "noReviews": "Še ni mnenj. Bodi prvi!",
+    "noReviews": "Še ni mnenj.",
     "loginToReview": "Za pisanje mnenja se prijavi.",
     "yourReview": "Tvoje mnenje",
     "rating": "Ocena",
@@ -296,17 +307,17 @@
       "bad_rating": "Ocena mora biti med 1 in 5.",
       "generic": "Mnenje ni bilo shranjeno. Poskusi znova."
     },
-    "reportTitle": "Prijava vsebine",
+    "reportTitle": "Sporoči težavo",
     "reportReasons": {
       "spam": "Neželena vsebina",
       "incorrect_info": "Napačni podatki",
       "privacy_violation": "Kršitev zasebnosti (otrok na sliki)",
       "other": "Drugo"
     },
-    "reportSubmit": "Pošlji prijavo",
+    "reportSubmit": "Pošlji",
     "reportCancel": "Prekliči",
-    "reportSuccess": "Prijava poslana. Hvala.",
-    "reportDuplicate": "Ta prijava že obstaja.",
+    "reportSuccess": "Hvala, sporočilo smo prejeli.",
+    "reportDuplicate": "Tvoje sporočilo o tem že imamo.",
     "feature": {
       "is_fenced": "Ograjeno",
       "has_shade": "Senca",
@@ -319,7 +330,19 @@
       "sand": "Pesek",
       "grass": "Trava",
       "gravel": "Gramoz"
-    }
+    },
+    "writeFirstReview": "Napiši prvo mnenje",
+    "loginToWriteFirst": "Prijavi se in napiši prvo mnenje",
+    "noData": "ni podatka",
+    "equipmentOptions": {
+      "swings": "Gugalnice",
+      "slides": "Tobogani",
+      "zipline": "Žičnica",
+      "sandbox": "Peskovnik",
+      "climbing_wall": "Plezalna stena"
+    },
+    "reportPlayground": "Sporoči napako",
+    "photoAlt": "{name}, fotografija {n}"
   },
   "search": {
     "title": "Iskanje",
@@ -329,24 +352,25 @@
     "title": "Dodaj igrišče",
     "loginPrompt": "Za dodajanje igrišča se prijavi.",
     "loginCta": "Prijavi se",
-    "step": "Korak {n} od {total}",
     "next": "Naprej",
     "back": "Nazaj",
     "submit": "Dodaj igrišče",
     "submitting": "Dodajam…",
     "step1": {
-      "title": "Označi lokacijo",
+      "title": "Lokacija",
       "hint": "Tapni na zemljevid ali povleci oznako, da nastaviš položaj.",
-      "useGps": "Uporabi mojo lokacijo",
+      "useGps": "Poišči mojo lokacijo",
       "gpsError": "Lokacije ni bilo mogoče določiti. Tapni na zemljevid in ročno nastavi položaj.",
-      "located": "Lokacija nastavljena."
+      "located": "Lokacija nastavljena.",
+      "duplicate": "Morda že obstaja: {name}, {distance} stran.",
+      "openExisting": "Odpri"
     },
     "step2": {
-      "title": "Podrobnosti igrišča",
+      "title": "Podrobnosti",
       "name": "Ime",
       "namePlaceholder": "Npr. Igrišče Tivoli",
-      "description": "Opis",
-      "descriptionPlaceholder": "Kratek opis igrišča (neobvezno)",
+      "description": "Opis (neobvezno)",
+      "descriptionPlaceholder": "Npr. senca popoldne, peskovnik, klopi",
       "surface": "Podlaga",
       "surfaceOptions": {
         "tartan": "Tartan",
@@ -364,19 +388,20 @@
       }
     },
     "step3": {
-      "title": "Fotografije (neobvezno)",
+      "title": "Fotografije",
       "verifyEmail": "Fotografije lahko dodaš, ko potrdiš e-poštni naslov. Igrišče lahko objaviš že zdaj, fotografije pa dodaš pozneje.",
-      "disclaimer": "Prosimo, ne objavljajte fotografij, na katerih so prepoznavni obrazi otrok.",
+      "disclaimer": "Prosimo, ne objavljaj fotografij, na katerih so prepoznavni obrazi otrok.",
       "pick": "Izberi fotografije",
       "takePhoto": "Posnemi fotografijo",
       "chooseGallery": "Iz galerije",
-      "removePhoto": "Odstrani fotografijo",
+      "removePhoto": "Odstrani fotografijo {n} od {total}",
       "selected": "Izbranih fotografij: {count} / {max}",
       "processing": "Pripravljam fotografije…",
       "totalSize": "{kb} KB skupaj",
       "tooMany": "Naložiš lahko največ {max} fotografij. Ostale so bile preskočene.",
       "processingFailed": "Nekaterih fotografij ni bilo mogoče pripraviti, zato niso dodane. Poskusi z drugo fotografijo (JPG, PNG ali WebP).",
-      "tooLarge": "Fotografije so skupaj prevelike (največ {mb} MB), zato nekatere niso dodane."
+      "tooLarge": "Fotografije so skupaj prevelike (največ {mb} MB), zato nekatere niso dodane.",
+      "heading": "Fotografije (neobvezno)"
     },
     "errors": {
       "noLocation": "Najprej izberi lokacijo na zemljevidu.",
@@ -458,7 +483,7 @@
     },
     "conduct": {
       "title": "Sprejemljiva raba",
-      "body": "Ne objavljaj neželene vsebine, zavajajočih informacij ali vsebine, ki krši zasebnost ali pravice drugih. Vsebino lahko drugi uporabniki prijavijo; vsebina z več prijavami gre v pregled in je lahko odstranjena."
+      "body": "Ne objavljaj neželene vsebine, zavajajočih informacij ali vsebine, ki krši zasebnost ali pravice drugih. Vsebino lahko drugi uporabniki sporočijo; vsebina z več sporočili gre v pregled in je lahko odstranjena."
     },
     "moderation": {
       "title": "Moderiranje",

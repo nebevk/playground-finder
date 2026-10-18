@@ -84,7 +84,7 @@ export default async function ModerationPage({
       target_type: "photo" as const,
       id: r.id,
       label: t("moderation.type.photo"),
-      detail: r.storage_path,
+      detail: null,
       photo: previewById.get(r.id),
     })),
   ];
@@ -104,14 +104,15 @@ export default async function ModerationPage({
 
   return (
     <section className="flex flex-col gap-6 p-4">
-      <Link href="/admin" className="link link-hover inline-flex items-center gap-1 text-sm">
-        <ArrowLeft className="size-4" aria-hidden />
+      <Link href="/admin" className="btn btn-ghost -ml-4 gap-1 self-start">
+        <ArrowLeft className="size-5" aria-hidden />
         {t("title")}
       </Link>
       <h1 className="text-2xl font-bold">{t("moderation.title")}</h1>
 
       <section>
-        <h2 className="mb-3 text-lg font-semibold">{t("moderation.flaggedHeading")}</h2>
+        <h2 className="mb-1 text-lg font-semibold">{t("moderation.flaggedHeading")}</h2>
+        <p className="mb-3 text-sm text-base-content/70">{t("moderation.approveHelp")}</p>
         {items.length === 0 ? (
           <EmptyState variant="moderation" title={t("moderation.empty")} />
         ) : (
@@ -121,9 +122,9 @@ export default async function ModerationPage({
                 key={`${item.target_type}-${item.id}`}
                 className="rounded-box border border-base-300 p-4"
               >
-                <div className="flex items-start justify-between gap-3">
+                <div className="flex flex-col gap-3">
                   <div>
-                    <p className="text-xs uppercase text-base-content/50">
+                    <p className="text-xs uppercase text-base-content/70">
                       {t(`moderation.type.${item.target_type}`)}
                     </p>
                     <p className="font-semibold">{item.label}</p>
@@ -137,7 +138,7 @@ export default async function ModerationPage({
                       <input type="hidden" name="target" value={item.target_type} />
                       <input type="hidden" name="id" value={item.id} />
                       <input type="hidden" name="locale" value={locale} />
-                      <button type="submit" className="btn btn-success btn-sm">
+                      <button type="submit" className="btn btn-success">
                         {t("moderation.approve")}
                       </button>
                     </form>
@@ -145,7 +146,7 @@ export default async function ModerationPage({
                       <input type="hidden" name="target" value={item.target_type} />
                       <input type="hidden" name="id" value={item.id} />
                       <input type="hidden" name="locale" value={locale} />
-                      <button type="submit" className="btn btn-error btn-sm">
+                      <button type="submit" className="btn btn-error btn-outline">
                         {t("moderation.delete")}
                       </button>
                     </form>
@@ -159,30 +160,29 @@ export default async function ModerationPage({
 
       <section>
         <h2 className="mb-1 text-lg font-semibold">{t("moderation.reportsHeading")}</h2>
-        <p className="mb-3 text-xs text-base-content/60">{t("moderation.reportsHelp")}</p>
+        <p className="mb-3 text-sm text-base-content/70">{t("moderation.reportsHelp")}</p>
         {reports.length === 0 ? (
           <p className="text-sm text-base-content/60">{t("moderation.reportsEmpty")}</p>
         ) : (
           <ul className="flex flex-col gap-3">
             {reports.map((r) => (
               <li key={r.id} className="rounded-box border border-base-300 p-4">
-                <div className="flex flex-wrap items-start justify-between gap-3">
+                <div className="flex flex-col gap-3">
                   <div>
-                    <p className="text-xs uppercase text-base-content/50">
+                    <p className="text-xs uppercase text-base-content/70">
                       {t(`moderation.type.${r.target_type}`)} ·{" "}
                       {t(`moderation.reportReasons.${r.reason}`)}
                     </p>
-                    <p className="mt-1 font-mono text-xs break-all">{r.target_id}</p>
-                    <p className="mt-1 text-xs text-base-content/60">
-                      {t("moderation.reportedBy")}: <span className="font-mono">{r.reporter}</span>
+                    <p className="mt-1 text-sm text-base-content/70">
+                      {t("moderation.reportedBy")}: <span className="font-semibold">{r.reporter}</span>
                     </p>
                     {r.photo && <PhotoThumb photo={r.photo} t={t} />}
                     {r.target_type === "playground" && (
                       <Link
                         href={`/playground/${r.target_id}`}
-                        className="link link-primary mt-1 text-xs"
+                        className="link link-primary mt-1 inline-flex min-h-11 items-center text-sm"
                       >
-                        →
+                        {t("moderation.type.playground")} <span aria-hidden>→</span>
                       </Link>
                     )}
                   </div>
@@ -190,7 +190,7 @@ export default async function ModerationPage({
                     <form action={dismissReportAction}>
                       <input type="hidden" name="id" value={r.id} />
                       <input type="hidden" name="locale" value={locale} />
-                      <button type="submit" className="btn btn-ghost btn-sm">
+                      <button type="submit" className="btn btn-ghost">
                         {t("moderation.dismiss")}
                       </button>
                     </form>
@@ -198,7 +198,7 @@ export default async function ModerationPage({
                       <input type="hidden" name="target" value={r.target_type} />
                       <input type="hidden" name="id" value={r.target_id} />
                       <input type="hidden" name="locale" value={locale} />
-                      <button type="submit" className="btn btn-warning btn-sm">
+                      <button type="submit" className="btn btn-warning">
                         {t("moderation.flagNow")}
                       </button>
                     </form>
@@ -235,8 +235,11 @@ function PhotoThumb({
       ) : (
         <p className="text-xs text-base-content/60">{t("moderation.photoMissing")}</p>
       )}
-      <Link href={`/playground/${photo.playgroundId}`} className="link link-hover text-xs">
-        {t("moderation.type.playground")} →
+      <Link
+        href={`/playground/${photo.playgroundId}`}
+        className="link link-primary inline-flex min-h-11 items-center text-sm"
+      >
+        {t("moderation.type.playground")} <span aria-hidden>→</span>
       </Link>
     </div>
   );

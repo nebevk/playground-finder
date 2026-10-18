@@ -42,13 +42,13 @@ export function DeleteAccountButton({ locale }: { locale: string }) {
             <button
               type="button"
               onClick={() => dialogRef.current?.close()}
-              className="btn btn-ghost btn-sm"
+              className="btn btn-ghost"
             >
               {t("deleteCancel")}
             </button>
             <form action={action}>
               <input type="hidden" name="locale" value={locale} />
-              <button type="submit" disabled={pending} className="btn btn-error btn-sm">
+              <button type="submit" disabled={pending} className="btn btn-error">
                 {pending ? t("deleting") : t("deleteConfirm")}
               </button>
             </form>

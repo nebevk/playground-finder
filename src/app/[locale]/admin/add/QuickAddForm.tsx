@@ -103,7 +103,7 @@ export function QuickAddForm({ locale }: { locale: string }) {
           }}
           placeholder={t("addressPlaceholder")}
           aria-label={t("addressLabel")}
-          className="input input-bordered input-sm flex-1"
+          className="input input-sm flex-1"
         />
         <button
           type="button"
@@ -150,7 +150,7 @@ export function QuickAddForm({ locale }: { locale: string }) {
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder={tFields("namePlaceholder")}
-          className="input input-bordered input-sm w-full"
+          className="input input-sm w-full"
         />
       </label>
 
@@ -161,7 +161,7 @@ export function QuickAddForm({ locale }: { locale: string }) {
           onChange={(e) => setDescription(e.target.value)}
           rows={2}
           placeholder={tFields("descriptionPlaceholder")}
-          className="textarea textarea-bordered textarea-sm w-full"
+          className="textarea textarea-sm w-full"
         />
       </label>
 

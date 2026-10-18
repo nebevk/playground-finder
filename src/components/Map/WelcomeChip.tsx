@@ -29,9 +29,9 @@ export function WelcomeChip({ dismissed }: { dismissed: boolean }) {
         type="button"
         onClick={markSeen}
         aria-label={t("dismiss")}
-        className="btn btn-ghost btn-xs btn-circle -mr-2"
+        className="btn btn-ghost btn-circle -mr-3"
       >
-        <X className="size-3" aria-hidden />
+        <X className="size-4" aria-hidden />
       </button>
     </div>
   );

@@ -14,7 +14,7 @@ export function ResendVerificationButton({ locale }: { locale: string }) {
   return (
     <form action={action} className="flex flex-col items-start gap-2">
       <input type="hidden" name="locale" value={locale} />
-      <button type="submit" disabled={pending} className="btn btn-sm btn-outline">
+      <button type="submit" disabled={pending} className="btn btn-outline">
         {pending && <span className="loading loading-spinner loading-xs" aria-hidden />}
         {t("resendVerification")}
       </button>

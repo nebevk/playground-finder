@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { E2E_LOGOUT_USER, login, noisePng, playgroundPath, sl } from "./fixtures";
+import { E2E_LOGOUT_USER, E2E_USER, expectTouchTargets, login, noisePng, playgroundPath, sl } from "./fixtures";
 
 test("[GDPR-01] signup consent is unchecked by default and required", async ({ page }) => {
   await page.goto("/sl/signup");
@@ -9,7 +9,7 @@ test("[GDPR-01] signup consent is unchecked by default and required", async ({ p
   await page.locator('input[name="email"]').fill(`nobody+${Date.now()}@example.com`);
   await page.locator('input[name="password"]').fill("secret-123456");
   await page.locator('input[name="age_confirmed"]').check();
-  await page.locator('form button[type="submit"]').click();
+  await page.getByRole("button", { name: sl.auth.submitSignup }).click();
 
   // The browser blocks submission on the required checkbox, so we stay on the form.
   expect(await consent.evaluate((el: HTMLInputElement) => el.validity.valueMissing)).toBe(true);
@@ -40,7 +40,8 @@ test("[FR-ADD-02] [FR-ADD-05] [GDPR-07] add a playground in three steps", async 
   await page.getByPlaceholder(sl.add.step2.namePlaceholder).fill(name);
   await page.getByRole("button", { name: sl.add.next }).click();
 
-  // Step 3: photos, with the children's-faces disclaimer.
+  // Step 3: photos, with the children's-faces disclaimer. "Naprej" must only move here, not
+  // submit (it once did: React reused the button and flipped its type within the click).
   await expect(page.getByText(sl.add.step3.disclaimer)).toBeVisible();
   await page.getByRole("button", { name: sl.add.submit }).click();
 
@@ -79,6 +80,9 @@ test("[FR-ADD-03] [FR-ADD-04] [FR-COM-06] [GDPR-16] a verified user's photo is u
   const img = page.locator('img[src*="playground-photos"]').first();
   await expect(img).toBeVisible();
   await expect(img).toHaveAttribute("src", /\/object\/sign\/playground-photos\/.+\?token=/);
+  // The hero photo can be reported too (BL-12). It is this playground's only photo and it
+  // has no reviews, so the one icon button named exactly "Sporoči" is the hero's.
+  await expect(page.getByRole("button", { name: sl.detail.report, exact: true })).toBeVisible();
   // Never offered to link previews (GDPR-16).
   await expect(page.locator('meta[property="og:image"][content*="playground-photos"]')).toHaveCount(0);
 
@@ -148,6 +152,43 @@ test("[FR-COM-04] a signed-in user can report a playground, with a privacy-viola
   await expect(page.getByText(sl.detail.reportReasons.privacy_violation)).toBeVisible();
 });
 
-// Known gaps (backlog BL-12, BL-14).
-test.fixme("[FR-COM-04] the first (hero) photo has a Report button", async () => {});
+test("[FR-ACC-03] signing in from a playground returns to it", async ({ page }) => {
+  const path = await playgroundPath();
+  await page.goto(path);
+  // Other tests may have reviewed it already, which swaps the link text.
+  await page
+    .getByRole("link", { name: sl.detail.loginToWriteFirst })
+    .or(page.getByRole("link", { name: sl.detail.loginToReview }))
+    .click();
+  await expect(page).toHaveURL(/\/sl\/login\?next=/);
+  await page.locator('input[name="email"]').fill(E2E_USER.email);
+  await page.locator('input[name="password"]').fill(E2E_USER.password);
+  await page.getByRole("button", { name: sl.auth.submitLogin }).click();
+  await expect(page).toHaveURL(new RegExp(`${path}$`), { timeout: 20_000 });
+});
+
+test("[FR-ADD-02] [NFR-UX-02] the add flow says what's missing and warns about a nearby duplicate", async ({ page, context }) => {
+  await context.grantPermissions(["geolocation"]);
+  await context.setGeolocation({ latitude: 46.0569, longitude: 14.4936 }); // the seeded Tivoli playground
+  await login(page);
+  await page.goto("/sl/add");
+
+  // "Naprej" is never silently disabled: it says what's missing.
+  await page.getByRole("button", { name: sl.add.next }).click();
+  await expect(page.getByText(sl.add.errors.noLocation)).toBeVisible();
+
+  await page.getByRole("button", { name: sl.map.useMyLocation }).click();
+  await expect(page.getByText(/Tivoli Park Playground/)).toBeVisible();
+  await expect(page.getByRole("link", { name: sl.add.step1.openExisting })).toBeVisible();
+
+  await page.getByRole("button", { name: sl.add.next }).click();
+  await page.getByRole("button", { name: sl.add.next }).click();
+  await expect(page.getByText(sl.add.errors.noName)).toBeVisible();
+  await expect(page.getByPlaceholder(sl.add.step2.namePlaceholder)).toBeFocused();
+
+  // Surface chips, feature toggles and the sticky Back/Next bar.
+  await expectTouchTargets(page.locator("main"), "add flow, step 2");
+});
+
+// Known gap (backlog BL-14).
 test.fixme("[FR-COM-02] a user can edit their own review", async () => {});

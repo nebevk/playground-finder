@@ -5,13 +5,14 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { loginAction, type AuthState } from "../actions";
 
-export function LoginForm({ locale }: { locale: string }) {
+export function LoginForm({ locale, next }: { locale: string; next?: string }) {
   const t = useTranslations("auth");
   const [state, action, pending] = useActionState<AuthState, FormData>(loginAction, undefined);
 
   return (
     <form action={action} className="flex flex-col gap-4">
       <input type="hidden" name="locale" value={locale} />
+      {next && <input type="hidden" name="next" value={next} />}
 
       <label className="floating-label">
         <span>{t("email")}</span>
@@ -20,7 +21,7 @@ export function LoginForm({ locale }: { locale: string }) {
           type="email"
           required
           autoComplete="email"
-          className="input input-bordered w-full"
+          className="input w-full"
           placeholder={t("email")}
         />
       </label>
@@ -33,12 +34,12 @@ export function LoginForm({ locale }: { locale: string }) {
           required
           minLength={6}
           autoComplete="current-password"
-          className="input input-bordered w-full"
+          className="input w-full"
           placeholder={t("password")}
         />
       </label>
 
-      <Link href="/forgot-password" className="link link-hover -mt-2 self-end text-sm">
+      <Link href="/forgot-password" className="link link-primary -mt-2 inline-flex min-h-11 items-center self-end text-sm">
         {t("forgotPassword")}
       </Link>
 
@@ -53,7 +54,10 @@ export function LoginForm({ locale }: { locale: string }) {
         {t("submitLogin")}
       </button>
 
-      <Link href="/signup" className="link link-hover text-sm text-center">
+      <Link
+        href={next ? { pathname: "/signup", query: { next } } : "/signup"}
+        className="link link-primary inline-flex min-h-11 items-center justify-center text-sm"
+      >
         {t("switchToSignup")}
       </Link>
     </form>

@@ -1,5 +1,5 @@
 import { crc32, deflateSync } from "node:zlib";
-import { expect, type Page } from "@playwright/test";
+import { expect, type Locator, type Page } from "@playwright/test";
 import en from "../../src/messages/en.json";
 import sl from "../../src/messages/sl.json";
 
@@ -84,6 +84,21 @@ export function noisePng(width: number, height: number) {
     chunk("IDAT", deflateSync(rows)),
     chunk("IEND", Buffer.alloc(0)),
   ]);
+}
+
+// Every visible button, link and button-styled label in `scope` is at least 44×44 px
+// (NFR-UX-02; sub-pixel rounding allowed).
+export async function expectTouchTargets(scope: Locator, what: string) {
+  const targets = scope.locator("button, a, label.btn").filter({ visible: true });
+  const count = await targets.count();
+  expect(count, `${what}: no controls found`).toBeGreaterThan(0);
+  for (let i = 0; i < count; i++) {
+    const el = targets.nth(i);
+    const box = (await el.boundingBox())!;
+    const name = (await el.getAttribute("aria-label")) ?? (await el.innerText()).trim();
+    expect(Math.round(box.height), `${what}: "${name}" height`).toBeGreaterThanOrEqual(44);
+    expect(Math.round(box.width), `${what}: "${name}" width`).toBeGreaterThanOrEqual(44);
+  }
 }
 
 export async function login(page: Page, user = E2E_USER) {

@@ -39,7 +39,7 @@ export function ReviewForm({
                 onMouseEnter={() => setHover(n)}
                 onMouseLeave={() => setHover(0)}
                 aria-label={`${n}`}
-                className="btn btn-ghost btn-sm btn-circle p-0"
+                className="btn btn-ghost btn-circle p-0"
               >
                 <Star
                   className={`size-6 ${filled ? "fill-warning stroke-warning" : "stroke-base-content/40"}`}
@@ -56,7 +56,7 @@ export function ReviewForm({
         <textarea
           name="comment"
           rows={3}
-          className="textarea textarea-bordered w-full"
+          className="textarea w-full"
           placeholder={t("commentPlaceholder")}
         />
       </label>
@@ -72,7 +72,7 @@ export function ReviewForm({
       <button
         type="submit"
         disabled={pending || rating === 0}
-        className="btn btn-primary btn-sm self-start"
+        className="btn btn-primary self-start"
       >
         {pending && <span className="loading loading-spinner loading-xs" aria-hidden />}
         {t("submitReview")}

@@ -2,7 +2,7 @@
 
 import { useRef, useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
-import { Upload, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { Upload, AlertTriangle, CheckCircle2, X } from "lucide-react";
 import { useToast } from "@/components/Toast/ToastProvider";
 import { parseCsv, parseBool } from "@/lib/csv";
 import { haversineMeters } from "@/lib/geo";
@@ -59,6 +59,7 @@ function indexHeaders(header: string[]): Record<string, number> {
 export function ImportClient({ locale }: { locale: string }) {
   const t = useTranslations("admin.import");
   const tSurface = useTranslations("filters.surfaceOption");
+  const tCommon = useTranslations("common");
   const { showToast } = useToast();
   const fileRef = useRef<HTMLInputElement | null>(null);
   const [importing, startImport] = useTransition();
@@ -211,7 +212,7 @@ export function ImportClient({ locale }: { locale: string }) {
             rows={8}
             placeholder="name,address,surface,fenced,shade…"
             aria-label={t("pasteLabel")}
-            className="textarea textarea-bordered w-full font-mono text-xs"
+            className="textarea w-full font-mono text-xs"
           />
           <div className="flex flex-wrap gap-2">
             <input
@@ -259,9 +260,10 @@ export function ImportClient({ locale }: { locale: string }) {
                 setPhase("input");
                 setCandidates([]);
               }}
-              className="btn btn-ghost btn-sm"
+              aria-label={tCommon("cancel")}
+              className="btn btn-ghost btn-sm btn-square"
             >
-              ✕
+              <X className="size-4" aria-hidden />
             </button>
           </div>
 
@@ -285,7 +287,7 @@ export function ImportClient({ locale }: { locale: string }) {
                         checked={c.include}
                         disabled={c.status !== "ready"}
                         onChange={(e) => patch(c.key, { include: e.target.checked })}
-                        className="checkbox checkbox-sm"
+                        className="checkbox checkbox-primary checkbox-sm"
                       />
                     </td>
                     <td>

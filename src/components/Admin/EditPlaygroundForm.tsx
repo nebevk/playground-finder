@@ -65,7 +65,7 @@ export function EditPlaygroundForm({
                 name="name"
                 defaultValue={playground.name}
                 required
-                className="input input-bordered w-full"
+                className="input w-full"
               />
             </label>
 
@@ -75,7 +75,7 @@ export function EditPlaygroundForm({
                 name="description"
                 rows={3}
                 defaultValue={playground.description ?? ""}
-                className="textarea textarea-bordered w-full"
+                className="textarea w-full"
               />
             </label>
 
@@ -84,7 +84,7 @@ export function EditPlaygroundForm({
               <select
                 name="surface_type"
                 defaultValue={playground.surface_type ?? ""}
-                className="select select-bordered"
+                className="select"
               >
                 <option value="">-</option>
                 {SURFACE_OPTIONS.map((s) => (

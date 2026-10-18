@@ -29,7 +29,7 @@ export default async function ProfilePage({
   if (!user) {
     return (
       <section className="flex flex-col items-center gap-6 p-4 pt-8 text-center">
-        <BrandStack size={140} align="center" nameSize="text-4xl" animatePunct />
+        <BrandStack size={96} align="center" nameSize="text-3xl" animatePunct />
         <p className="text-base-content/70">{t("loggedOut")}</p>
         <div className="flex gap-3">
           <Link href="/login" className="btn btn-primary">
@@ -61,7 +61,7 @@ export default async function ProfilePage({
         </p>
         {profile?.username && (
           <p className="mt-1 text-sm text-base-content/60">
-            {t("username")}: <span className="font-mono">{profile.username}</span>
+            {t("username")}: <span className="font-semibold text-base-content">{profile.username}</span>
           </p>
         )}
       </header>
@@ -90,10 +90,7 @@ export default async function ProfilePage({
 
       <section>
         <h2 className="mb-3 text-lg font-semibold">{t("data")}</h2>
-        <div className="flex flex-wrap gap-3">
-          <ExportDataButton />
-          <DeleteAccountButton locale={locale} />
-        </div>
+        <ExportDataButton />
       </section>
 
       <section className="md:hidden">
@@ -107,6 +104,11 @@ export default async function ProfilePage({
           {t("logout")}
         </button>
       </form>
+
+      {/* Destructive action last, set apart from everyday ones (design critique). */}
+      <section className="border-t border-base-300 pt-6">
+        <DeleteAccountButton locale={locale} />
+      </section>
     </section>
   );
 }

@@ -3,7 +3,6 @@ import { Star } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getReviewsForPlayground } from "@/lib/reviews";
-import { EmptyState } from "@/components/EmptyState";
 import { RatingSummary } from "@/components/RatingSummary";
 import { ReviewForm } from "./ReviewForm";
 import { HelpfulButton } from "./HelpfulButton";
@@ -24,6 +23,7 @@ export async function ReviewsSection({
   } = await supabase.auth.getUser();
 
   const reviews = await getReviewsForPlayground(playgroundId, user?.id ?? null);
+  const loginHref = { pathname: "/login", query: { next: `/${locale}/playground/${playgroundId}` } };
   const myReview = reviews.find((r) => r.is_mine);
 
   const avgRating =
@@ -44,23 +44,19 @@ export async function ReviewsSection({
         {reviews.length > 0 && <RatingSummary avg={avgRating} count={reviews.length} />}
       </div>
 
+      {/* One state, one action (design critique, BL-56). Signing in returns here (BL-55). */}
+      {reviews.length === 0 && <p className="mb-3 text-sm text-base-content/70">{t("noReviews")}</p>}
       {!user ? (
-        <div className="rounded-box border border-base-300 bg-base-200/50 p-4 text-sm text-base-content/70">
-          <Link href="/login" className="link link-primary">
-            {t("loginToReview")}
-          </Link>
-        </div>
+        <Link href={loginHref} className={reviews.length === 0 ? "btn btn-primary" : "btn btn-outline"}>
+          {reviews.length === 0 ? t("loginToWriteFirst") : t("loginToReview")}
+        </Link>
       ) : myReview ? (
-        <p className="text-sm text-base-content/60">{t("yourReview")}</p>
+        <p className="text-sm text-base-content/70">{t("yourReview")}</p>
       ) : (
         <ReviewForm playgroundId={playgroundId} locale={locale} />
       )}
 
-      {reviews.length === 0 ? (
-        <div className="mt-4">
-          <EmptyState variant="reviews" title={t("noReviews")} />
-        </div>
-      ) : (
+      {reviews.length > 0 && (
         <ul className="mt-4 flex flex-col gap-3">
           {reviews.map((r) => (
             <li
@@ -82,7 +78,7 @@ export async function ReviewsSection({
                         />
                       ))}
                     </span>
-                    <span className="text-xs text-base-content/50">
+                    <span className="text-xs text-base-content/60">
                       {dateFmt.format(new Date(r.created_at))}
                     </span>
                   </div>
@@ -113,7 +109,6 @@ export async function ReviewsSection({
                     targetId={r.id}
                     playgroundId={playgroundId}
                     locale={locale}
-                    size="xs"
                   />
                 )}
               </div>

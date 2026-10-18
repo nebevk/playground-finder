@@ -29,24 +29,32 @@ export default async function AdminDashboardPage({
 
   return (
     <section className="flex flex-col gap-6 p-4">
-      <Link href="/profile" className="link link-hover inline-flex items-center gap-1 text-sm">
-        <ArrowLeft className="size-4" aria-hidden />
+      <Link href="/profile" className="btn btn-ghost -ml-4 gap-1 self-start">
+        <ArrowLeft className="size-5" aria-hidden />
         {t("backToSite")}
       </Link>
 
       <header>
-        <h1 className="text-3xl font-bold">{t("title")}</h1>
+        <h1 className="text-2xl font-bold">{t("title")}</h1>
         <p className="mt-1 text-base-content/70">{t("dashboardIntro")}</p>
       </header>
 
-      <div className="stats stats-vertical md:stats-horizontal shadow">
+      {/* Each count links to the queue that resolves it; non-zero counts stand out (BL-67). */}
+      <ul className="grid grid-cols-2 gap-3 md:grid-cols-4">
         {stats.map((s) => (
-          <div key={s.key} className="stat">
-            <div className="stat-title text-xs">{t(`counts.${s.key}`)}</div>
-            <div className="stat-value text-2xl">{s.value}</div>
-          </div>
+          <li key={s.key}>
+            <Link
+              href="/admin/moderation"
+              className={`flex h-full flex-col gap-1 rounded-box border-2 p-4 transition-colors hover:bg-base-200 ${
+                s.value > 0 ? "border-warning bg-warning/5" : "border-base-300"
+              }`}
+            >
+              <span className="text-sm text-base-content/70">{t(`counts.${s.key}`)}</span>
+              <span className={`text-2xl font-bold ${s.value > 0 ? "text-warning" : ""}`}>{s.value}</span>
+            </Link>
+          </li>
         ))}
-      </div>
+      </ul>
 
       <nav className="grid gap-3 md:grid-cols-2">
         <Link href="/admin/playgrounds" className="btn btn-outline gap-2 justify-start">

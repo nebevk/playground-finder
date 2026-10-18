@@ -22,6 +22,7 @@ type LatLng = { lat: number; lng: number };
 export function LocationPickerClient(props: {
   value: LatLng | null;
   onChange: (pos: LatLng) => void;
+  existing?: { id: string; name: string; lat: number; lng: number }[];
 }) {
   return <LocationPicker {...props} />;
 }

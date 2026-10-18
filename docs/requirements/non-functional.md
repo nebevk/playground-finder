@@ -7,8 +7,8 @@ Conventions and the ID scheme are in [README.md](README.md). Status last reviewe
 | ID | Requirement | Pri | Status | Verify |
 |---|---|---|---|---|
 | NFR-UX-01 | Mobile-first: every public page works at 375 px width with no horizontal scrolling. | Must | Done | e2e |
-| NFR-UX-02 | Touch targets are at least 44×44 px. The bottom navigation is always reachable on mobile. | Must | Partial — the dock passes, but the map sheet, filter drawer, controls dial, SL/EN switch and checkbox rows are 24–40 px ([design critique](../reviews/2026-10-16-design-critique.md), BL-58) | e2e |
-| NFR-A11Y-01 | WCAG 2.1 AA basics: every page has one `h1`, controls have accessible names, everything is reachable by keyboard, text contrast ≥ 4.5:1. | Should | Partial — design critique 2026-10-16 found contrast failures in the info, success, warning and error tokens (3.1–4.3:1) and unnamed map markers (BL-57, BL-66) | manual |
+| NFR-UX-02 | Touch targets are at least 44×44 px. The bottom navigation is always reachable on mobile. | Must | Done | e2e |
+| NFR-A11Y-01 | WCAG 2.1 AA basics: every page has one `h1`, controls have accessible names, everything is reachable by keyboard, text contrast ≥ 4.5:1. | Should | Partial — the contrast and accessible-name failures from the [2026-10-16 design critique](../reviews/2026-10-16-design-critique.md) are fixed; no full audit yet (BL-29) | manual |
 
 ## Localization (`NFR-I18N`)
 
@@ -16,7 +16,7 @@ Conventions and the ID scheme are in [README.md](README.md). Status last reviewe
 |---|---|---|---|---|
 | NFR-I18N-01 | Slovenian is the default locale (`/` → `/sl`). English is available through a language switcher. | Must | Done | e2e |
 | NFR-I18N-02 | `sl.json` and `en.json` contain exactly the same keys. | Must | Done | unit |
-| NFR-I18N-03 | No hardcoded user-facing strings. The brand name exists only as the `app.name` key, so it can change without code changes. | Must | Partial — equipment values and a few admin glyphs are untranslated | unit |
+| NFR-I18N-03 | No hardcoded user-facing strings. The brand name exists only as the `app.name` key, so it can change without code changes. | Must | Done | unit, e2e |
 
 ## Security (`NFR-SEC`)
 

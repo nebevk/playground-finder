@@ -11,6 +11,8 @@
 
 Backlog items BL-51 to BL-67 came from this critique.
 
+**Status 2026-10-17:** implemented in [ops 0008](../../ops/handoff/0008-design-critique-fixes.md), together with BL-12 (report the hero photo) and BL-42 (cookie notice over the map controls). Open: the display font for č/š/ž (BL-65), an owner decision. The `[NFR-UX-02]` e2e test now measures the dock, map controls, sheet, filter drawer, "Več" menu and add flow.
+
 **Scope:** live alpha at 375 × 812 px, 27 screenshots (`01`–`20` mobile, `21`–`23` desktop). Numbers in brackets are screenshot IDs. Contrast is computed from the `retro` tokens in `src/app/globals.css`. Touch sizes come from DaisyUI 5 class sizes, checked on the screenshots (pixels ÷ 2.625). `BL-*` = [backlog](../backlog.md); `FR/NFR/GDPR-*` = [requirements](../requirements/).
 
 ### Overall Impression

@@ -3,6 +3,7 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import en from "@/messages/en.json";
 import sl from "@/messages/sl.json";
+import { EQUIPMENT_KEYS } from "@/lib/playground-types";
 
 // Leaf path → string. Arrays (e.g. privacy.dataCollected.items) flatten to index keys.
 function flatten(value: unknown, path = "", out = new Map<string, string>()) {
@@ -44,13 +45,20 @@ describe("localization", () => {
     expect(offenders).toEqual([]);
   });
 
-  it.todo("[NFR-I18N-03] equipment values are shown through translated labels, not raw DB strings");
+  it("[NFR-I18N-03] every known equipment value has a label in both languages, and the detail page uses it", () => {
+    for (const key of EQUIPMENT_KEYS) {
+      expect(slKeys.get(`detail.equipmentOptions.${key}`), key).toBeTruthy();
+      expect(enKeys.get(`detail.equipmentOptions.${key}`), key).toBeTruthy();
+    }
+    const page = readFileSync(join(SRC, "app", "[locale]", "playground", "[id]", "page.tsx"), "utf8");
+    expect(page).toContain("equipmentOptions.");
+  });
 });
 
 describe("photo upload disclaimer", () => {
   it("[GDPR-07] the Slovenian disclaimer about children's faces has the exact required text", () => {
     expect(slKeys.get("add.step3.disclaimer")).toBe(
-      "Prosimo, ne objavljajte fotografij, na katerih so prepoznavni obrazi otrok.",
+      "Prosimo, ne objavljaj fotografij, na katerih so prepoznavni obrazi otrok.",
     );
     expect(enKeys.get("add.step3.disclaimer")).toBe(
       "Please do not post photos with identifiable faces of children.",

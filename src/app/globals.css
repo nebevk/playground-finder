@@ -73,6 +73,63 @@ html, body {
   transform: translateY(-2px);
 }
 
+/* Field borders at 50 % (DaisyUI's 20 % is 1.5:1; WCAG asks 3:1 for UI components). */
+.input,
+.select,
+.textarea {
+  --input-color: color-mix(in oklab, var(--color-base-content) 50%, #0000);
+}
+
+/* Square-cornered checkboxes, so they don't read as radio buttons (--radius-selector is a pill). */
+.checkbox {
+  border-radius: 0.375rem;
+}
+
+/* The active bottom-nav tab in the brand colour. */
+.dock-active {
+  color: var(--color-primary);
+}
+
+/* Desktop sidebar: the active page in the brand colour (a primary bar and tint, with text
+   kept in base-content so it stays above 4.5:1). */
+.menu .menu-active {
+  background-color: color-mix(in oklab, var(--color-primary) 12%, transparent);
+  color: var(--color-base-content);
+  font-weight: 600;
+  box-shadow: inset 3px 0 0 var(--color-primary);
+}
+.menu .menu-active svg {
+  color: var(--color-primary);
+}
+
+/* Leaflet's zoom buttons at 44 px on touch screens (default 30 px). */
+.leaflet-touch .leaflet-bar a {
+  width: 44px;
+  height: 44px;
+  line-height: 44px;
+  font-size: 22px;
+}
+
+/* Brand-coloured marker clusters (playground-marker.ts → clusterIcon). */
+.brand-cluster {
+  display: grid;
+  place-items: center;
+  border-radius: 9999px;
+  background: color-mix(in oklab, var(--color-primary) 30%, transparent);
+}
+.brand-cluster span {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 9999px;
+  background: var(--color-primary);
+  color: var(--color-primary-content);
+  font-weight: 700;
+  font-size: 0.9rem;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.3);
+}
+
 /* Strip default Leaflet marker chrome on our DivIcon */
 .leaflet-div-icon.playground-marker,
 .playground-marker {
@@ -100,19 +157,22 @@ html, body {
   --color-accent-content: oklch(30% 0.09 75);
   --color-neutral: oklch(44% 0.017 285.786);
   --color-neutral-content: oklch(98% 0 0);
-  --color-info: oklch(58% 0.158 241.966);
+  /* Semantic colours darkened to WCAG AA (≥ 4.5:1 with their content colour and on base-100);
+     see docs/reviews/2026-10-16-design-critique.md. */
+  --color-info: oklch(53.5% 0.158 241.966);
   --color-info-content: oklch(97% 0.013 236.62);
-  --color-success: oklch(62% 0.194 149.214);
+  --color-success: oklch(52% 0.194 149.214);
   --color-success-content: oklch(98% 0.018 155.826);
-  --color-warning: oklch(64% 0.222 41.116);
+  --color-warning: oklch(57.5% 0.222 41.116);
   --color-warning-content: oklch(98% 0.016 73.684);
-  --color-error: oklch(58% 0.253 17.585);
+  --color-error: oklch(54.5% 0.253 17.585);
   --color-error-content: oklch(96% 0.015 12.422);
   --radius-selector: 2rem;
   --radius-field: 2rem;
   --radius-box: 0.5rem;
   --size-selector: 0.25rem;
-  --size-field: 0.25rem;
+  /* 0.275rem makes default buttons and inputs 44 px: the project's touch-target minimum. */
+  --size-field: 0.275rem;
   --border: 2px;
   --depth: 1;
   --noise: 1;

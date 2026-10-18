@@ -27,7 +27,7 @@ export function ResetPasswordForm({ locale, tokenHash }: { locale: string; token
           required
           minLength={6}
           autoComplete="new-password"
-          className="input input-bordered w-full"
+          className="input w-full"
           placeholder={t("newPassword")}
         />
       </label>
@@ -40,7 +40,7 @@ export function ResetPasswordForm({ locale, tokenHash }: { locale: string; token
           required
           minLength={6}
           autoComplete="new-password"
-          className="input input-bordered w-full"
+          className="input w-full"
           placeholder={t("confirmPassword")}
         />
       </label>

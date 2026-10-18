@@ -72,11 +72,11 @@ function MapWithFilters({
               {t(filtered ? "emptyFiltered" : "emptyNone")}
             </p>
             {filtered ? (
-              <button type="button" onClick={clearAll} className="btn btn-primary btn-sm">
+              <button type="button" onClick={clearAll} className="btn btn-primary">
                 {t("emptyFilteredAction")}
               </button>
             ) : (
-              <Link href="/add" className="btn btn-primary btn-sm">
+              <Link href="/add" className="btn btn-primary">
                 {t("emptyNoneAction")}
               </Link>
             )}

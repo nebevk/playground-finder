@@ -6,13 +6,14 @@ import { Link } from "@/i18n/navigation";
 import { Turnstile } from "@/components/Turnstile";
 import { signupAction, type AuthState } from "../actions";
 
-export function SignupForm({ locale }: { locale: string }) {
+export function SignupForm({ locale, next }: { locale: string; next?: string }) {
   const t = useTranslations("auth");
   const [state, action, pending] = useActionState<AuthState, FormData>(signupAction, undefined);
 
   return (
     <form action={action} className="flex flex-col gap-4">
       <input type="hidden" name="locale" value={locale} />
+      {next && <input type="hidden" name="next" value={next} />}
 
       <label className="floating-label">
         <span>{t("email")}</span>
@@ -21,7 +22,7 @@ export function SignupForm({ locale }: { locale: string }) {
           type="email"
           required
           autoComplete="email"
-          className="input input-bordered w-full"
+          className="input w-full"
           placeholder={t("email")}
         />
       </label>
@@ -34,19 +35,19 @@ export function SignupForm({ locale }: { locale: string }) {
           required
           minLength={6}
           autoComplete="new-password"
-          className="input input-bordered w-full"
+          className="input w-full"
           placeholder={t("password")}
         />
       </label>
 
-      <label className="label cursor-pointer items-start gap-3 py-1">
+      <label className="flex min-h-11 cursor-pointer items-start gap-3 py-1 whitespace-normal">
         <input
           name="consent"
           type="checkbox"
           required
           className="checkbox checkbox-primary mt-1"
         />
-        <span className="label-text text-sm leading-snug">
+        <span className="text-sm leading-snug">
           {t.rich("consent", {
             privacyLink: (chunks) => (
               <Link href="/privacy" className="link link-primary">
@@ -62,14 +63,14 @@ export function SignupForm({ locale }: { locale: string }) {
         </span>
       </label>
 
-      <label className="label cursor-pointer items-start gap-3 py-1">
+      <label className="flex min-h-11 cursor-pointer items-start gap-3 py-1 whitespace-normal">
         <input
           name="age_confirmed"
           type="checkbox"
           required
           className="checkbox checkbox-primary mt-1"
         />
-        <span className="label-text text-sm leading-snug">{t("ageConsent")}</span>
+        <span className="text-sm leading-snug">{t("ageConsent")}</span>
       </label>
 
       {state?.error === "consent_required" && (
@@ -106,7 +107,10 @@ export function SignupForm({ locale }: { locale: string }) {
         {t("submitSignup")}
       </button>
 
-      <Link href="/login" className="link link-hover text-sm text-center">
+      <Link
+        href={next ? { pathname: "/login", query: { next } } : "/login"}
+        className="link link-primary inline-flex min-h-11 items-center justify-center text-sm"
+      >
         {t("switchToLogin")}
       </Link>
     </form>

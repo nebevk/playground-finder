@@ -22,3 +22,20 @@ export const playgroundMarkerIcon = L.divIcon({
   iconAnchor: [18, 46],
   popupAnchor: [0, -40],
 });
+
+// The pin whose sheet is open: larger, so it stays findable above the sheet.
+export const selectedMarkerIcon = L.divIcon({
+  html: PIN_SVG.replace('width="36" height="46"', 'width="48" height="62"'),
+  className: "playground-marker playground-marker--selected",
+  iconSize: [48, 62],
+  iconAnchor: [24, 62],
+});
+
+// Brand-coloured cluster bubbles (instead of the default green/yellow/orange), 44 px to tap.
+export function clusterIcon(cluster: { getChildCount: () => number }) {
+  return L.divIcon({
+    html: `<span>${cluster.getChildCount()}</span>`,
+    className: "marker-cluster brand-cluster",
+    iconSize: L.point(44, 44),
+  });
+}

@@ -23,7 +23,7 @@ export function DeleteReviewButton({
       <button
         type="submit"
         aria-label={t("deleteReview")}
-        className="btn btn-ghost btn-xs btn-circle text-error"
+        className="btn btn-ghost btn-circle text-error"
       >
         <Trash2 className="size-3" aria-hidden />
       </button>

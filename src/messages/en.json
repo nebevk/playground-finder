@@ -15,7 +15,9 @@
     "privacy": "Privacy",
     "terms": "Terms",
     "language": "Language",
-    "copyright": "© 2026 Nejc Bevk"
+    "copyright": "© 2026 Nejc Bevk",
+    "more": "More",
+    "close": "Close"
   },
   "about": {
     "title": "About the app",
@@ -32,20 +34,22 @@
     "intro": "Find the perfect playground for your kids. Filter by shade, fences and water, and read other parents' reviews.",
     "latest": "Latest additions",
     "popular": "Most popular",
-    "noLatest": "No playgrounds yet. Be the first to add one!",
-    "explore": "Explore the map"
+    "noLatest": "No playgrounds yet. Add the first one!",
+    "explore": "Explore the map",
+    "nearby": "Nearby",
+    "findNearby": "Playgrounds near me"
   },
   "map": {
     "title": "Playground map",
     "loading": "Loading map…",
     "close": "Close",
     "seeDetails": "See details",
-    "locateMe": "Locate me",
+    "locateMe": "Find my location",
     "controls": "Map options",
     "zoomIn": "Zoom in",
     "zoomOut": "Zoom out",
-    "useMyLocation": "Use my location",
-    "welcome": "Tap a pin to see details.",
+    "useMyLocation": "Find my location",
+    "welcome": "Select a pin to see details.",
     "dismiss": "Got it",
     "addedToast": "Thanks! 🎉 Your playground is on the map.",
     "directions": "Directions",
@@ -53,8 +57,13 @@
     "emptyFiltered": "No playgrounds match these filters here.",
     "emptyFilteredAction": "Clear filters",
     "emptyNoneTitle": "No playgrounds here yet",
-    "emptyNone": "Be the first to add a playground in this area.",
-    "emptyNoneAction": "Add playground"
+    "emptyNone": "Add the first playground in this area.",
+    "emptyNoneAction": "Add playground",
+    "locating": "Finding your location…",
+    "locateDenied": "Location access is blocked. Allow it in your browser settings and try again.",
+    "locateUnavailable": "Couldn't find your location. Please try again.",
+    "youAreHere": "You are here",
+    "distanceAway": "{distance} away"
   },
   "admin": {
     "title": "Admin",
@@ -76,7 +85,7 @@
     "moderation": {
       "title": "Flagged content",
       "empty": "Nothing to review right now.",
-      "approve": "Approve (clear flag)",
+      "approve": "Approve",
       "delete": "Delete",
       "type": {
         "playground": "Playground",
@@ -99,7 +108,8 @@
       "flagNow": "Flag now",
       "photoAlt": "Reported photo",
       "openPhoto": "Open full size",
-      "photoMissing": "The photo file is no longer in storage."
+      "photoMissing": "The photo file is no longer in storage.",
+      "approveHelp": "“Approve” clears the flag and its reports; the content becomes visible again."
     },
     "playgrounds": {
       "title": "All playgrounds",
@@ -130,7 +140,8 @@
       "bulkError": "Action failed. Please try again.",
       "prev": "Prev",
       "next": "Next",
-      "pageInfo": "{page} / {total}"
+      "pageInfo": "{page} / {total}",
+      "shownCount": "Shown: {count}"
     },
     "quality": {
       "title": "Data quality",
@@ -192,7 +203,7 @@
     "notConfigured": "Cloudflare Turnstile not configured (dev mode)."
   },
   "cookies": {
-    "message": "We use essential cookies to keep you logged in.",
+    "message": "We only use essential cookies, to keep you logged in.",
     "learnMore": "Learn more",
     "accept": "Got it"
   },
@@ -221,7 +232,7 @@
     },
     "location": {
       "title": "Your location",
-      "body": "If you use the \"Locate me\" feature, your position is processed only in your browser to move the map. It is never sent to our servers or stored."
+      "body": "If you use “Find my location”, your position is processed only in your browser: to move the map and to calculate distances to playgrounds. It is never sent to our servers or stored."
     },
     "retention": {
       "title": "Data retention",
@@ -237,7 +248,7 @@
     },
     "photos": {
       "title": "Photos of children",
-      "body": "Identifiable faces of children are not allowed. You can flag inappropriate content with the Report button."
+      "body": "Identifiable faces of children are not allowed. You can flag inappropriate content with the “Report” button."
     },
     "contact": {
       "title": "Contact",
@@ -264,13 +275,13 @@
       "gravel": "Gravel"
     },
     "clear": "Clear",
-    "apply": "Show ({count})",
+    "apply": "Show {results}",
     "results": "{count, plural, one {# playground} other {# playgrounds}}"
   },
   "detail": {
     "notFound": "Playground not found.",
     "backToMap": "Back to map",
-    "directions": "Get directions",
+    "directions": "Directions",
     "noRatingsYet": "No ratings yet",
     "reviewsCount": "{count, plural, one {# review} other {# reviews}}",
     "features": "Features",
@@ -281,7 +292,7 @@
     "coordinates": "Coordinates",
     "report": "Report",
     "reviews": "Reviews",
-    "noReviews": "No reviews yet. Be the first!",
+    "noReviews": "No reviews yet.",
     "loginToReview": "Log in to leave a review.",
     "yourReview": "Your review",
     "rating": "Rating",
@@ -296,16 +307,16 @@
       "bad_rating": "Rating must be between 1 and 5.",
       "generic": "Could not save review. Try again."
     },
-    "reportTitle": "Report content",
+    "reportTitle": "Report a problem",
     "reportReasons": {
       "spam": "Spam",
       "incorrect_info": "Incorrect information",
       "privacy_violation": "Privacy violation (child in photo)",
       "other": "Other"
     },
-    "reportSubmit": "Send report",
+    "reportSubmit": "Send",
     "reportCancel": "Cancel",
-    "reportSuccess": "Report submitted. Thank you.",
+    "reportSuccess": "Thanks, we got your report.",
     "reportDuplicate": "You already reported this.",
     "feature": {
       "is_fenced": "Fenced",
@@ -319,7 +330,19 @@
       "sand": "Sand",
       "grass": "Grass",
       "gravel": "Gravel"
-    }
+    },
+    "writeFirstReview": "Write the first review",
+    "loginToWriteFirst": "Sign in to write the first review",
+    "noData": "no data",
+    "equipmentOptions": {
+      "swings": "Swings",
+      "slides": "Slides",
+      "zipline": "Zip line",
+      "sandbox": "Sandbox",
+      "climbing_wall": "Climbing wall"
+    },
+    "reportPlayground": "Report a problem",
+    "photoAlt": "{name}, photo {n}"
   },
   "search": {
     "title": "Search",
@@ -329,24 +352,25 @@
     "title": "Add a playground",
     "loginPrompt": "You need to be logged in to add a playground.",
     "loginCta": "Log in",
-    "step": "Step {n} of {total}",
     "next": "Next",
     "back": "Back",
     "submit": "Add playground",
     "submitting": "Submitting…",
     "step1": {
-      "title": "Pin the location",
+      "title": "Location",
       "hint": "Tap the map or drag the marker to set the position.",
-      "useGps": "Use my location",
+      "useGps": "Find my location",
       "gpsError": "Couldn't get your location. Tap the map to set the position manually.",
-      "located": "Location set."
+      "located": "Location set.",
+      "duplicate": "This may already exist: {name}, {distance} away.",
+      "openExisting": "Open"
     },
     "step2": {
-      "title": "Playground details",
+      "title": "Details",
       "name": "Name",
       "namePlaceholder": "e.g. Tivoli Park playground",
-      "description": "Description",
-      "descriptionPlaceholder": "Short description (optional)",
+      "description": "Description (optional)",
+      "descriptionPlaceholder": "E.g. shade in the afternoon, sandbox, benches",
       "surface": "Surface",
       "surfaceOptions": {
         "tartan": "Tartan",
@@ -364,19 +388,20 @@
       }
     },
     "step3": {
-      "title": "Photos (optional)",
+      "title": "Photos",
       "verifyEmail": "You can add photos once you verify your email. You can publish the playground now and add photos later.",
       "disclaimer": "Please do not post photos with identifiable faces of children.",
       "pick": "Choose photos",
       "takePhoto": "Take photo",
       "chooseGallery": "From gallery",
-      "removePhoto": "Remove photo",
+      "removePhoto": "Remove photo {n} of {total}",
       "selected": "Selected photos: {count} / {max}",
       "processing": "Preparing photos…",
       "totalSize": "{kb} KB total",
       "tooMany": "You can upload up to {max} photos. The rest were skipped.",
       "processingFailed": "Some photos couldn't be prepared, so they weren't added. Try another photo (JPG, PNG or WebP).",
-      "tooLarge": "The photos are too large in total (max {mb} MB), so some weren't added."
+      "tooLarge": "The photos are too large in total (max {mb} MB), so some weren't added.",
+      "heading": "Photos (optional)"
     },
     "errors": {
       "noLocation": "Pick a location on the map first.",

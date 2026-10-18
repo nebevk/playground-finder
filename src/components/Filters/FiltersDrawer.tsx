@@ -1,7 +1,9 @@
 "use client";
 
+import { useEffect, useId } from "react";
 import { X } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { FEATURE_ICONS, FeatureToggle } from "@/components/FeatureChip";
 import {
   PLAYGROUND_FEATURE_KEYS,
   SURFACE_TYPES,
@@ -11,14 +13,22 @@ import {
 export function FiltersDrawer({ visibleCount }: { visibleCount: number }) {
   const t = useTranslations("filters");
   const tCommon = useTranslations("common");
+  const titleId = useId();
   const { state, open, setOpen, toggleFeature, toggleSurface, clearAll, activeCount } =
     useFilters();
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open, setOpen]);
 
   return (
     <>
       <div
         onClick={() => setOpen(false)}
-        className={`fixed inset-0 z-[1300] bg-black/40 transition-opacity ${
+        className={`fixed inset-0 z-1300 bg-black/40 transition-opacity ${
           open ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
         aria-hidden
@@ -26,78 +36,64 @@ export function FiltersDrawer({ visibleCount }: { visibleCount: number }) {
       <aside
         role="dialog"
         aria-modal="true"
+        aria-labelledby={titleId}
         aria-hidden={!open}
-        className={`fixed top-0 right-0 z-[1400] flex h-dvh w-full max-w-sm flex-col border-l border-base-300 bg-base-100 shadow-xl transition-transform ${
+        inert={!open}
+        className={`fixed top-0 right-0 z-1400 flex h-dvh w-full max-w-sm flex-col border-l border-base-300 bg-base-100 shadow-xl transition-transform ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <header className="flex items-center justify-between border-b border-base-300 px-5 py-4">
-          <h2 className="text-lg font-bold">{t("title")}</h2>
+        <header className="flex items-center justify-between border-b border-base-300 px-5 py-3">
+          <h2 id={titleId} className="text-lg font-bold">
+            {t("title")}
+          </h2>
           <button
             type="button"
             onClick={() => setOpen(false)}
             aria-label={tCommon("close")}
-            className="btn btn-ghost btn-sm btn-circle"
+            className="btn btn-ghost btn-circle"
           >
-            <X className="size-4" aria-hidden />
+            <X className="size-5" aria-hidden />
           </button>
         </header>
 
         <div className="flex-1 overflow-y-auto px-5 py-4">
           <fieldset>
-            <legend className="mb-2 text-sm font-semibold">{t("features")}</legend>
-            <ul className="flex flex-col gap-2">
+            <legend className="mb-3 text-sm font-semibold">{t("features")}</legend>
+            <div className="flex flex-wrap gap-2">
               {PLAYGROUND_FEATURE_KEYS.map((key) => (
-                <li key={key}>
-                  <label className="flex cursor-pointer items-center gap-3">
-                    <input
-                      type="checkbox"
-                      className="checkbox checkbox-primary"
-                      checked={state.features.has(key)}
-                      onChange={() => toggleFeature(key)}
-                    />
-                    <span>{t(`feature.${key}`)}</span>
-                  </label>
-                </li>
+                <FeatureToggle
+                  key={key}
+                  icon={FEATURE_ICONS[key]}
+                  label={t(`feature.${key}`)}
+                  checked={state.features.has(key)}
+                  onChange={() => toggleFeature(key)}
+                />
               ))}
-            </ul>
+            </div>
           </fieldset>
 
           <fieldset className="mt-6">
-            <legend className="mb-2 text-sm font-semibold">{t("surface")}</legend>
+            <legend className="mb-3 text-sm font-semibold">{t("surface")}</legend>
             <div className="flex flex-wrap gap-2">
-              {SURFACE_TYPES.map((s) => {
-                const active = state.surfaces.has(s);
-                return (
-                  <button
-                    key={s}
-                    type="button"
-                    onClick={() => toggleSurface(s)}
-                    className={`btn btn-sm ${active ? "btn-primary" : "btn-outline"}`}
-                  >
-                    {t(`surfaceOption.${s}`)}
-                  </button>
-                );
-              })}
+              {SURFACE_TYPES.map((s) => (
+                <FeatureToggle
+                  key={s}
+                  label={t(`surfaceOption.${s}`)}
+                  checked={state.surfaces.has(s)}
+                  onChange={() => toggleSurface(s)}
+                />
+              ))}
             </div>
           </fieldset>
         </div>
 
-        <footer className="flex items-center justify-between gap-3 border-t border-base-300 px-5 py-4">
-          <button
-            type="button"
-            onClick={clearAll}
-            disabled={activeCount === 0}
-            className="btn btn-ghost btn-sm"
-          >
+        <footer className="flex items-center justify-between gap-3 border-t border-base-300 px-5 py-4 pb-[calc(1rem+env(safe-area-inset-bottom))]">
+          <button type="button" onClick={clearAll} disabled={activeCount === 0} className="btn btn-ghost">
             {t("clear")}
           </button>
-          <button
-            type="button"
-            onClick={() => setOpen(false)}
-            className="btn btn-primary btn-sm"
-          >
-            {t("apply", { count: visibleCount })}
+          <button type="button" onClick={() => setOpen(false)} className="btn btn-primary flex-1">
+            {t("apply", { results: t("results", { count: visibleCount }) })}
           </button>
         </footer>
       </aside>

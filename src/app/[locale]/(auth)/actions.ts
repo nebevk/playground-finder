@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { getSiteUrl } from "@/lib/site";
+import { getSiteUrl, safeNextPath } from "@/lib/site";
 import { verifyTurnstile } from "@/lib/turnstile";
 
 // `verified`: a recovery token was already used up (and the user signed in) by this form.
@@ -19,7 +19,8 @@ export async function loginAction(_prev: AuthState, formData: FormData): Promise
   // Unconfirmed addresses can't sign in (email confirmations are on); say so, rather than
   // a generic "check your details" that sends people retyping a correct password.
   if (error) return { error: error.code === "email_not_confirmed" ? "email_not_confirmed" : "generic" };
-  redirect(`/${locale}/profile`);
+  // Back to where sign-in was needed (BL-55); only same-site paths.
+  redirect(safeNextPath(formData.get("next"), `/${locale}/profile`));
 }
 
 // Bump when the privacy policy or terms change materially, so stored consents
@@ -49,6 +50,8 @@ export async function signupAction(_prev: AuthState, formData: FormData): Promis
         consent_privacy_at: new Date().toISOString(),
         consent_policy_version: CONSENT_POLICY_VERSION,
         age_confirmed: true,
+        // Where to land after confirming the email (BL-55); read once by /auth/confirm.
+        return_to: safeNextPath(formData.get("next"), "") || null,
       },
     },
   });

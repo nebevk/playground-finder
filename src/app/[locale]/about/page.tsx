@@ -25,7 +25,7 @@ export default async function AboutPage({
   return (
     <article className="prose-slate mx-auto flex max-w-2xl flex-col gap-6 p-6">
       <header>
-        <h1 className="text-3xl font-bold">{t("title")}</h1>
+        <h1 className="text-2xl font-bold">{t("title")}</h1>
       </header>
 
       <p className="text-base-content/80">{t("intro")}</p>

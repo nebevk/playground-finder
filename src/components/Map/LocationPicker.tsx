@@ -1,18 +1,21 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, CircleMarker, useMap, useMapEvents } from "react-leaflet";
 import type { Marker as LeafletMarker } from "leaflet";
 import { LocateFixed } from "lucide-react";
 import { useTranslations } from "next-intl";
 import "leaflet/dist/leaflet.css";
+import { useUserLocation } from "@/components/Location/UserLocationContext";
 import { fixLeafletDefaultIcons } from "./fix-leaflet-icons";
+import { playgroundMarkerIcon } from "./playground-marker";
 
 fixLeafletDefaultIcons();
 
 const LJUBLJANA: [number, number] = [46.0569, 14.5058];
 
 type LatLng = { lat: number; lng: number };
+export type ExistingPlayground = { id: string; name: string; lat: number; lng: number };
 
 function ClickToPlace({ onChange }: { onChange: (pos: LatLng) => void }) {
   useMapEvents({
@@ -23,36 +26,17 @@ function ClickToPlace({ onChange }: { onChange: (pos: LatLng) => void }) {
   return null;
 }
 
-function GpsButton({
-  onChange,
-  onError,
-}: {
-  onChange: (pos: LatLng) => void;
-  onError: () => void;
-}) {
+function GpsButton({ onChange, onError }: { onChange: (pos: LatLng) => void; onError: () => void }) {
   const map = useMap();
   const t = useTranslations("map");
-  const [locating, setLocating] = useState(false);
+  const { locate, locating } = useUserLocation();
 
-  function handle() {
-    if (!("geolocation" in navigator)) {
-      onError();
-      return;
-    }
-    setLocating(true);
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setLocating(false);
-        const next = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-        onChange(next);
-        map.setView([next.lat, next.lng], 16);
-      },
-      () => {
-        setLocating(false);
-        onError();
-      },
-      { enableHighAccuracy: true, timeout: 8000 },
-    );
+  async function handle() {
+    // Quiet: this step explains a failure inline, with what to do instead.
+    const pos = await locate({ quiet: true });
+    if (!pos) return onError();
+    onChange({ lat: pos.lat, lng: pos.lng });
+    map.setView([pos.lat, pos.lng], 16);
   }
 
   return (
@@ -61,12 +45,12 @@ function GpsButton({
       onClick={handle}
       disabled={locating}
       aria-label={t("useMyLocation")}
-      className="btn btn-circle btn-primary absolute right-3 bottom-3 z-[1000] shadow-lg"
+      className="btn btn-circle btn-lg btn-primary absolute right-3 bottom-3 z-1000 shadow-lg"
     >
       {locating ? (
         <span className="loading loading-spinner loading-sm" aria-hidden />
       ) : (
-        <LocateFixed className="size-5" aria-hidden />
+        <LocateFixed className="size-6" aria-hidden />
       )}
     </button>
   );
@@ -75,9 +59,12 @@ function GpsButton({
 export function LocationPicker({
   value,
   onChange,
+  existing = [],
 }: {
   value: LatLng | null;
   onChange: (pos: LatLng) => void;
+  /** Already-listed playgrounds, shown faded so people don't add duplicates (BL-60). */
+  existing?: ExistingPlayground[];
 }) {
   const t = useTranslations("add.step1");
   const markerRef = useRef<LeafletMarker | null>(null);
@@ -107,12 +94,22 @@ export function LocationPicker({
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
           <ClickToPlace onChange={handleChange} />
+          {existing.map((p) => (
+            <CircleMarker
+              key={p.id}
+              center={[p.lat, p.lng]}
+              radius={7}
+              interactive={false}
+              pathOptions={{ color: "oklch(57% 0.22 300)", weight: 2, opacity: 0.6, fillOpacity: 0.25 }}
+            />
+          ))}
           {value && (
             <Marker
               ref={(m) => {
                 markerRef.current = m;
               }}
               position={[value.lat, value.lng]}
+              icon={playgroundMarkerIcon}
               draggable
               eventHandlers={{
                 dragend(e) {

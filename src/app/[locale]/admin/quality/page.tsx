@@ -173,7 +173,7 @@ export default async function AdminQualityPage({
             {nearbyPairs.map(({ a, b, dist }) => (
               <li key={`${a.id}-${b.id}`}>
                 {pgLink(a)} · {pgLink(b)}{" "}
-                <span className="text-base-content/50">
+                <span className="text-base-content/60">
                   ({t("distanceApart", { distance: dist })})
                 </span>
               </li>
@@ -207,7 +207,7 @@ function ListSection({
       </div>
       <div className="collapse-content">
         {count === 0 ? (
-          <p className="text-sm text-base-content/50">{emptyLabel}</p>
+          <p className="text-sm text-base-content/60">{emptyLabel}</p>
         ) : (
           <ul className="flex flex-col gap-1 text-sm">{children}</ul>
         )}

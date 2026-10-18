@@ -1,4 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
+import { safeNextPath } from "@/lib/site";
 import { createClient } from "@/lib/supabase/server";
 
 // Landing route for the signup-confirmation email: /auth/confirm?token_hash=…&type=email
@@ -12,8 +13,16 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
   if (tokenHash && searchParams.get("type") === "email") {
     const supabase = await createClient();
-    const { error } = await supabase.auth.verifyOtp({ type: "email", token_hash: tokenHash });
-    if (!error) return NextResponse.redirect(`${origin}/${locale}/profile?confirmed=1`);
+    const { data, error } = await supabase.auth.verifyOtp({ type: "email", token_hash: tokenHash });
+    if (!error) {
+      // Back to where signup started (BL-55), saved with the account; used once.
+      const returnTo = safeNextPath(data.user?.user_metadata?.return_to, "");
+      if (returnTo) {
+        await supabase.auth.updateUser({ data: { return_to: null } });
+        return NextResponse.redirect(`${origin}${returnTo}`);
+      }
+      return NextResponse.redirect(`${origin}/${locale}/profile?confirmed=1`);
+    }
   }
 
   return NextResponse.redirect(`${origin}/${locale}/login?error=link_invalid`);

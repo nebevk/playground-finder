@@ -11,6 +11,7 @@ import { BottomNav } from "@/components/BottomNav";
 import { SideNav } from "@/components/SideNav";
 import { CookieBanner } from "@/components/CookieBanner";
 import { ToastProvider } from "@/components/Toast/ToastProvider";
+import { UserLocationProvider } from "@/components/Location/UserLocationContext";
 import "../globals.css";
 
 const nunito = Nunito({
@@ -93,6 +94,7 @@ export default async function LocaleLayout({
       <body className="min-h-dvh antialiased bg-base-100 text-base-content">
         <NextIntlClientProvider>
           <ToastProvider>
+            <UserLocationProvider>
             <div className="flex min-h-dvh md:flex-row">
               <SideNav />
               <div className="mx-auto flex w-full max-w-md flex-1 flex-col md:max-w-none">
@@ -103,6 +105,7 @@ export default async function LocaleLayout({
               </div>
             </div>
             <CookieBanner />
+            </UserLocationProvider>
           </ToastProvider>
         </NextIntlClientProvider>
         <Analytics />

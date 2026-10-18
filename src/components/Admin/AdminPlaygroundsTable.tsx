@@ -3,7 +3,7 @@
 import { useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { ArrowUp, ArrowDown, Pencil, Trash2, FlagOff } from "lucide-react";
+import { AlertTriangle, ArrowUp, ArrowDown, Pencil, Trash2, FlagOff } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { useToast } from "@/components/Toast/ToastProvider";
 import { EditPlaygroundForm } from "./EditPlaygroundForm";
@@ -156,7 +156,7 @@ export function AdminPlaygroundsTable({
             setPage(0);
           }}
           placeholder={t("search")}
-          className="input input-bordered input-sm w-full max-w-xs"
+          className="input input-sm w-full max-w-xs"
         />
         <div className="join">
           {(["all", "flagged", "noReviews"] as const).map((f) => (
@@ -174,7 +174,7 @@ export function AdminPlaygroundsTable({
           ))}
         </div>
         <span className="ml-auto text-sm text-base-content/60">
-          {t("selectedCount", { count: filtered.length })}
+          {t("shownCount", { count: filtered.length })}
         </span>
       </div>
 
@@ -218,7 +218,7 @@ export function AdminPlaygroundsTable({
                       checked={allSelected}
                       onChange={toggleAll}
                       aria-label={t("selectAll")}
-                      className="checkbox checkbox-sm"
+                      className="checkbox checkbox-primary checkbox-sm"
                     />
                   </th>
                   {renderSortHeader("name", t("name"))}
@@ -238,7 +238,7 @@ export function AdminPlaygroundsTable({
                         checked={selected.has(pg.id)}
                         onChange={() => toggleOne(pg.id)}
                         aria-label={pg.name}
-                        className="checkbox checkbox-sm"
+                        className="checkbox checkbox-primary checkbox-sm"
                       />
                     </td>
                     <td>
@@ -253,7 +253,14 @@ export function AdminPlaygroundsTable({
                     <td className="text-sm whitespace-nowrap">
                       {dateFmt.format(new Date(pg.created_at))}
                     </td>
-                    <td>{pg.flagged ? "⚠️" : ""}</td>
+                    <td>
+                      {pg.flagged && (
+                        <span className="text-warning" title={t("flagged")}>
+                          <AlertTriangle className="size-4" aria-hidden />
+                          <span className="sr-only">{t("flagged")}</span>
+                        </span>
+                      )}
+                    </td>
                     <td>
                       <div className="flex gap-1">
                         <EditPlaygroundForm

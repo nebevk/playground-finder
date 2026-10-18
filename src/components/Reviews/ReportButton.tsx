@@ -14,14 +14,13 @@ export function ReportButton({
   playgroundId,
   locale,
   label,
-  size = "sm",
 }: {
   targetType: "playground" | "review" | "photo";
   targetId: string;
   playgroundId: string;
   locale: string;
+  /** Visible text; without it the button is a 44 px icon button named by `detail.report`. */
   label?: string;
-  size?: "xs" | "sm";
 }) {
   const t = useTranslations("detail");
   const tCommon = useTranslations("common");
@@ -48,9 +47,7 @@ export function ReportButton({
         aria-label={label ?? t("report")}
         aria-haspopup="dialog"
         aria-controls={dialogId}
-        className={`btn btn-ghost gap-1 ${
-          size === "xs" ? "btn-sm min-h-10 min-w-10" : "btn-sm"
-        }`}
+        className={label ? "btn btn-ghost gap-1" : "btn btn-ghost btn-circle"}
       >
         <Flag className="size-4" aria-hidden />
         {label && <span>{label}</span>}
@@ -72,7 +69,7 @@ export function ReportButton({
             className="mt-4 flex flex-col gap-2"
           >
             {REASONS.map((r) => (
-              <label key={r} className="flex cursor-pointer items-center gap-3">
+              <label key={r} className="flex min-h-11 cursor-pointer items-center gap-3">
                 <input
                   type="radio"
                   name="reason"
@@ -102,10 +99,10 @@ export function ReportButton({
             )}
 
             <div className="modal-action mt-4">
-              <button type="button" onClick={close} className="btn btn-ghost btn-sm">
+              <button type="button" onClick={close} className="btn btn-ghost">
                 {t("reportCancel")}
               </button>
-              <button type="submit" disabled={pending} className="btn btn-primary btn-sm">
+              <button type="submit" disabled={pending} className="btn btn-primary">
                 {t("reportSubmit")}
               </button>
             </div>

@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { en, sl } from "./fixtures";
+import { en, expectTouchTargets, sl } from "./fixtures";
 
 test.describe("default locale", () => {
   // A browser that prefers neither sl nor en must fall back to Slovenian.
@@ -46,23 +46,87 @@ test.describe("anonymous visitor", () => {
     await page.goto("/sl/map");
     await expect(page.locator(".leaflet-container")).toBeVisible();
 
-    const locate = page.getByRole("button", { name: sl.map.locateMe });
-    if (!(await locate.isVisible())) await page.getByRole("button", { name: sl.map.controls }).click();
-    await locate.click();
+    // Always visible, one tap (BL-51).
+    await page.getByRole("button", { name: sl.map.locateMe }).click();
 
     // Locate zooms to 15 around the user. Tiles at z15 near Maribor have x ≈ 17808
     // (Ljubljana's are ≈ 17704), so tile URLs prove where the map went.
     await expect(page.locator('img.leaflet-tile[src*="/15/1780"]').first()).toBeAttached();
+    // "You are here": accuracy circle + dot.
+    await expect(page.locator(".leaflet-overlay-pane path")).toHaveCount(2);
   });
 
-  // Known gap (backlog BL-13).
-  test.fixme("[FR-MAP-02] Locate me explains when location is denied or unavailable", async () => {});
+  test("[FR-MAP-02] Locate me explains when location is denied", async ({ page }) => {
+    // No permission granted: the browser denies the request.
+    await page.goto("/sl/map");
+    await page.getByRole("button", { name: sl.map.locateMe }).click();
+    await expect(page.getByText(sl.map.locateDenied)).toBeVisible();
+  });
+
+  test("[FR-MAP-08] one tap opens the filters, and the button shows how many are active", async ({ page }) => {
+    await page.goto("/sl/map");
+    await page.getByRole("button", { name: sl.filters.open, exact: true }).click();
+    const drawer = page.getByRole("dialog", { name: sl.filters.title });
+    await drawer.getByText(sl.filters.feature.has_shade, { exact: true }).click();
+    const apply = drawer.getByRole("button", { name: /^Pokaži / });
+    await expect(apply).toHaveText(/^Pokaži \d+ igrišč/);
+    await apply.click();
+    await expect(page.getByRole("button", { name: sl.filters.openWithCount.replace("{count}", "1") })).toBeVisible();
+  });
 
   test("[FR-MAP-09] home lists playgrounds and links to the map", async ({ page }) => {
     await page.goto("/sl");
     await expect(page.locator('a[href*="/playground/"]').first()).toBeVisible();
     // The side nav also links to /sl/map but is hidden on mobile.
     await expect(page.locator('a[href="/sl/map"]').filter({ visible: true }).first()).toBeVisible();
+  });
+
+  test("[FR-MAP-09] [GDPR-13] one tap on Home lists the nearest playgrounds with distances", async ({ page, context }) => {
+    await context.grantPermissions(["geolocation"]);
+    // ~85 m from the seeded Tivoli playground (46.0569, 14.4936), with digits no playground has.
+    await context.setGeolocation({ latitude: 46.05731, longitude: 14.49452 });
+    // Count position requests, to prove the page asks only after the tap.
+    await page.addInitScript(() => {
+      const geo = navigator.geolocation;
+      const calls = { n: 0 };
+      Object.assign(window, { __geoCalls: calls });
+      const get = geo.getCurrentPosition.bind(geo);
+      const watch = geo.watchPosition.bind(geo);
+      geo.getCurrentPosition = (...args: Parameters<Geolocation["getCurrentPosition"]>) => {
+        calls.n++;
+        get(...args);
+      };
+      geo.watchPosition = (...args: Parameters<Geolocation["watchPosition"]>) => {
+        calls.n++;
+        return watch(...args);
+      };
+    });
+    const sent: string[] = [];
+    page.on("request", (r) => sent.push(`${r.url()} ${r.postData() ?? ""}`));
+    const geoCalls = () => page.evaluate(() => (window as unknown as { __geoCalls: { n: number } }).__geoCalls.n);
+
+    await page.goto("/sl");
+    await page.waitForLoadState("networkidle");
+    expect(await geoCalls()).toBe(0);
+
+    await page.getByRole("button", { name: sl.home.findNearby }).click();
+    const nearby = page.locator("section", { has: page.getByRole("heading", { name: sl.home.nearby }) });
+    await expect(nearby).toBeVisible();
+    const first = nearby.locator('a[href*="/playground/"]').first();
+    await expect(first).toContainText("Tivoli");
+    await expect(first).toContainText(/\d+ m|\d+(,\d)? km/);
+    expect(await geoCalls()).toBeGreaterThan(0);
+
+    // Distances are computed in the browser: the position is never sent anywhere.
+    await page.waitForLoadState("networkidle");
+    expect(sent.filter((s) => s.includes("46.0573") || s.includes("14.4945"))).toEqual([]);
+  });
+
+  test("[GDPR-10] Privacy and Terms are one tap away in the mobile navigation", async ({ page }) => {
+    await page.goto("/sl/map");
+    await page.locator("nav.dock").getByRole("button", { name: sl.nav.more }).click();
+    await page.getByRole("dialog", { name: sl.nav.more }).getByRole("link", { name: sl.nav.privacy }).click();
+    await expect(page).toHaveURL(/\/sl\/privacy/);
   });
 
   test("[FR-ADM-01] admin pages show the not-found page to visitors", async ({ page }) => {
@@ -124,16 +188,27 @@ test.describe("mobile layout", () => {
     });
   }
 
-  test("[NFR-UX-02] bottom navigation is visible with touch targets of at least 44×44 px", async ({ page }) => {
-    await page.goto("/sl");
-    const items = page.locator("nav.dock > a");
-    await expect(items.first()).toBeVisible();
-    for (const item of await items.all()) {
-      const box = await item.boundingBox();
-      expect(box, "nav item must be rendered").not.toBeNull();
-      expect(box!.width).toBeGreaterThanOrEqual(44);
-      expect(box!.height).toBeGreaterThanOrEqual(44);
+  test("[NFR-UX-02] touch targets are at least 44×44 px: nav, map controls, sheet, filters, menu", async ({ page }) => {
+    await page.goto("/sl/map");
+    await expectTouchTargets(page.locator("nav.dock"), "bottom nav");
+    await expectTouchTargets(page.locator(".leaflet-container > div").filter({ has: page.getByRole("button") }), "map controls");
+
+    // The playground sheet (tap a pin; zoom into clusters first).
+    const marker = page.locator(".playground-marker").first();
+    for (let i = 0; i < 6 && !(await marker.isVisible()); i++) {
+      await page.locator(".marker-cluster").first().click();
+      await page.waitForTimeout(400);
     }
+    await marker.click();
+    await expectTouchTargets(page.getByRole("dialog"), "playground sheet");
+    await page.keyboard.press("Escape");
+
+    await page.getByRole("button", { name: sl.filters.open, exact: true }).click();
+    await expectTouchTargets(page.getByRole("dialog", { name: sl.filters.title }), "filter drawer");
+    await page.keyboard.press("Escape");
+
+    await page.locator("nav.dock").getByRole("button", { name: sl.nav.more }).click();
+    await expectTouchTargets(page.getByRole("dialog", { name: sl.nav.more }), "more menu");
   });
 });
 

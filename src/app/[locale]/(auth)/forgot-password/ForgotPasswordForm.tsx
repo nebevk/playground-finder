@@ -24,7 +24,7 @@ export function ForgotPasswordForm({ locale }: { locale: string }) {
           type="email"
           required
           autoComplete="email"
-          className="input input-bordered w-full"
+          className="input w-full"
           placeholder={t("email")}
         />
       </label>

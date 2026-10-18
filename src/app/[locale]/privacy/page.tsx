@@ -16,7 +16,7 @@ export default async function PrivacyPage({
   return (
     <article className="prose-slate mx-auto flex max-w-2xl flex-col gap-6 p-6">
       <header>
-        <h1 className="text-3xl font-bold">{t("title")}</h1>
+        <h1 className="text-2xl font-bold">{t("title")}</h1>
         <p className="mt-1 text-sm text-base-content/60">{t("lastUpdated")}</p>
       </header>
 
@@ -24,7 +24,7 @@ export default async function PrivacyPage({
 
       <section>
         <h2 className="mb-2 text-xl font-semibold">{t("dataCollected.title")}</h2>
-        <ul className="list-inside list-disc space-y-1 text-base-content/80">
+        <ul className="list-outside list-disc space-y-1 pl-5 text-base-content/80">
           {dataItems.map((item) => (
             <li key={item}>{item}</li>
           ))}
@@ -33,7 +33,7 @@ export default async function PrivacyPage({
 
       <section>
         <h2 className="mb-2 text-xl font-semibold">{t("processors.title")}</h2>
-        <ul className="list-inside list-disc space-y-1 text-base-content/80">
+        <ul className="list-outside list-disc space-y-1 pl-5 text-base-content/80">
           <li>{t("processors.supabase")}</li>
           <li>{t("processors.vercel")}</li>
           <li>{t("processors.vercelAnalytics")}</li>
@@ -57,7 +57,7 @@ export default async function PrivacyPage({
 
       <section>
         <h2 className="mb-2 text-xl font-semibold">{t("rights.title")}</h2>
-        <ul className="list-inside list-disc space-y-1 text-base-content/80">
+        <ul className="list-outside list-disc space-y-1 pl-5 text-base-content/80">
           {rightsItems.map((item) => (
             <li key={item}>{item}</li>
           ))}

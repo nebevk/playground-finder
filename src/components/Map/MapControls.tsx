@@ -2,133 +2,82 @@
 
 import { useMap } from "react-leaflet";
 import { useTranslations } from "next-intl";
-import { LocateFixed, Minus, Plus, Settings2, SlidersHorizontal, X } from "lucide-react";
+import { LocateFixed, Minus, Plus, SlidersHorizontal } from "lucide-react";
 import { useFilters } from "@/components/Filters/FiltersContext";
+import { useUserLocation } from "@/components/Location/UserLocationContext";
 
-// A single DaisyUI FAB (speed dial) that gathers every map control into one corner:
-// zoom, locate, and filters. Rendered inside <MapContainer> so `useMap()` works; the
-// Filters drawer is reached through context. `!absolute` overrides the component's
-// default `position: fixed` so the cluster stays pinned to the map (and clears the
-// bottom dock on mobile, since the map already ends above it).
-export function MapControls() {
+// Map controls, always visible and one tap each (design critique, BL-51/BL-52):
+// - bottom-left: "Filtri" with a count of active filters, so filtered-out pins don't just vanish;
+// - bottom-right: zoom (the alternative to pinching, WCAG 2.5.1) and a 48 px locate button,
+//   the parent's core action, closest to the thumb.
+// Rendered inside <MapContainer> so `useMap()` works. `bottom` lifts both groups above the
+// playground sheet while it's open.
+export function MapControls({ bottom }: { bottom: number }) {
   const map = useMap();
   const t = useTranslations("map");
   const tf = useTranslations("filters");
   const { setOpen, activeCount } = useFilters();
+  const { locate, locating } = useUserLocation();
 
-  function locate() {
-    if (!("geolocation" in navigator)) return;
-    navigator.geolocation.getCurrentPosition(
-      (pos) => map.setView([pos.coords.latitude, pos.coords.longitude], 15),
-      () => undefined,
-      { enableHighAccuracy: true, timeout: 8000 },
-    );
+  async function onLocate() {
+    const pos = await locate();
+    if (pos) map.setView([pos.lat, pos.lng], Math.max(map.getZoom(), 15));
   }
 
+  const style = { bottom: `${bottom}px`, transition: "bottom 200ms ease" };
+
   return (
-    <div
-      className="fab absolute! right-4 bottom-4 z-1000"
-      onKeyDown={(e) => {
-        // Escape collapses the dial: blurring drops `.fab`'s `:focus-within`.
-        if (e.key === "Escape") (document.activeElement as HTMLElement | null)?.blur();
-      }}
-    >
-      {/* Closed state: the trigger. The FAB opens on `:focus-within`, but iOS Safari
-          doesn't focus controls on tap — so we force focus in the click handler.
-          `tabIndex` is required for the daisyUI `[tabindex]:first-child` selector. */}
-      <button
-        type="button"
-        tabIndex={0}
-        aria-label={t("controls")}
-        onClick={(e) => e.currentTarget.focus()}
-        className="btn btn-circle btn-lg btn-primary shadow-lg"
-      >
-        <Settings2 className="size-5" aria-hidden />
-      </button>
-
-      {/* Open state: the trigger is swapped for this close affordance. It must be a real
-          focusable button with an explicit blur — on iOS tapping an inert element doesn't
-          drop focus, so an inert X would leave the dial stuck open. */}
-      <button
-        type="button"
-        aria-label={t("close")}
-        onClick={() => (document.activeElement as HTMLElement | null)?.blur()}
-        className="fab-close btn btn-circle btn-lg btn-primary shadow-lg"
-      >
-        <X className="size-5" aria-hidden />
-      </button>
-
-      <div>
-        <span className="rounded-field bg-base-100/90 px-2 py-1 text-sm font-medium shadow">
-          {t("zoomIn")}
-        </span>
+    <>
+      <div className="absolute left-4 z-1000" style={style}>
         <button
           type="button"
-          onClick={(e) => {
-            map.zoomIn();
-            e.currentTarget.focus(); // keep the dial open for repeated taps
-          }}
-          aria-label={t("zoomIn")}
-          className="btn btn-circle bg-base-100 shadow-md"
+          onClick={() => setOpen(true)}
+          aria-label={activeCount > 0 ? tf("openWithCount", { count: activeCount }) : tf("open")}
+          className="btn gap-2 rounded-full border-base-300 bg-base-100 shadow-md"
         >
-          <Plus className="size-5" aria-hidden />
-        </button>
-      </div>
-
-      <div>
-        <span className="rounded-field bg-base-100/90 px-2 py-1 text-sm font-medium shadow">
-          {t("zoomOut")}
-        </span>
-        <button
-          type="button"
-          onClick={(e) => {
-            map.zoomOut();
-            e.currentTarget.focus(); // keep the dial open for repeated taps
-          }}
-          aria-label={t("zoomOut")}
-          className="btn btn-circle bg-base-100 shadow-md"
-        >
-          <Minus className="size-5" aria-hidden />
-        </button>
-      </div>
-
-      <div>
-        <span className="rounded-field bg-base-100/90 px-2 py-1 text-sm font-medium shadow">
-          {t("locateMe")}
-        </span>
-        <button
-          type="button"
-          onClick={locate}
-          aria-label={t("locateMe")}
-          className="btn btn-circle bg-base-100 shadow-md"
-        >
-          <LocateFixed className="size-5" aria-hidden />
-        </button>
-      </div>
-
-      <div>
-        <span className="rounded-field bg-base-100/90 px-2 py-1 text-sm font-medium shadow">
-          {tf("title")}
-        </span>
-        <span className="indicator">
+          <SlidersHorizontal className="size-5" aria-hidden />
+          {tf("open")}
           {activeCount > 0 && (
-            <span
-              className="indicator-item badge badge-accent badge-sm font-semibold"
-              aria-hidden
-            >
+            <span className="badge badge-primary badge-sm font-semibold" aria-hidden>
               {activeCount}
             </span>
           )}
+        </button>
+      </div>
+
+      <div className="absolute right-4 z-1000 flex flex-col items-center gap-2" style={style}>
+        <div className="join join-vertical rounded-full bg-base-100 shadow-md">
           <button
             type="button"
-            onClick={() => setOpen(true)}
-            aria-label={activeCount > 0 ? tf("openWithCount", { count: activeCount }) : tf("open")}
-            className="btn btn-circle bg-base-100 shadow-md"
+            onClick={() => map.zoomIn()}
+            aria-label={t("zoomIn")}
+            className="btn btn-ghost join-item btn-square rounded-t-full"
           >
-            <SlidersHorizontal className="size-5" aria-hidden />
+            <Plus className="size-5" aria-hidden />
           </button>
-        </span>
+          <button
+            type="button"
+            onClick={() => map.zoomOut()}
+            aria-label={t("zoomOut")}
+            className="btn btn-ghost join-item btn-square rounded-b-full"
+          >
+            <Minus className="size-5" aria-hidden />
+          </button>
+        </div>
+        <button
+          type="button"
+          onClick={onLocate}
+          disabled={locating}
+          aria-label={locating ? t("locating") : t("locateMe")}
+          className="btn btn-circle btn-lg btn-primary shadow-lg"
+        >
+          {locating ? (
+            <span className="loading loading-spinner loading-sm" aria-hidden />
+          ) : (
+            <LocateFixed className="size-6" aria-hidden />
+          )}
+        </button>
       </div>
-    </div>
+    </>
   );
 }

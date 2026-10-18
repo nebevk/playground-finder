@@ -3,7 +3,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const supabase = {
-  auth: { getUser: vi.fn(), signUp: vi.fn(), verifyOtp: vi.fn(), updateUser: vi.fn() },
+  auth: { getUser: vi.fn(), signUp: vi.fn(), signInWithPassword: vi.fn(), verifyOtp: vi.fn(), updateUser: vi.fn() },
   from: vi.fn(),
   storage: { from: vi.fn() },
 };
@@ -20,7 +20,7 @@ vi.mock("next/navigation", () => ({
   }),
 }));
 
-const { signupAction, updatePasswordAction } = await import("@/app/[locale]/(auth)/actions");
+const { loginAction, signupAction, updatePasswordAction } = await import("@/app/[locale]/(auth)/actions");
 const { createPlaygroundAction } = await import("@/app/[locale]/add/actions");
 const { verifyTurnstile } = await import("@/lib/turnstile");
 
@@ -82,6 +82,29 @@ describe("signup", () => {
     expect(Date.parse(data.consent_privacy_at)).not.toBeNaN();
     expect(data.consent_policy_version).toMatch(/^\d{4}-\d{2}$/);
     expect(data.age_confirmed).toBe(true);
+  });
+});
+
+describe("login", () => {
+  const creds = { email: "a@example.com", password: "secret123", locale: "sl" };
+
+  it("[FR-ACC-03] returns to the page that asked for sign-in", async () => {
+    supabase.auth.signInWithPassword.mockResolvedValue({ error: null });
+    await expect(loginAction(undefined, fd({ ...creds, next: "/sl/playground/pg1" }))).rejects.toMatchObject({
+      url: "/sl/playground/pg1",
+    });
+  });
+
+  it("[FR-ACC-03] ignores a return path that leaves the site", async () => {
+    supabase.auth.signInWithPassword.mockResolvedValue({ error: null });
+    await expect(loginAction(undefined, fd({ ...creds, next: "//evil.com" }))).rejects.toMatchObject({
+      url: "/sl/profile",
+    });
+  });
+
+  it("[FR-ACC-02] says to confirm the email first instead of a generic failure", async () => {
+    supabase.auth.signInWithPassword.mockResolvedValue({ error: { code: "email_not_confirmed" } });
+    expect(await loginAction(undefined, fd(creds))).toEqual({ error: "email_not_confirmed" });
   });
 });
 

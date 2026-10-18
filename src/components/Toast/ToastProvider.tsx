@@ -70,7 +70,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                 type="button"
                 onClick={() => dismiss(t.id)}
                 aria-label={tCommon("close")}
-                className="btn btn-ghost btn-xs btn-circle"
+                className="btn btn-ghost btn-circle"
               >
                 <X className="size-3" aria-hidden />
               </button>

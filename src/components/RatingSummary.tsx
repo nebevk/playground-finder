@@ -17,7 +17,7 @@ export function RatingSummary({
   const t = useTranslations("detail");
 
   if (count === 0 || avg == null) {
-    return <span className="text-sm text-base-content/50">{t("noRatingsYet")}</span>;
+    return <span className="text-sm text-base-content/60">{t("noRatingsYet")}</span>;
   }
 
   return (
@@ -31,7 +31,7 @@ export function RatingSummary({
           {avg.toFixed(1)}
         </span>
       </span>
-      <span className="text-sm text-base-content/50">{t("reviewsCount", { count })}</span>
+      <span className="text-sm text-base-content/60">{t("reviewsCount", { count })}</span>
     </span>
   );
 }

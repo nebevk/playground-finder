@@ -63,7 +63,7 @@ export function SideNav() {
             {t("nav.terms")}
           </Link>
         </div>
-        <p className="text-center text-xs text-base-content/50">{t("nav.copyright")}</p>
+        <p className="text-center text-xs text-base-content/60">{t("nav.copyright")}</p>
       </div>
     </aside>
   );

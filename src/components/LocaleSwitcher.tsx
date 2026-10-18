@@ -9,13 +9,14 @@ const LOCALE_LABELS: Record<string, string> = {
   en: "English",
 };
 
+// Segmented control (DaisyUI tabs-box): one pill per language, 44 px tall.
 export function LocaleSwitcher() {
   const t = useTranslations("nav");
   const locale = useLocale();
   const pathname = usePathname();
 
   return (
-    <nav aria-label={t("language")} className="join">
+    <nav aria-label={t("language")} className="tabs tabs-box">
       {routing.locales.map((l) => (
         <Link
           key={l}
@@ -23,9 +24,7 @@ export function LocaleSwitcher() {
           locale={l}
           aria-current={l === locale ? "true" : undefined}
           aria-label={LOCALE_LABELS[l] ?? l}
-          className={`btn join-item btn-xs uppercase ${
-            l === locale ? "btn-primary" : "btn-ghost"
-          }`}
+          className={`tab min-h-11 min-w-11 font-semibold uppercase ${l === locale ? "tab-active" : ""}`}
         >
           {l}
         </Link>
