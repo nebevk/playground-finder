@@ -36,13 +36,8 @@ html, body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .brand-punct--wiggle,
-  .dock-active {
+  .brand-punct--wiggle {
     animation: none;
-  }
-  .dock > a:hover,
-  .dock > button:hover {
-    transform: none;
   }
 }
 
@@ -51,26 +46,11 @@ html, body {
   50% { transform: rotate(18deg); }
 }
 
-@keyframes pop {
-  0% { transform: scale(1); }
-  40% { transform: scale(1.15); }
-  100% { transform: scale(1.05); }
-}
-
-.dock-active {
-  animation: pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-  transform: scale(1.05);
-}
-/* Smooth nudge on bottom-nav items, only where hovering is real: on phones a tap leaves :hover
-   stuck, which kept the tapped tab lifted. (A drop-shadow "glow" on the active icon was removed:
-   oklch(var(--color-primary) / …) is invalid with DaisyUI 5 colours, so it never applied.) */
+/* Bottom-nav tabs: the active colour fades in, and that's all. A bouncy "pop", a permanent 5 %
+   scale-up and a hover lift were stock "delight" effects (and on phones a tap left :hover stuck,
+   keeping the tapped tab raised). */
 .dock > a, .dock > button {
-  transition: transform 180ms ease, color 180ms ease;
-}
-@media (hover: hover) {
-  .dock > a:hover, .dock > button:hover {
-    transform: translateY(-2px);
-  }
+  transition: color 180ms ease;
 }
 
 /* Field borders at 50 % (DaisyUI's 20 % is 1.5:1; WCAG asks 3:1 for UI components). */
@@ -244,6 +224,7 @@ html, body {
   /* 0.275rem makes default buttons and inputs 44 px: the project's touch-target minimum. */
   --size-field: 0.275rem;
   --border: 2px;
-  --depth: 1;
-  --noise: 1;
+  /* Flat: no glow under buttons, no glossy inset highlight and no grain texture. */
+  --depth: 0;
+  --noise: 0;
 }

@@ -46,7 +46,7 @@ function GpsButton({ onChange, onError }: { onChange: (pos: LatLng) => void; onE
       onClick={handle}
       disabled={locating}
       aria-label={t("useMyLocation")}
-      className="btn btn-circle btn-lg btn-primary absolute right-3 bottom-3 z-1000 shadow-lg"
+      className="btn btn-circle btn-lg btn-primary absolute right-3 bottom-3 z-1000 shadow-sm"
     >
       {locating ? (
         <span className="loading loading-spinner loading-sm" aria-hidden />

@@ -40,7 +40,7 @@ export function MapControls({ lift }: { lift: number }) {
           type="button"
           onClick={() => setOpen(true)}
           aria-label={activeCount > 0 ? tf("openWithCount", { count: activeCount }) : tf("open")}
-          className="btn gap-2 rounded-full border-base-300 bg-base-100 shadow-md"
+          className="btn gap-2 rounded-full border-base-300 bg-base-100 shadow-sm"
         >
           <SlidersHorizontal className="size-5" aria-hidden />
           {tf("open")}
@@ -56,7 +56,7 @@ export function MapControls({ lift }: { lift: number }) {
         className="pointer-events-none absolute top-4 right-4 bottom-[calc(var(--lift)+1rem)] z-1000 flex flex-col items-center justify-end-safe gap-2 transition-[bottom] duration-200"
         style={liftVar}
       >
-        <div className="pointer-events-auto join join-vertical rounded-full bg-base-100 shadow-md">
+        <div className="pointer-events-auto join join-vertical rounded-full border border-base-300 bg-base-100 shadow-sm">
           <button
             type="button"
             onClick={() => map.zoomIn()}
@@ -79,7 +79,7 @@ export function MapControls({ lift }: { lift: number }) {
           onClick={onLocate}
           disabled={locating}
           aria-label={locating ? t("locating") : t("locateMe")}
-          className="pointer-events-auto btn btn-circle btn-lg btn-primary shadow-lg"
+          className="pointer-events-auto btn btn-circle btn-lg btn-primary shadow-sm"
         >
           {locating ? (
             <span className="loading loading-spinner loading-sm" aria-hidden />

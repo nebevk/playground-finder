@@ -57,7 +57,7 @@ function MapWithFilters({
 
       {empty && (
         <div className="pointer-events-none absolute inset-0 z-[1000] flex items-center justify-center p-6">
-          <div className="pointer-events-auto flex max-w-xs flex-col items-center gap-3 rounded-box border border-base-300 bg-base-100/95 p-6 text-center shadow-xl backdrop-blur">
+          <div className="pointer-events-auto flex max-w-xs flex-col items-center gap-3 rounded-box border border-base-300 bg-base-100 p-6 text-center shadow-sm">
             <span className="text-primary">
               {filtered ? (
                 <SlidersHorizontal className="size-8" aria-hidden />

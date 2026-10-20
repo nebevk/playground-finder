@@ -27,7 +27,7 @@
     "authorBody": "I'm Nejc Bevk, and I build this app in my spare time. It's a personal project, born from wanting a better overview of playgrounds for our little ones.",
     "authorLink": "My personal page",
     "supportTitle": "Support the project",
-    "supportBody": "The app is free and ad-free. If you like it, you can buy me a coffee. Thank you! ☕",
+    "supportBody": "The app is free and ad-free. If you like it, you can buy me a coffee. Thank you!",
     "supportCta": "Buy me a coffee on Ko-fi"
   },
   "home": {
@@ -61,7 +61,7 @@
     "useMyLocation": "Find my location",
     "welcome": "Select a pin to see details.",
     "dismiss": "Got it",
-    "addedToast": "Thanks! 🎉 Your playground is on the map.",
+    "addedToast": "Thanks! Your playground is on the map.",
     "directions": "Directions",
     "emptyFilteredTitle": "No matches",
     "emptyFiltered": "No playgrounds match these filters here.",
@@ -156,7 +156,7 @@
     "quality": {
       "title": "Data quality",
       "intro": "Find incomplete and possibly duplicate playgrounds at a glance.",
-      "allGood": "Everything looks tidy! 🎉",
+      "allGood": "Everything looks tidy!",
       "sectionEmpty": "No issues.",
       "noPhotos": "No photos",
       "noDescription": "No description",

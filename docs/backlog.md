@@ -39,7 +39,7 @@ The [2026-10-16 design critique](reviews/2026-10-16-design-critique.md) shipped 
 | # | Item | Moves | Size |
 |---|---|---|---|
 | BL-65 | Display font with Slovenian letters. Chewy (the wordmark and display headings) exists only in a `latin` subset, so č, š and ž fall back to another font mid-word. Pick a display font that has `latin-ext`, or keep Chewy for the wordmark only. Owner's call. | — | S |
-| BL-68 | "Less AI-looking" polish, the owner's call: the recommended (no emoji in copy, flat buttons via `--depth: 0` / `--noise: 0`, one shadow for map controls, a swipeable or no grabber on the phone sheet, a quieter "Podpri" button, neutral feature chips, no fog over the detail photo) and the brand list (gradient wordmark, watercolour logo, pill radius, palette, wiggling "?") in the [Home redesign review](reviews/2026-10-20-home-redesign.md). | — | S |
+| BL-68 | Brand look, the owner's call: a solid wordmark instead of the violet-to-rose gradient, the watercolour logo, pill shapes everywhere (`--radius-field: 2rem`), the rainbow palette and the wiggling "?". The cheap non-brand fixes shipped in [ops 0010](../ops/handoff/0010-less-ai-looking-polish.md); see the [Home redesign review](reviews/2026-10-20-home-redesign.md). | — | S |
 
 ## Later
 

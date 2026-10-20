@@ -300,7 +300,7 @@ export function AddFlow({
                           type="button"
                           onClick={() => removePhoto(i)}
                           aria-label={t("step3.removePhoto", { n: i + 1, total: photos.length })}
-                          className="btn btn-circle absolute top-1 right-1 bg-base-100/90 backdrop-blur"
+                          className="btn btn-circle absolute top-1 right-1 bg-base-100 shadow-sm"
                         >
                           <X className="size-5" aria-hidden />
                         </button>

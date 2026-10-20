@@ -60,18 +60,19 @@ export default async function PlaygroundDetailPage({
       <RecordView id={playground.id} />
       {hero && (
         <div className="relative h-56 w-full overflow-hidden md:h-72">
+          {/* The photo as taken: no fog gradient over it. Buttons on it are solid, so they read
+              on any photo. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={hero.url} alt={t("photoAlt", { name: playground.name, n: 1 })} className="h-full w-full object-cover" />
-          <div className="absolute inset-0 bg-linear-to-t from-base-100/90 via-base-100/20 to-transparent" />
           <Link
             href="/map"
-            className="btn btn-circle absolute top-4 left-4 bg-base-100/90 backdrop-blur"
+            className="btn btn-circle absolute top-4 left-4 bg-base-100 shadow-sm"
             aria-label={t("backToMap")}
           >
             <ArrowLeft className="size-5" aria-hidden />
           </Link>
           {user && (
-            <div className="absolute top-4 right-4 rounded-full bg-base-100/90 backdrop-blur">
+            <div className="absolute top-4 right-4 rounded-full bg-base-100 shadow-sm">
               <ReportButton targetType="photo" targetId={hero.id} playgroundId={playground.id} locale={locale} />
             </div>
           )}
@@ -175,7 +176,7 @@ export default async function PlaygroundDetailPage({
                       loading="lazy"
                     />
                     {user && (
-                      <div className="absolute top-1 right-1 rounded-full bg-base-100/90">
+                      <div className="absolute top-1 right-1 rounded-full bg-base-100 shadow-sm">
                         <ReportButton targetType="photo" targetId={photo.id} playgroundId={playground.id} locale={locale} />
                       </div>
                     )}

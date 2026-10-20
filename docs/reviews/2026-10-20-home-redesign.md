@@ -59,14 +59,20 @@ The removed accents:
 
 The current page is still clear without them. In the side nav it shows as a tint, bold text, a primary icon and `aria-current`. In the bottom nav it shows as colour and bold text.
 
-### Optional, the owner's call
+### Other "AI-ish" tells
 
-Other "AI-ish" tells that the review found but did not change:
+The owner asked for the cheap, non-brand ones. They ship in [ops 0010](../../ops/handoff/0010-less-ai-looking-polish.md):
+- **Copy:** no emoji (👋 map hint, ☕ about, 🎉 toasts and admin).
+- **Buttons:** flat. The theme's `--depth` and `--noise` are 0, so there is no glow, glossy highlight or grain.
+- **Map controls:** one light shadow, with a hairline border, on every floating control.
+- **Phone sheet:** no drag handle (it couldn't be dragged).
+- **Bottom nav:** no bouncy "pop", scale-up or hover lift on the tabs.
+- **Sidebar:** "Podpri" (*support*) is a quiet ghost button.
+- **Feature chips:** neutral instead of lavender (violet now means "you can tap this").
+- **Detail photo:** no fog gradient; the buttons on it are solid instead of blurred and translucent.
+- **Loading animation:** the swing stops for visitors who ask for reduced motion.
 
-| Kind | Items |
-|---|---|
-| **Recommended**, cheap and not brand | Remove the emoji in copy (👋 map hint, ☕ about, 🎉 toasts). Set the theme's `--depth: 0` and `--noise: 0` (flat buttons, no glow or grain). Give all map controls one shadow. Remove the drag handle on the phone sheet, or make it swipeable. Drop the bouncy "pop" on the active tab. Make the sidebar's full-width rose "Podpri" (*support*) button quieter. Use neutral feature chips instead of lavender ones. Remove the fog gradient over the detail photo. |
-| **Brand** | The violet-to-rose gradient wordmark, solid colour instead? The watercolour logo. Pill-shaped everything (`--radius-field: 2rem`). The rainbow palette. The wiggling "?". Chewy has no č/š/ž (BL-65). |
+**Still the owner's call (brand):** the violet-to-rose gradient wordmark (solid colour instead?), the watercolour logo, pill shapes everywhere (`--radius-field: 2rem`), the rainbow palette and the wiggling "?". Also, Chewy has no č/š/ž (BL-65).
 
 ### Decisions taken with defaults (reversible)
 

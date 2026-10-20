@@ -45,9 +45,11 @@ export function SideNav() {
           href={KOFI_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="btn btn-secondary w-full gap-2"
+          // Quiet on purpose: a full-width coloured button pinned to the sidebar outshouted every
+          // other control. The rose icon keeps it findable.
+          className="btn btn-ghost w-full gap-2"
         >
-          <Coffee className="size-5" aria-hidden />
+          <Coffee className="size-5 text-secondary" aria-hidden />
           {t("nav.support")}
         </a>
         <div className="flex items-center justify-center gap-3 text-xs text-base-content/60">

@@ -261,7 +261,10 @@ function ZoomButtons() {
     L.DomEvent.disableScrollPropagation(ref.current);
   }, []);
   return (
-    <div ref={ref} className="absolute right-4 bottom-8 z-1000 join join-vertical rounded-full bg-base-100 shadow-md">
+    <div
+      ref={ref}
+      className="absolute right-4 bottom-8 z-1000 join join-vertical rounded-full border border-base-300 bg-base-100 shadow-sm"
+    >
       <button
         type="button"
         onClick={() => map.zoomIn()}

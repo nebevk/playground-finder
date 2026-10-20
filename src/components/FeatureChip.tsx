@@ -27,11 +27,10 @@ export function FeatureBadge({
 }) {
   return (
     <li
-      className={`badge h-auto min-h-7 gap-1.5 py-1 ${
-        missing ? "badge-ghost text-base-content/60" : "badge-soft badge-primary"
-      }`}
+      // Neutral: violet means "you can tap this", and these are information.
+      className={`badge h-auto min-h-7 gap-1.5 py-1 ${missing ? "badge-ghost text-base-content/60" : "badge-soft"}`}
     >
-      <Icon className="size-3.5 shrink-0" aria-hidden />
+      <Icon className={`size-3.5 shrink-0 ${missing ? "" : "text-base-content/70"}`} aria-hidden />
       <span>
         {label}
         {missing && missingLabel && <span className="font-normal"> · {missingLabel}</span>}

@@ -69,15 +69,12 @@ export function PlaygroundSheet({
       inert={!open}
       // Closed, it is also invisible: the visibility flips once the slide-out ends, so the sheet
       // can never paint over the bottom nav or peek out of the map (the map root clips it too).
-      className={`absolute inset-x-0 bottom-0 z-1100 mx-auto flex max-w-md flex-col rounded-t-2xl border-t border-base-300 bg-base-100 px-5 pt-2 pb-4 shadow-[0_-4px_16px_rgb(0_0_0/0.12)] transition-[translate,visibility] duration-200 md:right-4 md:bottom-4 md:left-auto md:max-w-sm md:rounded-2xl md:border ${
+      className={`absolute inset-x-0 bottom-0 z-1100 mx-auto flex max-w-md flex-col rounded-t-2xl border-t border-base-300 bg-base-100 px-5 pt-4 pb-4 shadow-[0_-4px_16px_rgb(0_0_0/0.12)] transition-[translate,visibility] duration-200 md:right-4 md:bottom-4 md:left-auto md:max-w-sm md:rounded-2xl md:border ${
         open ? "visible translate-y-0" : "pointer-events-none invisible translate-y-full md:translate-y-[calc(100%+1rem)]"
       }`}
     >
       {p && (
         <>
-          {/* Phones only: on desktop the sheet is a floating card, where a grabber means nothing. */}
-          <div aria-hidden className="mx-auto mb-1 h-1.5 w-10 shrink-0 rounded-full bg-base-300 md:hidden" />
-
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0 pt-2">
               <h2 id={titleId} className="truncate text-xl font-bold">

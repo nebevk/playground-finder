@@ -27,7 +27,7 @@
     "authorBody": "Aplikacijo v prostem času razvijam Nejc Bevk. To je moj osebni projekt, ki je nastal iz želje po boljšem pregledu nad igrišči za naše najmlajše.",
     "authorLink": "Moja osebna stran",
     "supportTitle": "Podpri projekt",
-    "supportBody": "Aplikacija je brezplačna in brez oglasov. Če ti je všeč, me lahko počastiš s kavico. Hvala! ☕",
+    "supportBody": "Aplikacija je brezplačna in brez oglasov. Če ti je všeč, me lahko počastiš s kavico. Hvala!",
     "supportCta": "Časti kavo na Ko-fi"
   },
   "home": {
@@ -61,7 +61,7 @@
     "useMyLocation": "Poišči mojo lokacijo",
     "welcome": "Izberi oznako za podrobnosti.",
     "dismiss": "Razumem",
-    "addedToast": "Hvala! 🎉 Tvoje igrišče je na zemljevidu.",
+    "addedToast": "Hvala! Tvoje igrišče je na zemljevidu.",
     "directions": "Navodila za pot",
     "emptyFilteredTitle": "Ni zadetkov",
     "emptyFiltered": "Na tem območju ni igrišč s temi filtri.",
@@ -156,7 +156,7 @@
     "quality": {
       "title": "Kakovost podatkov",
       "intro": "Hitro poišči nepopolna in morda podvojena igrišča.",
-      "allGood": "Vse je videti urejeno! 🎉",
+      "allGood": "Vse je videti urejeno!",
       "sectionEmpty": "Ni težav.",
       "noPhotos": "Brez fotografij",
       "noDescription": "Brez opisa",

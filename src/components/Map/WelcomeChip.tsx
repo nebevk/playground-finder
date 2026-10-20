@@ -23,9 +23,8 @@ export function WelcomeChip({ dismissed }: { dismissed: boolean }) {
       role="status"
       // w-max: an absolutely positioned box at left-1/2 would otherwise shrink to half the map
       // and wrap to three lines on a phone.
-      className="pointer-events-auto absolute top-5 left-1/2 z-[1000] flex w-max max-w-[calc(100%-2rem)] -translate-x-1/2 items-center gap-2 rounded-full border border-base-300 bg-base-100 px-4 py-2 text-sm shadow-lg"
+      className="pointer-events-auto absolute top-5 left-1/2 z-[1000] flex w-max max-w-[calc(100%-2rem)] -translate-x-1/2 items-center gap-2 rounded-full border border-base-300 bg-base-100 px-4 py-2 text-sm shadow-sm"
     >
-      <span aria-hidden className="text-base">👋</span>
       <span>{t("welcome")}</span>
       <button
         type="button"
