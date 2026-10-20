@@ -1,7 +1,7 @@
 ---
 id: 0008
 title: Design critique fixes (map, home, add flow, sign-in return, accessibility)
-status: blocked
+status: done
 order: any
 destructive: false
 migrations: []
@@ -74,3 +74,4 @@ No database changes. The checks are the smoke tests and owner tests above.
 - **2026-10-18T07:02Z** started (status → in-progress). Preflight: clean; local commit `a7136ac` ahead of origin (design code + this ticket); prod deploy `READY` (`5cdca87`); no migrations (order: any). Drift OK (22 migrations incl. `index_foreign_keys`).
 - **2026-10-18T07:05Z** pushed `a7136ac` + `8316450`. Deploy `dpl_BLFSbyP4iMdjEagwCwikpSEzZ5C9` → `READY`. Smoke: `/sl`, `/sl/map`, `/sl/privacy`, `/en/privacy`, `/sitemap.xml` all 200. Curl checks: `Igrišča v bližini` ≥ 1, `>Več<` ≥ 1, login `next=/sl/add` kept, `next=//evil.example` dropped. Security advisors unchanged (WARN `increment_playground_views` SECURITY DEFINER; WARN `auth_leaked_password_protection`).
 - **Blocked** on owner phone tests (ticket step 4): locate allow/deny, Filtri count, nearby list + distances, sign-in return, add-flow Naprej validation + photos step (no premature publish), Več → Zasebnost. Say **process ops** when done.
+- **2026-10-20T12:23Z** owner said process ops (phone tests accepted). Re-checked smoke 200 + curl (nearby, Več, next=/sl/add kept, evil next dropped). Security advisors unchanged. **status → done**.
