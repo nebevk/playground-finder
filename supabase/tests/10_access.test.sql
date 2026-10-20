@@ -119,6 +119,26 @@ select throws_ok(
   '42501', null,
   '[NFR-SEC-05] owners cannot change the flagged column'
 );
+select lives_ok(
+  $$ update public.playgrounds
+       set description = 'Edited', has_toilets = true, surface_type = 'sand',
+           location = 'SRID=4326;POINT(14.61 46.11)'
+     where name = 'Mine' $$,
+  '[FR-ADD-08] the person who added a playground can edit its details and move its pin'
+);
+select is(
+  (select count(*)::int from public.playgrounds
+    where name = 'Mine' and description = 'Edited' and has_toilets and surface_type = 'sand'),
+  1,
+  '[FR-ADD-08] the edit is saved'
+);
+-- Someone else's playground: the owner-only policy matches no rows, so nothing changes.
+update public.playgrounds set name = 'Hijacked' where id = '00000000-0000-0000-0000-0000000000a1';
+select is(
+  (select name from public.playgrounds where id = '00000000-0000-0000-0000-0000000000a1'),
+  'Visible',
+  '[FR-ADD-08] nobody else can edit a playground'
+);
 select throws_ok(
   $$ update public.reviews set helpful_count = 99 where id = '00000000-0000-0000-0000-0000000000b1' $$,
   '42501', null,

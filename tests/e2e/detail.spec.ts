@@ -23,6 +23,13 @@ test("[FR-PG-01] [NFR-I18N-03] equipment is shown with translated labels", async
   await expect(page.getByText("climbing_wall")).toHaveCount(0);
 });
 
-// Known gaps (backlog BL-26, BL-22).
-test.fixme("[FR-PG-01] photos open in a swipeable carousel", async () => {});
+test("[FR-PG-01] features a playground doesn't have say so ('Brez …'), not 'no data'", async ({ page }) => {
+  // Seeded Park Zvezda: shade only, sand surface. An unticked box in the add form means "no".
+  await page.goto(await playgroundPath("Park Zvezda"));
+  await expect(page.getByText(sl.detail.feature.has_shade, { exact: true })).toBeVisible();
+  await expect(page.getByText(sl.detail.featureAbsent.has_toilets, { exact: true })).toBeVisible();
+  await expect(page.getByText(sl.detail.noData)).toHaveCount(0);
+});
+
+// Known gap (backlog BL-22). The photo viewer is tested in account.spec.ts (it needs uploads).
 test.fixme("[NFR-SEO-02] every public page links its sl/en alternates with hreflang", async () => {});

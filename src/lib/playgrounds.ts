@@ -104,7 +104,7 @@ export const getPlaygroundById = cache(async (id: string): Promise<PlaygroundDet
 
   const { data, error } = await supabase
     .from("playgrounds_geo")
-    .select(`${MAP_SELECT}, equipment`)
+    .select(`${MAP_SELECT}, equipment, user_id`)
     .eq("id", id)
     .eq("flagged", false)
     .maybeSingle();
@@ -138,5 +138,8 @@ export const getPlaygroundById = cache(async (id: string): Promise<PlaygroundDet
     ? data.equipment.filter((x): x is string => typeof x === "string")
     : [];
 
-  return { ...base, equipment, photos };
+  // Who added it: decides, on the server, whether the visitor may edit it (FR-ADD-08).
+  const user_id = typeof data.user_id === "string" ? data.user_id : null;
+
+  return { ...base, equipment, photos, user_id };
 });

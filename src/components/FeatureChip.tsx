@@ -13,27 +13,30 @@ export const SURFACE_ICON = Layers;
 
 // One way to show playground attributes everywhere (design critique, BL-59).
 
-/** Static chip for the sheet and detail page. `missing` = not reported ("ni podatka"). */
+/**
+ * Static chip for the sheet and detail page. `muted` = the playground doesn't have it ("Brez
+ * stranišča") or it isn't known; `note` is added after the label, e.g. "ni podatka".
+ */
 export function FeatureBadge({
   icon: Icon,
   label,
-  missing,
-  missingLabel,
+  muted,
+  note,
 }: {
   icon: LucideIcon;
   label: string;
-  missing?: boolean;
-  missingLabel?: string;
+  muted?: boolean;
+  note?: string;
 }) {
   return (
     <li
       // Neutral: violet means "you can tap this", and these are information.
-      className={`badge h-auto min-h-7 gap-1.5 py-1 ${missing ? "badge-ghost text-base-content/60" : "badge-soft"}`}
+      className={`badge h-auto min-h-7 gap-1.5 py-1 ${muted ? "badge-ghost text-base-content/60" : "badge-soft"}`}
     >
-      <Icon className={`size-3.5 shrink-0 ${missing ? "" : "text-base-content/70"}`} aria-hidden />
+      <Icon className={`size-3.5 shrink-0 ${muted ? "" : "text-base-content/70"}`} aria-hidden />
       <span>
         {label}
-        {missing && missingLabel && <span className="font-normal"> · {missingLabel}</span>}
+        {note && <span className="font-normal"> · {note}</span>}
       </span>
     </li>
   );

@@ -60,6 +60,16 @@ html, body {
   --input-color: color-mix(in oklab, var(--color-base-content) 50%, #0000);
 }
 
+/* The full-screen photo viewer is open: the page behind it must not scroll. */
+html:has(dialog.photo-viewer[open]) {
+  overflow: hidden;
+}
+
+/* Multi-line fields aren't pills: the theme's 2rem field radius made textareas look swollen. */
+.textarea {
+  border-radius: var(--radius-box);
+}
+
 /* Square-cornered checkboxes, so they don't read as radio buttons (--radius-selector is a pill). */
 .checkbox {
   border-radius: 0.375rem;

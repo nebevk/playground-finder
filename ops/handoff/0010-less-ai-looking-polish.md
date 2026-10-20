@@ -1,7 +1,7 @@
 ---
 id: 0010
 title: Less AI-looking polish (flat buttons, no emoji, quieter accents)
-status: blocked
+status: done
 order: any
 destructive: false
 migrations: []
@@ -76,3 +76,4 @@ There are no database changes. The checks are the smoke tests and the owner look
 - **2026-10-20T17:24Z** started (status → in-progress). Preflight: clean; local `4e7f2db` ahead (polish code + this ticket); no migrations (order: any). Continuing after 0009 done.
 - **2026-10-20T17:26Z** pushed `4e7f2db` + `411ba93`. Deploy `dpl_4g6keCVdsfii8oLJ2dainpRdWokr` → `READY`. Smoke 200. Curl: `☕` = 0 on `/sl/about` and `/en/about`. Security advisors unchanged.
 - **Blocked** on owner phone look (step 4) + desktop Podpri (step 5). Say **process ops** when done.
+- **2026-10-20T19:58Z** owner said process ops / commit (polish look accepted). **status → done**.

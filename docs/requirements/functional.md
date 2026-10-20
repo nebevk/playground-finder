@@ -21,7 +21,7 @@ Conventions and the ID scheme are in [README.md](README.md). Status last reviewe
 
 | ID | Requirement | Pri | Status | Verify |
 |---|---|---|---|---|
-| FR-PG-01 | The detail page shows photos, features, surface, equipment, rating summary and reviews. | Must | Partial — photos are a hero + grid with no carousel (BL-26) | e2e |
+| FR-PG-01 | The detail page shows photos, features, surface, equipment, rating summary and reviews. Photos open in a full-screen viewer (swipe or arrows, zoom, report). Features the playground doesn't have say so ("Brez stranišča", *no toilets*); only an unset surface shows as unknown. | Must | Done | e2e |
 | FR-PG-02 | "Directions" opens the device's maps app with the playground as the destination. | Must | Done | unit |
 | FR-PG-03 | Opening a detail page counts one view per session. Views drive "most viewed" on Home. | Could | Done — counter is gameable, see backlog | db |
 | FR-PG-04 | Signed-in users can save favourites and see them on their profile. | Should | Not started — table, RLS and export already exist | db, e2e |
@@ -38,6 +38,7 @@ Conventions and the ID scheme are in [README.md](README.md). Status last reviewe
 | FR-ADD-05 | After submitting, the user lands on the map focused on the new playground, with a success message. | Should | Done | e2e |
 | FR-ADD-06 | Users can add photos to an existing playground (the unverified-email message already promises "add photos later"). | Should | Not started | e2e |
 | FR-ADD-07 | Equipment can be entered when adding or editing a playground. | Should | Not started — only the importer and seed set it | e2e |
+| FR-ADD-08 | The person who added a playground can edit its name, description, surface and features, and move its pin. Nobody else can (the database's owner-only policy). | Should | Done | db, e2e |
 
 ## Community (`FR-COM`)
 

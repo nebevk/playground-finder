@@ -1,5 +1,14 @@
-import { expect, test } from "@playwright/test";
-import { E2E_LOGOUT_USER, E2E_USER, expectTouchTargets, login, noisePng, playgroundPath, sl } from "./fixtures";
+import { expect, test, type Page } from "@playwright/test";
+import {
+  E2E_ADMIN_USER,
+  E2E_LOGOUT_USER,
+  E2E_USER,
+  expectTouchTargets,
+  login,
+  noisePng,
+  playgroundPath,
+  sl,
+} from "./fixtures";
 
 test("[GDPR-01] signup consent is unchecked by default and required", async ({ page }) => {
   await page.goto("/sl/signup");
@@ -80,9 +89,12 @@ test("[FR-ADD-03] [FR-ADD-04] [FR-COM-06] [GDPR-16] a verified user's photo is u
   const img = page.locator('img[src*="playground-photos"]').first();
   await expect(img).toBeVisible();
   await expect(img).toHaveAttribute("src", /\/object\/sign\/playground-photos\/.+\?token=/);
-  // The hero photo can be reported too (BL-12). It is this playground's only photo and it
-  // has no reviews, so the one icon button named exactly "Sporoči" is the hero's.
-  await expect(page.getByRole("button", { name: sl.detail.report, exact: true })).toBeVisible();
+  // The photo opens full screen, where it can be reported too (BL-12).
+  await page.getByRole("button", { name: openPhotoLabel(1, 1) }).click();
+  const viewer = page.getByRole("dialog", { name: sl.detail.photos });
+  await expect(viewer.getByRole("button", { name: sl.detail.report, exact: true })).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(viewer).toBeHidden();
   // Never offered to link previews (GDPR-16).
   await expect(page.locator('meta[property="og:image"][content*="playground-photos"]')).toHaveCount(0);
 
@@ -190,5 +202,93 @@ test("[FR-ADD-02] [NFR-UX-02] the add flow says what's missing and warns about a
   await expectTouchTargets(page.locator("main"), "add flow, step 2");
 });
 
+test("[FR-PG-01] photos open full screen: step through them, zoom in, report from there", async ({ page }) => {
+  // Sign in, add a playground with two photos, then view them: a long journey under parallel load.
+  test.setTimeout(90_000);
+  await login(page);
+  const name = `E2E galerija ${Date.now()}`;
+  const path = await addPlayground(page, name, [
+    { name: "a.png", mimeType: "image/png", buffer: noisePng(400, 300) },
+    { name: "b.png", mimeType: "image/png", buffer: noisePng(300, 400) },
+  ]);
+  await page.goto(path);
+  await expect(page.getByRole("heading", { level: 1, name })).toBeVisible();
+
+  await page.getByRole("button", { name: openPhotoLabel(1, 2) }).click();
+  const viewer = page.getByRole("dialog", { name: sl.detail.photos });
+  await expect(viewer).toBeVisible();
+  await expect(viewer.getByText("1 / 2")).toBeVisible();
+  await page.keyboard.press("ArrowRight");
+  await expect(viewer.getByText("2 / 2")).toBeVisible();
+
+  await viewer.getByRole("button", { name: sl.detail.zoomIn }).click();
+  await expect(viewer.getByRole("button", { name: sl.detail.zoomOut })).toHaveAttribute("aria-pressed", "true");
+  // Reporting lives in the viewer (signed-in visitors), not on every thumbnail.
+  await expect(viewer.getByRole("button", { name: sl.detail.report, exact: true })).toBeVisible();
+
+  await page.keyboard.press("Escape");
+  await expect(viewer).toBeHidden();
+});
+
+test("[FR-ADD-08] the person who added a playground can edit it; nobody else can", async ({ page, browser }) => {
+  test.setTimeout(90_000);
+  await login(page);
+  const name = `E2E urejanje ${Date.now()}`;
+  const path = await addPlayground(page, name);
+  await page.goto(path);
+
+  await page.getByRole("link", { name: sl.detail.edit }).click();
+  await expect(page).toHaveURL(new RegExp(`${path}/edit$`));
+  const renamed = `${name} (popravljeno)`;
+  await page.getByPlaceholder(sl.add.step2.namePlaceholder).fill(renamed);
+  await page.getByText(sl.filters.feature.has_toilets, { exact: true }).click();
+  await page.getByRole("button", { name: sl.edit.save }).click();
+
+  await expect(page).toHaveURL(new RegExp(`${path}(\\?|$)`), { timeout: 20_000 });
+  await expect(page.getByRole("heading", { level: 1, name: renamed })).toBeVisible();
+  await expect(page.getByText(sl.detail.updated)).toBeVisible();
+  await expect(page.getByText(sl.detail.feature.has_toilets, { exact: true })).toBeVisible();
+  await expect(page.getByText(sl.detail.featureAbsent.has_shade, { exact: true })).toBeVisible();
+
+  // A visitor sees no edit link, and the edit page asks them to sign in.
+  const anon = await browser.newContext();
+  const anonPage = await anon.newPage();
+  await anonPage.goto(path);
+  await expect(anonPage.getByRole("heading", { level: 1, name: renamed })).toBeVisible();
+  await expect(anonPage.getByRole("link", { name: sl.detail.edit })).toHaveCount(0);
+  await anonPage.goto(`${path}/edit`);
+  await expect(anonPage).toHaveURL(/\/sl\/login\?next=/);
+  await anon.close();
+
+  // Any other signed-in user (an admin here) gets "not found"; the database refuses them too.
+  const other = await browser.newContext();
+  const otherPage = await other.newPage();
+  await login(otherPage, E2E_ADMIN_USER);
+  await otherPage.goto(`${path}/edit`);
+  await expect(otherPage.getByRole("heading", { level: 1, name: sl.common.notFoundTitle })).toBeVisible();
+  await other.close();
+});
+
 // Known gap (backlog BL-14).
 test.fixme("[FR-COM-02] a user can edit their own review", async () => {});
+
+// The viewer's name for "open photo n of total".
+function openPhotoLabel(n: number, total: number) {
+  return sl.detail.openPhoto.replace("{n}", String(n)).replace("{total}", String(total));
+}
+
+// Adds a playground through the real add flow and returns its detail page's path.
+async function addPlayground(page: Page, name: string, photos: { name: string; mimeType: string; buffer: Buffer }[] = []) {
+  await page.goto("/sl/add");
+  await page.locator(".leaflet-container").first().click({ position: { x: 150, y: 130 } });
+  await page.getByRole("button", { name: sl.add.next }).click();
+  await page.getByPlaceholder(sl.add.step2.namePlaceholder).fill(name);
+  await page.getByRole("button", { name: sl.add.next }).click();
+  if (photos.length > 0) await page.locator('input[type="file"][multiple]').setInputFiles(photos);
+  await page.getByRole("button", { name: sl.add.submit }).click();
+  await expect(page).toHaveURL(/\/sl\/map/, { timeout: 20_000 });
+  const sheet = page.getByRole("dialog");
+  await expect(sheet.getByText(name)).toBeVisible();
+  const href = await sheet.locator('a[href*="/playground/"]').first().getAttribute("href");
+  return href!;
+}

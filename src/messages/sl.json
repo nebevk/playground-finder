@@ -353,7 +353,22 @@
       "climbing_wall": "Plezalna stena"
     },
     "reportPlayground": "Sporoči napako",
-    "photoAlt": "{name}, fotografija {n}"
+    "photoAlt": "{name}, fotografija {n}",
+    "edit": "Uredi",
+    "updated": "Spremembe so shranjene.",
+    "featureAbsent": {
+      "is_fenced": "Brez ograje",
+      "has_shade": "Brez sence",
+      "has_water": "Brez pitnika",
+      "has_toilets": "Brez stranišča",
+      "has_parking": "Brez parkirišča"
+    },
+    "openPhoto": "Odpri fotografijo {n} od {total}",
+    "photoPosition": "Fotografija {n} od {total}",
+    "previousPhoto": "Prejšnja fotografija",
+    "nextPhoto": "Naslednja fotografija",
+    "zoomIn": "Povečaj",
+    "zoomOut": "Pomanjšaj"
   },
   "search": {
     "title": "Iskanje",
@@ -389,7 +404,7 @@
         "grass": "Trava",
         "gravel": "Gramoz"
       },
-      "features": "Lastnosti",
+      "features": "Kaj ima igrišče?",
       "featureOptions": {
         "is_fenced": "Ograjeno",
         "has_shade": "Senca",
@@ -522,5 +537,14 @@
     "errorTitle": "Nekaj je šlo narobe",
     "errorBody": "Prišlo je do nepričakovane napake. Poskusi znova.",
     "errorRetry": "Poskusi znova"
+  },
+  "edit": {
+    "title": "Uredi igrišče",
+    "intro": "Popravi podatke ali premakni oznako na pravo mesto.",
+    "save": "Shrani spremembe",
+    "saving": "Shranjujem…",
+    "errors": {
+      "notFound": "Tega igrišča ne moreš urejati."
+    }
   }
 }

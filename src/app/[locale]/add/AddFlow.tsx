@@ -4,14 +4,14 @@ import { useActionState, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Camera, Images, X } from "lucide-react";
 import { Link } from "@/i18n/navigation";
-import { FEATURE_ICONS, FeatureToggle } from "@/components/FeatureChip";
 import { LocationPickerClient } from "@/components/Map/LocationPickerClient";
+import { DetailsFields } from "@/components/Playground/DetailsFields";
 import type { ExistingPlayground } from "@/components/Map/LocationPicker";
 import { Turnstile } from "@/components/Turnstile";
 import { formatDistance, haversineMeters } from "@/lib/geo";
 import { resizeImage } from "@/lib/image";
 import { MAX_PHOTOS, MAX_TOTAL_PHOTO_BYTES } from "@/lib/photo-checks";
-import { PLAYGROUND_FEATURE_KEYS, SURFACE_TYPES } from "@/lib/playground-types";
+import { PLAYGROUND_FEATURE_KEYS } from "@/lib/playground-types";
 import { createPlaygroundAction, type AddState } from "./actions";
 
 const MAX_TOTAL_MB = MAX_TOTAL_PHOTO_BYTES / 1024 / 1024;
@@ -33,7 +33,6 @@ export function AddFlow({
   existing: ExistingPlayground[];
 }) {
   const t = useTranslations("add");
-  const tFilters = useTranslations("filters");
   const displayLocale = useLocale();
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [location, setLocation] = useState<LatLng | null>(null);
@@ -154,80 +153,21 @@ export function AddFlow({
 
       {step === 2 && (
         <section className="flex flex-col gap-2">
-          <fieldset className="fieldset">
-            <legend className="fieldset-legend text-sm">{t("step2.name")}</legend>
-            <input
-              ref={nameInput}
-              type="text"
-              required
-              className="input w-full"
-              placeholder={t("step2.namePlaceholder")}
-              value={name}
-              aria-invalid={stepError === "noName" || undefined}
-              aria-describedby={stepError === "noName" ? "name-error" : undefined}
-              onChange={(e) => {
-                setName(e.target.value);
-                if (e.target.value.trim()) setStepError(null);
-              }}
-            />
-            {stepError === "noName" && (
-              <p id="name-error" className="text-sm text-error">
-                {t("errors.noName")}
-              </p>
-            )}
-          </fieldset>
-
-          <fieldset className="fieldset">
-            <legend className="fieldset-legend text-sm">{t("step2.description")}</legend>
-            <textarea
-              className="textarea w-full"
-              rows={3}
-              placeholder={t("step2.descriptionPlaceholder")}
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
-          </fieldset>
-
-          <fieldset className="fieldset">
-            <legend className="fieldset-legend text-sm">{t("step2.surface")}</legend>
-            <div role="radiogroup" className="flex flex-wrap gap-2">
-              {SURFACE_TYPES.map((s) => (
-                <label
-                  key={s}
-                  className={`btn has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-primary ${
-                    surface === s ? "btn-primary" : "btn-outline border-base-content/30"
-                  }`}
-                >
-                  <input
-                    type="radio"
-                    name="surface"
-                    value={s}
-                    className="sr-only"
-                    checked={surface === s}
-                    onChange={() => setSurface(s)}
-                    // Tapping the chosen surface again clears it (it's optional).
-                    onClick={() => surface === s && setSurface("")}
-                  />
-                  {t(`step2.surfaceOptions.${s}`)}
-                </label>
-              ))}
-            </div>
-          </fieldset>
-
-          <fieldset className="fieldset">
-            <legend className="fieldset-legend text-sm">{t("step2.features")}</legend>
-            <div className="flex flex-wrap gap-2">
-              {PLAYGROUND_FEATURE_KEYS.map((key) => (
-                <FeatureToggle
-                  key={key}
-                  icon={FEATURE_ICONS[key]}
-                  label={tFilters(`feature.${key}`)}
-                  checked={!!features[key]}
-                  onChange={() => setFeatures({ ...features, [key]: !features[key] })}
-                />
-              ))}
-            </div>
-          </fieldset>
+          <DetailsFields
+            name={name}
+            onNameChange={(value) => {
+              setName(value);
+              if (value.trim()) setStepError(null);
+            }}
+            nameError={stepError === "noName"}
+            nameInput={nameInput}
+            description={description}
+            onDescriptionChange={setDescription}
+            surface={surface}
+            onSurfaceChange={setSurface}
+            features={features}
+            onFeatureToggle={(key) => setFeatures({ ...features, [key]: !features[key] })}
+          />
         </section>
       )}
 

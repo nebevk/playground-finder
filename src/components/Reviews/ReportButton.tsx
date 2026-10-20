@@ -14,6 +14,7 @@ export function ReportButton({
   playgroundId,
   locale,
   label,
+  buttonClassName,
 }: {
   targetType: "playground" | "review" | "photo";
   targetId: string;
@@ -21,6 +22,8 @@ export function ReportButton({
   locale: string;
   /** Visible text; without it the button is a 44 px icon button named by `detail.report`. */
   label?: string;
+  /** Replaces the trigger's classes, e.g. light text in the dark photo viewer. */
+  buttonClassName?: string;
 }) {
   const t = useTranslations("detail");
   const tCommon = useTranslations("common");
@@ -47,7 +50,7 @@ export function ReportButton({
         aria-label={label ?? t("report")}
         aria-haspopup="dialog"
         aria-controls={dialogId}
-        className={label ? "btn btn-ghost gap-1" : "btn btn-ghost btn-circle"}
+        className={buttonClassName ?? (label ? "btn btn-ghost gap-1" : "btn btn-ghost btn-circle")}
       >
         <Flag className="size-4" aria-hidden />
         {label && <span>{label}</span>}

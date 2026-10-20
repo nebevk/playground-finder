@@ -353,7 +353,22 @@
       "climbing_wall": "Climbing wall"
     },
     "reportPlayground": "Report a problem",
-    "photoAlt": "{name}, photo {n}"
+    "photoAlt": "{name}, photo {n}",
+    "edit": "Edit",
+    "updated": "Changes saved.",
+    "featureAbsent": {
+      "is_fenced": "No fence",
+      "has_shade": "No shade",
+      "has_water": "No drinking water",
+      "has_toilets": "No toilets",
+      "has_parking": "No parking"
+    },
+    "openPhoto": "Open photo {n} of {total}",
+    "photoPosition": "Photo {n} of {total}",
+    "previousPhoto": "Previous photo",
+    "nextPhoto": "Next photo",
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out"
   },
   "search": {
     "title": "Search",
@@ -389,7 +404,7 @@
         "grass": "Grass",
         "gravel": "Gravel"
       },
-      "features": "Features",
+      "features": "What does it have?",
       "featureOptions": {
         "is_fenced": "Fenced",
         "has_shade": "Shade",
@@ -522,5 +537,14 @@
     "errorTitle": "Something went wrong",
     "errorBody": "An unexpected error occurred. Please try again.",
     "errorRetry": "Try again"
+  },
+  "edit": {
+    "title": "Edit playground",
+    "intro": "Fix the details, or move the pin to the right spot.",
+    "save": "Save changes",
+    "saving": "Saving…",
+    "errors": {
+      "notFound": "You can't edit this playground."
+    }
   }
 }

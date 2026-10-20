@@ -41,4 +41,6 @@ export type PlaygroundPhoto = {
 export type PlaygroundDetail = MapPlayground & {
   equipment: string[];
   photos: PlaygroundPhoto[];
+  /** Who added it. Server-side only: decides whether the visitor may edit it. */
+  user_id: string | null;
 };

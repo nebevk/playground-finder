@@ -21,7 +21,7 @@ Work that's done in the repo but still has to reach production is tracked by its
 | BL-47 | Move the remaining app-only write rules into the database: at most 8 photos per playground per user (trigger), and a non-empty, length-capped name and description (check constraints). | NFR-SEC-07 | S |
 | BL-14 | Let users edit their own review. | FR-COM-02 | S |
 | BL-15 | Favourites: add/remove on the sheet and detail page, list on the profile. | FR-PG-04 | M |
-| BL-16 | "My contributions" on the profile, including flagged items and their status. | FR-COM-07 | M |
+| BL-16 | "My contributions" on the profile, including flagged items and their status, with an edit link on each playground (owners can already edit from the playground's page, FR-ADD-08). | FR-COM-07 | M |
 | BL-17 | Add photos to an existing playground, and give the detail page's "no photos yet" line an "add a photo" button. | FR-ADD-06 | M |
 | BL-18 | Equipment: constrain `equipment` in the database to the keys in `EQUIPMENT_KEYS` (`src/lib/playground-types.ts`), then add input in the add and admin forms and a filter. The detail page already shows translated labels. | FR-ADD-07, FR-MAP-07 | M |
 | BL-19 | Server-side rate limits on signup, add, review and report. | NFR-SEC-04 | M |
@@ -47,7 +47,6 @@ The [2026-10-16 design critique](reviews/2026-10-16-design-critique.md) shipped 
 |---|---|---|---|
 | BL-24 | Offline map: service worker + cacheable snapshot route (ADR-0001 option D). | NFR-PWA-02 | L |
 | BL-25 | Community maintenance status. | FR-PG-05 | M |
-| BL-26 | Photo carousel / lightbox on the detail page. | FR-PG-01 | S |
 | BL-27 | De-duplicate view counts (per session/IP) so "most viewed" can't be gamed by calling the RPC in a loop. | FR-PG-03 | S |
 | BL-28 | Automated photo screening (faces / NSFW) before publishing. | GDPR-07 | L |
 | BL-29 | Accessibility audit (WCAG 2.1 AA). | NFR-A11Y-01 | M |
