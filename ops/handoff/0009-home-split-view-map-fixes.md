@@ -1,7 +1,7 @@
 ---
 id: 0009
 title: Desktop Home split view, mobile map fixes, no coloured edge accents
-status: blocked
+status: done
 order: any
 destructive: false
 migrations: []
@@ -104,3 +104,4 @@ There are no database changes. The checks are the smoke tests and owner tests ab
 - **2026-10-20T15:54Z** started (status → in-progress). Preflight: dirty tree → owner chose commit; prod deploy `READY` (`90bdc8a`); no migrations (order: any).
 - **2026-10-20T15:56Z** committed + pushed `ffc517a`. Deploy `dpl_Bahqc6gnX2HGD3XfGGT9cKfBK4qD` → `READY`. Smoke 200. Curl: h1 ≥ 1, `border-l-4` = 0, OpenStreetMap on `/sl/privacy` and `/en/privacy`. Security advisors unchanged.
 - **Blocked** on owner phone (step 4) + desktop 1920 (step 5) tests. Say **process ops** when done.
+- **2026-10-20T17:24Z** owner said process ops (phone + desktop accepted). Re-checked smoke 200 + curl (h1, no `border-l-4`). **status → done**.

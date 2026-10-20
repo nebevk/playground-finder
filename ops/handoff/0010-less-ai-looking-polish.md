@@ -1,7 +1,7 @@
 ---
 id: 0010
 title: Less AI-looking polish (flat buttons, no emoji, quieter accents)
-status: ready
+status: in-progress
 order: any
 destructive: false
 migrations: []
@@ -73,4 +73,4 @@ There are no database changes. The checks are the smoke tests and the owner look
 
 ## Result log (Cursor)
 
-- 
+- **2026-10-20T17:24Z** started (status → in-progress). Preflight: clean; local `4e7f2db` ahead (polish code + this ticket); no migrations (order: any). Continuing after 0009 done.
