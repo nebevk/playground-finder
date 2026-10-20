@@ -26,7 +26,7 @@ export function SideNav() {
             <li key={key}>
               <Link
                 href={href}
-                className={active ? "menu-active" : undefined}
+                className={`min-h-11 content-center${active ? " menu-active" : ""}`}
                 aria-current={active ? "page" : undefined}
               >
                 <Icon className="size-5" aria-hidden />

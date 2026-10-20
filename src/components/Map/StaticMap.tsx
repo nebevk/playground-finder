@@ -1,9 +1,10 @@
 "use client";
 
-import { MapContainer, TileLayer, Marker } from "react-leaflet";
+import { AttributionControl, MapContainer, TileLayer, Marker } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { fixLeafletDefaultIcons } from "./fix-leaflet-icons";
 import { playgroundMarkerIcon } from "./playground-marker";
+import { OSM_ATTRIBUTION, OSM_TILE_URL } from "./tiles";
 
 fixLeafletDefaultIcons();
 
@@ -29,7 +30,9 @@ export function StaticMap({
       attributionControl={false}
       className="h-full w-full"
     >
-      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+      {/* OSM's tile policy requires the credit (it was missing here). */}
+      <AttributionControl position="bottomright" prefix={false} />
+      <TileLayer url={OSM_TILE_URL} attribution={OSM_ATTRIBUTION} />
       {marker && <Marker position={[lat, lng]} icon={playgroundMarkerIcon} />}
     </MapContainer>
   );

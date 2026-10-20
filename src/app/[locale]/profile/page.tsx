@@ -29,7 +29,11 @@ export default async function ProfilePage({
   if (!user) {
     return (
       <section className="flex flex-col items-center gap-6 p-4 pt-8 text-center">
-        <BrandStack size={96} align="center" nameSize="text-3xl" animatePunct />
+        {/* Desktop already shows the brand in the side nav. */}
+        <div className="md:hidden">
+          <BrandStack size={96} align="center" nameSize="text-3xl" animatePunct />
+        </div>
+        <h1 className="text-2xl font-bold">{t("title")}</h1>
         <p className="text-base-content/70">{t("loggedOut")}</p>
         <div className="flex gap-3">
           <Link href="/login" className="btn btn-primary">

@@ -107,7 +107,7 @@ export default async function AdminQualityPage({
       </header>
 
       {totalIssues === 0 ? (
-        <p className="rounded-box border border-primary/30 bg-primary/5 p-6 text-center font-semibold">
+        <p role="status" className="alert alert-success alert-soft font-semibold">
           {t("allGood")}
         </p>
       ) : (

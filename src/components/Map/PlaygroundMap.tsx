@@ -8,7 +8,8 @@ import "leaflet/dist/leaflet.css";
 import "leaflet.markercluster/dist/MarkerCluster.css";
 import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 import { fixLeafletDefaultIcons } from "./fix-leaflet-icons";
-import { clusterIcon, playgroundMarkerIcon, selectedMarkerIcon } from "./playground-marker";
+import { BRAND, clusterIcon, playgroundMarkerIcon, selectedMarkerIcon } from "./playground-marker";
+import { OSM_ATTRIBUTION, OSM_TILE_URL } from "./tiles";
 import { MapControls } from "./MapControls";
 import { PlaygroundSheet } from "./PlaygroundSheet";
 import { WelcomeChip } from "./WelcomeChip";
@@ -19,9 +20,9 @@ fixLeafletDefaultIcons();
 
 const LJUBLJANA: [number, number] = [46.0569, 14.5058];
 const DEFAULT_ZOOM = 13;
-const CONTROLS_GAP = 16;
 
-// Pans to a just-added playground and opens its sheet, once.
+// Flies to a just-added playground and opens its sheet once the flight ends, once. (Opening it
+// right away let SheetSync's panTo cancel the flight at zoom 13, often inside a cluster.)
 function FocusOnAdded({
   playgrounds,
   focusId,
@@ -40,7 +41,7 @@ function FocusOnAdded({
     if (!target) return;
     done.current = true;
     map.flyTo([target.lat, target.lng], 16, { duration: 1.2 });
-    onFocus(target);
+    map.once("moveend", () => onFocus(target));
   }, [focusId, playgrounds, map, onFocus]);
 
   return null;
@@ -50,20 +51,20 @@ function FocusOnAdded({
 // below the pin. Tapping the map background closes the sheet.
 function SheetSync({
   selected,
-  sheetHeight,
+  sheetLift,
   onBackgroundTap,
 }: {
   selected: MapPlayground | null;
-  sheetHeight: number;
+  sheetLift: number;
   onBackgroundTap: () => void;
 }) {
   const map = useMap();
   useMapEvents({ click: onBackgroundTap });
   useEffect(() => {
-    if (!selected || sheetHeight === 0) return;
+    if (!selected || sheetLift === 0) return;
     const pin = map.project([selected.lat, selected.lng]);
-    map.panTo(map.unproject(pin.add([0, sheetHeight / 2])), { animate: true });
-  }, [selected, sheetHeight, map]);
+    map.panTo(map.unproject(pin.add([0, sheetLift / 2])), { animate: true });
+  }, [selected, sheetLift, map]);
   return null;
 }
 
@@ -78,13 +79,13 @@ function UserLocationLayer() {
       <Circle
         center={center}
         radius={position.accuracy}
-        pathOptions={{ color: "oklch(57% 0.22 300)", weight: 1, fillOpacity: 0.12 }}
+        pathOptions={{ color: BRAND.primary, weight: 1, fillOpacity: 0.12 }}
         interactive={false}
       />
       <CircleMarker
         center={center}
         radius={8}
-        pathOptions={{ color: "white", weight: 3, fillColor: "oklch(57% 0.22 300)", fillOpacity: 1 }}
+        pathOptions={{ color: "white", weight: 3, fillColor: BRAND.primary, fillOpacity: 1 }}
       >
         <Tooltip>{t("youAreHere")}</Tooltip>
       </CircleMarker>
@@ -100,11 +101,13 @@ export function PlaygroundMap({
   focusId?: string | null;
 }) {
   const [selected, setSelected] = useState<MapPlayground | null>(null);
-  const [sheetHeight, setSheetHeight] = useState(0);
+  const [sheetLift, setSheetLift] = useState(0);
   const close = useCallback(() => setSelected(null), []);
 
   return (
-    <div className="relative h-full w-full">
+    // overflow-clip, not -hidden: nothing (the sliding sheet, its shadow) may spill over the
+    // bottom nav, and a clip box can't be scrolled by focus mid-slide either.
+    <div className="relative h-full w-full overflow-clip">
       <MapContainer
         center={LJUBLJANA}
         zoom={DEFAULT_ZOOM}
@@ -115,11 +118,9 @@ export function PlaygroundMap({
       >
         {/* Top-right: the bottom corners hold the Filtri, zoom and locate controls. */}
         <AttributionControl position="topright" />
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        <MarkerClusterGroup chunkedLoading iconCreateFunction={clusterIcon}>
+        <TileLayer attribution={OSM_ATTRIBUTION} url={OSM_TILE_URL} />
+        {/* No coverage polygon: Leaflet's blue hull is off-brand, and a tap on a phone flashes it. */}
+        <MarkerClusterGroup chunkedLoading showCoverageOnHover={false} iconCreateFunction={clusterIcon}>
           {playgrounds.map((p) => (
             <Marker
               key={p.id}
@@ -133,13 +134,13 @@ export function PlaygroundMap({
           ))}
         </MarkerClusterGroup>
         <UserLocationLayer />
-        <MapControls bottom={selected ? sheetHeight + CONTROLS_GAP : CONTROLS_GAP} />
-        <SheetSync selected={selected} sheetHeight={sheetHeight} onBackgroundTap={close} />
+        <MapControls lift={selected ? sheetLift : 0} />
+        <SheetSync selected={selected} sheetLift={sheetLift} onBackgroundTap={close} />
         <FocusOnAdded playgrounds={playgrounds} focusId={focusId} onFocus={setSelected} />
       </MapContainer>
 
       <WelcomeChip dismissed={selected !== null} />
-      <PlaygroundSheet playground={selected} onClose={close} onHeight={setSheetHeight} />
+      <PlaygroundSheet playground={selected} onClose={close} onLift={setSheetLift} />
     </div>
   );
 }

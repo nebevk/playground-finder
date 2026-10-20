@@ -39,15 +39,14 @@ export default async function AdminDashboardPage({
         <p className="mt-1 text-base-content/70">{t("dashboardIntro")}</p>
       </header>
 
-      {/* Each count links to the queue that resolves it; non-zero counts stand out (BL-67). */}
+      {/* Each count links to the queue that resolves it; a non-zero count stands out by its
+          colour, not by a coloured border (BL-67). */}
       <ul className="grid grid-cols-2 gap-3 md:grid-cols-4">
         {stats.map((s) => (
           <li key={s.key}>
             <Link
               href="/admin/moderation"
-              className={`flex h-full flex-col gap-1 rounded-box border-2 p-4 transition-colors hover:bg-base-200 ${
-                s.value > 0 ? "border-warning bg-warning/5" : "border-base-300"
-              }`}
+              className="flex h-full flex-col gap-1 rounded-box border border-base-300 p-4 transition-colors hover:bg-base-200"
             >
               <span className="text-sm text-base-content/70">{t(`counts.${s.key}`)}</span>
               <span className={`text-2xl font-bold ${s.value > 0 ? "text-warning" : ""}`}>{s.value}</span>

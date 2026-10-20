@@ -58,8 +58,8 @@ export function EmptyState({
   action?: ReactNode;
 }) {
   return (
-    <div className="flex flex-col items-center gap-3 rounded-box border border-dashed border-primary/30 bg-primary/5 px-6 py-10 text-center">
-      <div className="flex size-24 items-center justify-center rounded-full bg-primary/10">
+    <div className="flex flex-col items-center gap-3 rounded-box bg-base-200/60 px-6 py-10 text-center">
+      <div className="flex size-24 items-center justify-center">
         <Illustration variant={variant} />
       </div>
       <p className="text-base font-semibold">{title}</p>

@@ -55,14 +55,15 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   return (
     <ToastContext.Provider value={{ showToast }}>
       {children}
-      <div className="toast toast-center toast-bottom z-[2000] mb-[env(safe-area-inset-bottom)] w-full max-w-md px-4 md:mb-0">
+      {/* Top on phones: at the bottom it covered the bottom nav and the map sheet's buttons. */}
+      <div className="toast toast-center toast-top z-[2000] mt-[env(safe-area-inset-top)] w-full max-w-md px-4 md:toast-bottom md:mt-0">
         {toasts.map((t) => {
           const Icon = ICON[t.type];
           return (
             <div
               key={t.id}
               role="status"
-              className={`alert ${ALERT_CLASS[t.type]} shadow-lg animate-in fade-in slide-in-from-bottom-2`}
+              className={`alert ${ALERT_CLASS[t.type]} shadow-lg`}
             >
               <Icon className="size-5 shrink-0" aria-hidden />
               <span className="text-sm font-medium">{t.message}</span>

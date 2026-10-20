@@ -61,16 +61,16 @@ html, body {
   animation: pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
   transform: scale(1.05);
 }
-.dock-active > svg {
-  filter: drop-shadow(0 1px 2px oklch(var(--color-primary) / 0.35));
-}
-
-/* Smooth nudge on bottom-nav items */
+/* Smooth nudge on bottom-nav items, only where hovering is real: on phones a tap leaves :hover
+   stuck, which kept the tapped tab lifted. (A drop-shadow "glow" on the active icon was removed:
+   oklch(var(--color-primary) / …) is invalid with DaisyUI 5 colours, so it never applied.) */
 .dock > a, .dock > button {
   transition: transform 180ms ease, color 180ms ease;
 }
-.dock > a:hover, .dock > button:hover {
-  transform: translateY(-2px);
+@media (hover: hover) {
+  .dock > a:hover, .dock > button:hover {
+    transform: translateY(-2px);
+  }
 }
 
 /* Field borders at 50 % (DaisyUI's 20 % is 1.5:1; WCAG asks 3:1 for UI components). */
@@ -85,21 +85,37 @@ html, body {
   border-radius: 0.375rem;
 }
 
-/* The active bottom-nav tab in the brand colour. */
+/* The active bottom-nav tab: brand colour and a bolder label, without DaisyUI's underline bar
+   (no coloured edge accents; colour plus weight keeps the state clear without relying on colour). */
 .dock-active {
   color: var(--color-primary);
 }
+.dock .dock-active::after {
+  display: none;
+}
+.dock-active .dock-label {
+  font-weight: 700;
+}
 
-/* Desktop sidebar: the active page in the brand colour (a primary bar and tint, with text
-   kept in base-content so it stays above 4.5:1). */
+/* Menus (the desktop side nav, the phone "Več" sheet): the current page, and any item while it is
+   pressed, as a quiet brand tint with base-content text (above 4.5:1). DaisyUI paints both from
+   these variables (its default is a dark neutral). No edge bar or depth shadow: the old inset
+   bar drew a crescent on the pill and read as decoration. */
+.menu {
+  --menu-active-bg: color-mix(in oklab, var(--color-primary) 12%, transparent);
+  --menu-active-fg: var(--color-base-content);
+}
 .menu .menu-active {
-  background-color: color-mix(in oklab, var(--color-primary) 12%, transparent);
-  color: var(--color-base-content);
   font-weight: 600;
-  box-shadow: inset 3px 0 0 var(--color-primary);
+  box-shadow: none;
 }
 .menu .menu-active svg {
   color: var(--color-primary);
+}
+/* DaisyUI removes the outline on menu items, and gave the active one no focus style at all. */
+.menu li > :is(a, button):focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 /* Leaflet's zoom buttons at 44 px on touch screens (default 30 px). */
@@ -110,14 +126,17 @@ html, body {
   font-size: 22px;
 }
 
-/* Brand-coloured marker clusters (playground-marker.ts → clusterIcon). */
-.brand-cluster {
+/* Brand-coloured marker clusters (playground-marker.ts → clusterIcon). The doubled class is
+   needed: leaflet.css and MarkerCluster.Default.css load later (with the map's chunk) and, at
+   equal specificity, won with display: block and a 20 px radius, which left the circle at the
+   top of its halo (an offset "shadow"). */
+.leaflet-marker-icon.brand-cluster {
   display: grid;
   place-items: center;
   border-radius: 9999px;
   background: color-mix(in oklab, var(--color-primary) 30%, transparent);
 }
-.brand-cluster span {
+.leaflet-marker-icon.brand-cluster span {
   display: grid;
   place-items: center;
   width: 34px;
@@ -130,11 +149,62 @@ html, body {
   box-shadow: 0 1px 3px rgb(0 0 0 / 0.3);
 }
 
+/* The small clusters of the Home teaser (smallClusterIcon). */
+.leaflet-marker-icon.brand-cluster.brand-cluster--sm span {
+  width: 22px;
+  height: 22px;
+  font-size: 0.75rem;
+  line-height: 1;
+}
+
 /* Strip default Leaflet marker chrome on our DivIcon */
 .leaflet-div-icon.playground-marker,
 .playground-marker {
   background: transparent;
   border: 0;
+}
+
+/* Tiles: Leaflet 1.9 draws them with mix-blend-mode: plus-lighter. On fractional-DPR phones
+   (Pixel 7: 2.625) neighbouring tiles overlap by a device pixel and the overlap adds up to a
+   white seam across the map. This selector outranks leaflet.css in any load order. */
+.leaflet-container .leaflet-tile-pane img.leaflet-tile {
+  mix-blend-mode: normal;
+}
+
+/* The muted OSM land tone: the placeholder behind Home's maps (bg-map-land), so tiles load onto
+   a matching colour instead of a grey flash. */
+@theme {
+  --color-map-land: oklch(95.4% 0.004 85);
+}
+
+/* Home's maps: once the visitor has located, the pins outside "V bližini" (and their clusters)
+   step back. */
+.home-map[data-located] .leaflet-home-others-pane {
+  opacity: 0.4;
+}
+
+/* The name label on Home's hovered pin: a quiet chip instead of Leaflet's tooltip with an arrow. */
+.leaflet-tooltip.home-map-label {
+  padding: 0.25rem 0.625rem;
+  border: 1px solid var(--color-base-300);
+  border-radius: var(--radius-box);
+  background: var(--color-base-100);
+  color: var(--color-base-content);
+  font: 600 0.875rem/1.25rem var(--font-sans), system-ui, sans-serif;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.12);
+}
+.leaflet-tooltip.home-map-label::before {
+  display: none;
+}
+
+/* The OSM credit on Home's map: a 24 px target for its link. */
+.home-map .leaflet-control-attribution {
+  padding: 0 0.5rem;
+  line-height: 1.5rem;
+}
+.home-map .leaflet-control-attribution a {
+  display: inline-block;
+  min-height: 1.5rem;
 }
 
 @plugin "daisyui/theme" {

@@ -8,7 +8,7 @@ Conventions and the ID scheme are in [README.md](README.md). Status last reviewe
 |---|---|---|---|---|
 | NFR-UX-01 | Mobile-first: every public page works at 375 px width with no horizontal scrolling. | Must | Done | e2e |
 | NFR-UX-02 | Touch targets are at least 44×44 px. The bottom navigation is always reachable on mobile. | Must | Done | e2e |
-| NFR-A11Y-01 | WCAG 2.1 AA basics: every page has one `h1`, controls have accessible names, everything is reachable by keyboard, text contrast ≥ 4.5:1. | Should | Partial — the contrast and accessible-name failures from the [2026-10-16 design critique](../reviews/2026-10-16-design-critique.md) are fixed; no full audit yet (BL-29) | manual |
+| NFR-A11Y-01 | WCAG 2.1 AA basics: every page has one `h1`, controls have accessible names, everything is reachable by keyboard, text contrast ≥ 4.5:1. | Should | Partial — the contrast and accessible-name failures from the [2026-10-16 design critique](../reviews/2026-10-16-design-critique.md) are fixed; no full audit yet (BL-29) | e2e, manual |
 
 ## Localization (`NFR-I18N`)
 

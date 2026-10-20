@@ -31,13 +31,23 @@
     "supportCta": "Buy me a coffee on Ko-fi"
   },
   "home": {
-    "intro": "Find the perfect playground for your kids. Filter by shade, fences and water, and read other parents' reviews.",
+    "intro": "Find the nearest playground, check for shade, a fence and drinking water, and read what other parents say.",
     "latest": "Latest additions",
     "popular": "Most popular",
     "noLatest": "No playgrounds yet. Add the first one!",
     "explore": "Explore the map",
     "nearby": "Nearby",
-    "findNearby": "Playgrounds near me"
+    "findNearby": "Playgrounds near me",
+    "title": "Which playground today?",
+    "locationPrivacy": "We don't send your location to our servers or store it.",
+    "nearbyFrom": "Straight-line distance from your location",
+    "nearbyApprox": "Your location is approximate (± {accuracy}), so distances are rough.",
+    "refresh": "Refresh",
+    "refreshLabel": "Refresh location",
+    "farAway": "The nearest playground is {distance} away. Know one closer?",
+    "addIt": "Add it",
+    "missingPrompt": "Missing a playground?",
+    "mapCount": "{count, plural, one {# playground} other {# playgrounds}}"
   },
   "map": {
     "title": "Playground map",
@@ -209,7 +219,7 @@
   },
   "privacy": {
     "title": "Privacy Policy",
-    "lastUpdated": "Last updated: April 2026",
+    "lastUpdated": "Last updated: October 2026",
     "intro": "This policy describes how we collect and use your data, in line with GDPR and Slovenia's ZVOP-2.",
     "dataCollected": {
       "title": "Data we collect",
@@ -228,6 +238,7 @@
       "cloudflare": "Cloudflare: spam protection (Turnstile)",
       "simpleAnalytics": "Simple Analytics: privacy-friendly visitor statistics (no cookies, no personal data)",
       "kofi": "Ko-fi: voluntary donations (external site, opens only when you tap the support link)",
+      "osm": "OpenStreetMap: map images (tiles); when they load, OpenStreetMap's servers see your IP address and the map area shown",
       "sentry": "Sentry: error reports from the app, without personal data (EU servers)"
     },
     "location": {

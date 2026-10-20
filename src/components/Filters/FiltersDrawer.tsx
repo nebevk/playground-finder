@@ -39,8 +39,9 @@ export function FiltersDrawer({ visibleCount }: { visibleCount: number }) {
         aria-labelledby={titleId}
         aria-hidden={!open}
         inert={!open}
-        className={`fixed top-0 right-0 z-1400 flex h-dvh w-full max-w-sm flex-col border-l border-base-300 bg-base-100 shadow-xl transition-transform ${
-          open ? "translate-x-0" : "translate-x-full"
+        // Invisible once closed, so its shadow doesn't bleed in from the screen edge.
+        className={`fixed top-0 right-0 z-1400 flex h-dvh w-full max-w-sm flex-col border-l border-base-300 bg-base-100 shadow-xl transition-[translate,visibility] duration-200 ${
+          open ? "visible translate-x-0" : "invisible translate-x-full"
         }`}
       >
         <header className="flex items-center justify-between border-b border-base-300 px-5 py-3">

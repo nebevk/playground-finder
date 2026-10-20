@@ -1,5 +1,6 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import { useMap } from "react-leaflet";
 import { useTranslations } from "next-intl";
 import { LocateFixed, Minus, Plus, SlidersHorizontal } from "lucide-react";
@@ -10,9 +11,12 @@ import { useUserLocation } from "@/components/Location/UserLocationContext";
 // - bottom-left: "Filtri" with a count of active filters, so filtered-out pins don't just vanish;
 // - bottom-right: zoom (the alternative to pinching, WCAG 2.5.1) and a 48 px locate button,
 //   the parent's core action, closest to the thumb.
-// Rendered inside <MapContainer> so `useMap()` works. `bottom` lifts both groups above the
-// playground sheet while it's open.
-export function MapControls({ bottom }: { bottom: number }) {
+// Rendered inside <MapContainer> so `useMap()` works. `lift` is how far the open playground
+// sheet reaches up from the map's bottom edge (0 when closed). On phones the sheet spans the
+// width, so both groups rise above it; on md+ it's a card in the bottom-right corner, so only
+// the right group does. The right column also reaches to the map's top with "safe" end
+// alignment, so on a short map (a landscape phone) it stops at the top instead of leaving it.
+export function MapControls({ lift }: { lift: number }) {
   const map = useMap();
   const t = useTranslations("map");
   const tf = useTranslations("filters");
@@ -24,11 +28,14 @@ export function MapControls({ bottom }: { bottom: number }) {
     if (pos) map.setView([pos.lat, pos.lng], Math.max(map.getZoom(), 15));
   }
 
-  const style = { bottom: `${bottom}px`, transition: "bottom 200ms ease" };
+  const liftVar = { "--lift": `${lift}px` } as CSSProperties;
 
   return (
     <>
-      <div className="absolute left-4 z-1000" style={style}>
+      <div
+        className="absolute bottom-[calc(var(--lift)+1rem)] left-4 z-1000 transition-[bottom] duration-200 md:bottom-4"
+        style={liftVar}
+      >
         <button
           type="button"
           onClick={() => setOpen(true)}
@@ -45,8 +52,11 @@ export function MapControls({ bottom }: { bottom: number }) {
         </button>
       </div>
 
-      <div className="absolute right-4 z-1000 flex flex-col items-center gap-2" style={style}>
-        <div className="join join-vertical rounded-full bg-base-100 shadow-md">
+      <div
+        className="pointer-events-none absolute top-4 right-4 bottom-[calc(var(--lift)+1rem)] z-1000 flex flex-col items-center justify-end-safe gap-2 transition-[bottom] duration-200"
+        style={liftVar}
+      >
+        <div className="pointer-events-auto join join-vertical rounded-full bg-base-100 shadow-md">
           <button
             type="button"
             onClick={() => map.zoomIn()}
@@ -69,7 +79,7 @@ export function MapControls({ bottom }: { bottom: number }) {
           onClick={onLocate}
           disabled={locating}
           aria-label={locating ? t("locating") : t("locateMe")}
-          className="btn btn-circle btn-lg btn-primary shadow-lg"
+          className="pointer-events-auto btn btn-circle btn-lg btn-primary shadow-lg"
         >
           {locating ? (
             <span className="loading loading-spinner loading-sm" aria-hidden />

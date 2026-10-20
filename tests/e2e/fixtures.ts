@@ -90,8 +90,10 @@ export function noisePng(width: number, height: number) {
 // (NFR-UX-02; sub-pixel rounding allowed).
 export async function expectTouchTargets(scope: Locator, what: string) {
   const targets = scope.locator("button, a, label.btn").filter({ visible: true });
+  // Wait for the first control: page content streams in after the layout, so counting straight
+  // after page.goto() can catch the scope still empty.
+  await expect(targets.first(), `${what}: no controls found`).toBeVisible();
   const count = await targets.count();
-  expect(count, `${what}: no controls found`).toBeGreaterThan(0);
   for (let i = 0; i < count; i++) {
     const el = targets.nth(i);
     const box = (await el.boundingBox())!;

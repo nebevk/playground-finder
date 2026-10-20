@@ -31,13 +31,23 @@
     "supportCta": "Časti kavo na Ko-fi"
   },
   "home": {
-    "intro": "Najdi popolno igrišče za svoje otroke. Filtriraj po senci, ograji in pitniku ter preberi mnenja drugih staršev.",
+    "intro": "Poišči najbližje igrišče, preveri senco, ograjo in pitnik ter preberi mnenja drugih staršev.",
     "latest": "Najnovejša igrišča",
     "popular": "Najbolj priljubljena",
     "noLatest": "Še ni igrišč. Dodaj prvo!",
     "explore": "Razišči zemljevid",
     "nearby": "V bližini",
-    "findNearby": "Igrišča v bližini"
+    "findNearby": "Igrišča v bližini",
+    "title": "Na katero igrišče gremo danes?",
+    "locationPrivacy": "Tvoje lokacije ne pošljemo na naše strežnike in je ne shranimo.",
+    "nearbyFrom": "Zračna razdalja od tvoje lokacije",
+    "nearbyApprox": "Lokacija je približna (± {accuracy}), zato so razdalje okvirne.",
+    "refresh": "Osveži",
+    "refreshLabel": "Osveži lokacijo",
+    "farAway": "Najbližje igrišče je {distance} od tebe. Poznaš kakšno bližje?",
+    "addIt": "Dodaj ga",
+    "missingPrompt": "Manjka kakšno igrišče?",
+    "mapCount": "{count, plural, one {# igrišče} two {# igrišči} few {# igrišča} other {# igrišč}}"
   },
   "map": {
     "title": "Zemljevid igrišč",
@@ -209,7 +219,7 @@
   },
   "privacy": {
     "title": "Politika zasebnosti",
-    "lastUpdated": "Zadnja posodobitev: april 2026",
+    "lastUpdated": "Zadnja posodobitev: oktober 2026",
     "intro": "Ta politika opisuje, kako zbiramo in uporabljamo tvoje podatke v skladu z GDPR in ZVOP-2.",
     "dataCollected": {
       "title": "Katere podatke zbiramo",
@@ -228,6 +238,7 @@
       "cloudflare": "Cloudflare: zaščita pred neželeno vsebino (Turnstile)",
       "simpleAnalytics": "Simple Analytics: statistika obiska, prijazna do zasebnosti (brez piškotkov in brez osebnih podatkov)",
       "kofi": "Ko-fi: prostovoljni prispevki (zunanja stran, odpre se le ob kliku na povezavo za podporo)",
+      "osm": "OpenStreetMap: slike zemljevida (ploščice); ob nalaganju njihovi strežniki vidijo tvoj naslov IP in prikazano območje zemljevida",
       "sentry": "Sentry: poročila o napakah v aplikaciji, brez osebnih podatkov (strežniki v EU)"
     },
     "location": {

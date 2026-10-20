@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { formatRating } from "@/lib/format";
 import { formatDistance } from "@/lib/geo";
 import { safeNextPath } from "@/lib/site";
 
@@ -9,6 +10,14 @@ describe("distance labels", () => {
     expect(formatDistance(1234, "sl")).toBe("1,2 km");
     expect(formatDistance(1234, "en")).toBe("1.2 km");
     expect(formatDistance(18_400, "sl")).toBe("18 km");
+  });
+});
+
+describe("rating labels", () => {
+  it("[FR-MAP-09] ratings use the visitor's decimal separator", () => {
+    expect(formatRating(4.6, "sl")).toBe("4,6");
+    expect(formatRating(4.6, "en")).toBe("4.6");
+    expect(formatRating(4, "sl")).toBe("4,0");
   });
 });
 

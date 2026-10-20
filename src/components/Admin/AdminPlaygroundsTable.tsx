@@ -179,7 +179,7 @@ export function AdminPlaygroundsTable({
       </div>
 
       {selected.size > 0 && (
-        <div className="flex flex-wrap items-center gap-2 rounded-box border border-primary/30 bg-primary/5 p-2">
+        <div className="flex flex-wrap items-center gap-2 rounded-box bg-base-200 p-2">
           <span className="px-2 text-sm font-medium">
             {t("selectedCount", { count: selected.size })}
           </span>

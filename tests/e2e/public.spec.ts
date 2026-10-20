@@ -19,6 +19,8 @@ test.describe("anonymous visitor", () => {
   test("[FR-MAP-01] browses the map without an account", async ({ page }) => {
     await page.goto("/sl/map");
     await expect(page.locator(".playground-marker, .marker-cluster").first()).toBeVisible();
+    // Leaflet's plus-lighter tile blending drew a white seam on fractional-DPR phones.
+    await expect(page.locator("img.leaflet-tile").first()).toHaveCSS("mix-blend-mode", "normal");
   });
 
   test("[FR-MAP-04] tapping a marker opens the bottom sheet with a link to the detail page", async ({ page }) => {
@@ -38,6 +40,42 @@ test.describe("anonymous visitor", () => {
     await expect(sheet).toBeVisible();
     await expect(sheet.locator('a[href*="/playground/"]').first()).toBeVisible();
     await expect(sheet.locator('a[href^="https://www.google.com/maps/dir/"]')).toBeVisible();
+  });
+
+  test("[FR-MAP-03] cluster bubbles are round, with the count centred in the halo", async ({ page }) => {
+    await page.goto("/sl/map");
+    const cluster = page.locator(".brand-cluster").first();
+    await expect(cluster).toBeVisible();
+    // Leaflet's CSS loads later and once won (display: block, 20 px radius): the circle sat at
+    // the top of its halo, which read as a misaligned shadow.
+    const halo = (await cluster.boundingBox())!;
+    const dot = (await cluster.locator("span").boundingBox())!;
+    expect(Math.abs(halo.x + halo.width / 2 - (dot.x + dot.width / 2))).toBeLessThanOrEqual(1);
+    expect(Math.abs(halo.y + halo.height / 2 - (dot.y + dot.height / 2))).toBeLessThanOrEqual(1);
+    expect(await cluster.evaluate((el) => getComputedStyle(el).borderRadius)).toBe("9999px");
+  });
+
+  test("[NFR-UX-02] the closed playground sheet never covers the bottom navigation", async ({ page }) => {
+    await page.goto("/sl/map");
+    await expect(page.locator(".leaflet-container")).toBeVisible();
+    // A CSS locator on purpose: getByRole and elementFromPoint both skip the closed sheet
+    // (aria-hidden, inert), which is how an empty white strip over the nav's icons slipped by.
+    const sheet = page.locator('[role="dialog"][aria-modal="false"]');
+    const pageScrolls = () => page.evaluate(() => document.scrollingElement!.scrollHeight > innerHeight);
+    await expect(sheet).toBeHidden();
+    expect(await pageScrolls()).toBe(false);
+
+    // Open a sheet, close it again: it must slide fully away.
+    const marker = page.locator(".playground-marker").first();
+    for (let i = 0; i < 6 && !(await marker.isVisible()); i++) {
+      await page.locator(".marker-cluster").first().click();
+      await page.waitForTimeout(400);
+    }
+    await marker.click();
+    await expect(sheet).toBeVisible();
+    await sheet.getByRole("button", { name: sl.map.close }).click();
+    await expect(sheet).toBeHidden();
+    expect(await pageScrolls()).toBe(false);
   });
 
   test("[FR-MAP-02] Locate me moves the map to the user's position", async ({ page, context }) => {
@@ -74,11 +112,17 @@ test.describe("anonymous visitor", () => {
     await expect(page.getByRole("button", { name: sl.filters.openWithCount.replace("{count}", "1") })).toBeVisible();
   });
 
-  test("[FR-MAP-09] home lists playgrounds and links to the map", async ({ page }) => {
+  test("[FR-MAP-09] [NFR-A11Y-01] home lists playgrounds, has one h1 and links to the map", async ({ page }) => {
     await page.goto("/sl");
     await expect(page.locator('a[href*="/playground/"]').first()).toBeVisible();
     // The side nav also links to /sl/map but is hidden on mobile.
     await expect(page.locator('a[href="/sl/map"]').filter({ visible: true }).first()).toBeVisible();
+    await expect(page.getByRole("link", { name: new RegExp(sl.home.explore) })).toBeVisible();
+    // One h1 (for screen readers on phones, where the wordmark is the visual title).
+    await expect(page.locator("h1")).toHaveCount(1);
+    await expect(page.getByRole("heading", { level: 1, name: sl.home.title })).toBeAttached();
+    // Flat list rows: no coloured left stripes.
+    await expect(page.locator('main a[href*="/playground/"]').first()).toHaveCSS("border-left-width", "0px");
   });
 
   test("[FR-MAP-09] [GDPR-13] one tap on Home lists the nearest playgrounds with distances", async ({ page, context }) => {
@@ -110,16 +154,37 @@ test.describe("anonymous visitor", () => {
     expect(await geoCalls()).toBe(0);
 
     await page.getByRole("button", { name: sl.home.findNearby }).click();
-    const nearby = page.locator("section", { has: page.getByRole("heading", { name: sl.home.nearby }) });
+    const heading = page.getByRole("heading", { name: sl.home.nearby });
+    // The button gives way to the list, so focus moves to its heading.
+    await expect(heading).toBeFocused();
+    const nearby = page.locator("section", { has: heading });
     await expect(nearby).toBeVisible();
     const first = nearby.locator('a[href*="/playground/"]').first();
     await expect(first).toContainText("Tivoli");
     await expect(first).toContainText(/\d+ m|\d+(,\d)? km/);
+    await expect(nearby.locator('a[href*="/playground/"]')).toHaveCount(3);
+    await expect(nearby.getByText(sl.home.nearbyFrom)).toBeVisible();
+    await expect(nearby.getByRole("button", { name: sl.home.refreshLabel })).toBeVisible();
+    // Listed once: Tivoli leaves "Najbolj priljubljena" for "V bližini".
+    await expect(page.locator('main a[href*="/playground/"]', { hasText: "Tivoli" })).toHaveCount(1);
+    // The teaser numbers the nearest pins 1 to 3, like the rows.
+    await expect(page.locator(".playground-marker--ranked")).toHaveCount(3);
     expect(await geoCalls()).toBeGreaterThan(0);
 
     // Distances are computed in the browser: the position is never sent anywhere.
     await page.waitForLoadState("networkidle");
     expect(sent.filter((s) => s.includes("46.0573") || s.includes("14.4945"))).toEqual([]);
+  });
+
+  test("[NFR-A11Y-01] a denied location keeps keyboard focus on the Home button", async ({ page }) => {
+    // No permission granted: the browser denies the request. The button must not be natively
+    // disabled while it waits, or focus would drop to <body>.
+    await page.goto("/sl");
+    const button = page.getByRole("button", { name: sl.home.findNearby });
+    await button.focus();
+    await page.keyboard.press("Enter");
+    await expect(page.getByText(sl.map.locateDenied)).toBeVisible();
+    await expect(button).toBeFocused();
   });
 
   test("[GDPR-10] Privacy and Terms are one tap away in the mobile navigation", async ({ page }) => {
@@ -187,6 +252,18 @@ test.describe("mobile layout", () => {
       expect(overflow).toBeLessThanOrEqual(0);
     });
   }
+
+  test("[NFR-UX-02] Home controls are at least 44×44 px, before and after locating", async ({ page, context }) => {
+    await context.grantPermissions(["geolocation"]);
+    await context.setGeolocation({ latitude: 46.05731, longitude: 14.49452 });
+    await page.goto("/sl");
+    await expect(page.getByRole("button", { name: sl.home.findNearby })).toBeVisible();
+    await expectTouchTargets(page.locator("main"), "home");
+    await page.getByRole("button", { name: sl.home.findNearby }).click();
+    await expect(page.getByRole("heading", { name: sl.home.nearby })).toBeVisible();
+    // Adds "Osveži" and distances; the teaser map is inert, so it holds no links.
+    await expectTouchTargets(page.locator("main"), "home located");
+  });
 
   test("[NFR-UX-02] touch targets are at least 44×44 px: nav, map controls, sheet, filters, menu", async ({ page }) => {
     await page.goto("/sl/map");

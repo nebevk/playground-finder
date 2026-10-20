@@ -8,7 +8,8 @@ import { useTranslations } from "next-intl";
 import "leaflet/dist/leaflet.css";
 import { useUserLocation } from "@/components/Location/UserLocationContext";
 import { fixLeafletDefaultIcons } from "./fix-leaflet-icons";
-import { playgroundMarkerIcon } from "./playground-marker";
+import { BRAND, playgroundMarkerIcon } from "./playground-marker";
+import { OSM_ATTRIBUTION, OSM_TILE_URL } from "./tiles";
 
 fixLeafletDefaultIcons();
 
@@ -89,10 +90,7 @@ export function LocationPicker({
           scrollWheelZoom
           className="h-full w-full"
         >
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
+          <TileLayer attribution={OSM_ATTRIBUTION} url={OSM_TILE_URL} />
           <ClickToPlace onChange={handleChange} />
           {existing.map((p) => (
             <CircleMarker
@@ -100,7 +98,7 @@ export function LocationPicker({
               center={[p.lat, p.lng]}
               radius={7}
               interactive={false}
-              pathOptions={{ color: "oklch(57% 0.22 300)", weight: 2, opacity: 0.6, fillOpacity: 0.25 }}
+              pathOptions={{ color: BRAND.primary, weight: 2, opacity: 0.6, fillOpacity: 0.25 }}
             />
           ))}
           {value && (

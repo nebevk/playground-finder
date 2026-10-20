@@ -2,7 +2,7 @@
 
 Open work, highest priority first. Each item links to the requirement it moves forward ([requirements/](requirements/)) or the ADR it implements ([adr/](adr/)). When an item ships: update the requirement's status, make sure a test names the requirement ID, and delete the row here (git history is the changelog).
 
-**Size:** S ≈ under a day · M ≈ 1–3 days · L ≈ a week or more. Last reviewed **2026-10-17** (includes findings from the [2026-10-14 architecture review](reviews/2026-10-14-architecture-review.md), [ops 0001](../ops/handoff/0001-verify-prod-baseline.md) and the [2026-10-16 design critique](reviews/2026-10-16-design-critique.md)).
+**Size:** S ≈ under a day · M ≈ 1–3 days · L ≈ a week or more. Last reviewed **2026-10-20** (includes findings from the [2026-10-14 architecture review](reviews/2026-10-14-architecture-review.md), [ops 0001](../ops/handoff/0001-verify-prod-baseline.md), the [2026-10-16 design critique](reviews/2026-10-16-design-critique.md) and the [2026-10-20 Home redesign](reviews/2026-10-20-home-redesign.md)).
 
 Work that's done in the repo but still has to reach production is tracked by its [ops ticket](../ops/README.md), not here. Run `pnpm ops:check` to see what's waiting for Cursor.
 
@@ -34,11 +34,12 @@ Work that's done in the repo but still has to reach production is tracked by its
 
 ## Design & UX
 
-The [2026-10-16 design critique](reviews/2026-10-16-design-critique.md) shipped in [ops 0008](../ops/handoff/0008-design-critique-fixes.md), except the font below, which is a brand decision.
+The [2026-10-16 design critique](reviews/2026-10-16-design-critique.md) shipped in [ops 0008](../ops/handoff/0008-design-critique-fixes.md). The [2026-10-20 Home redesign](reviews/2026-10-20-home-redesign.md) (desktop split view, map fixes, no coloured edge accents) ships in [ops 0009](../ops/handoff/0009-home-split-view-map-fixes.md). What's left are brand decisions.
 
 | # | Item | Moves | Size |
 |---|---|---|---|
 | BL-65 | Display font with Slovenian letters. Chewy (the wordmark and display headings) exists only in a `latin` subset, so č, š and ž fall back to another font mid-word. Pick a display font that has `latin-ext`, or keep Chewy for the wordmark only. Owner's call. | — | S |
+| BL-68 | "Less AI-looking" polish, the owner's call: the recommended (no emoji in copy, flat buttons via `--depth: 0` / `--noise: 0`, one shadow for map controls, a swipeable or no grabber on the phone sheet, a quieter "Podpri" button, neutral feature chips, no fog over the detail photo) and the brand list (gradient wordmark, watercolour logo, pill radius, palette, wiggling "?") in the [Home redesign review](reviews/2026-10-20-home-redesign.md). | — | S |
 
 ## Later
 

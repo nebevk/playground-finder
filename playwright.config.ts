@@ -40,6 +40,13 @@ export default defineConfig({
       // Mobile-first: the 375 px baseline from NFR-UX-01.
       name: "mobile",
       use: { ...devices["Pixel 7"], viewport: { width: 375, height: 812 } },
+      testIgnore: /\.desktop\.spec\.ts$/,
+    },
+    {
+      // Desktop-only layouts (Home's list + map split view), in *.desktop.spec.ts files.
+      name: "desktop",
+      use: { ...devices["Desktop Chrome"], viewport: { width: 1440, height: 900 } },
+      testMatch: /\.desktop\.spec\.ts$/,
     },
   ],
   // A production build: `next dev` compiles routes on first hit, which makes parallel

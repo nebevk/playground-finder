@@ -8,13 +8,13 @@ Conventions and the ID scheme are in [README.md](README.md). Status last reviewe
 |---|---|---|---|---|
 | FR-MAP-01 | Anyone can browse the map, playground details and reviews without an account. | Must | Done | db, e2e |
 | FR-MAP-02 | The map opens full-screen, centred on Ljubljana. An always-visible "Locate me" button centres it on the user's position after browser permission, marks it with a "you are here" dot, and tells the user when location is unavailable or denied. | Must | Done | e2e |
-| FR-MAP-03 | Markers cluster at low zoom levels. | Must | Done | manual |
+| FR-MAP-03 | Markers cluster at low zoom levels. | Must | Done | e2e |
 | FR-MAP-04 | Tapping a marker opens a bottom sheet with the name, rating summary, a description of at most 2 lines, feature and surface badges, a Directions button and a link to the detail page. | Must | Done | e2e |
 | FR-MAP-05 | Feature filters (shade, fenced, drinking water, toilets, parking). A playground matches only if it has **all** selected features. | Must | Done | unit |
 | FR-MAP-06 | Surface filter (tartan, sand, grass, gravel). A playground matches if it has **any** selected surface; with none selected, all match. | Must | Done | unit |
 | FR-MAP-07 | Equipment filter (swings, slides, zipline, sandbox, climbing wall). Depends on FR-ADD-07. | Should | Not started | unit |
 | FR-MAP-08 | Filters open with one tap from the map, and the button shows how many are active. Filters show how many playgrounds match and offer "clear all". "Nothing matches your filters" and "no playgrounds yet" each have their own empty state. | Should | Done | e2e, manual |
-| FR-MAP-09 | Home shows a preview map plus the 3 most-viewed and 3 latest playgrounds, with no playground in both lists. One tap lists the 3 nearest playgrounds with their distance, computed in the browser (GDPR-13). | Should | Done | unit, e2e |
+| FR-MAP-09 | Home shows a map plus the 3 most-viewed and 3 latest playgrounds. One tap lists the 3 nearest playgrounds with their distance, computed in the browser (GDPR-13). No playground is listed twice (nearby, then popular, then latest), and the lists refill from spare rows. From 1024 px the lists sit beside a full-height map whose pins answer the rows. | Should | Done | unit, e2e |
 | FR-MAP-10 | Text search by playground name or place. | Should | Not started | e2e |
 
 ## Playground detail (`FR-PG`)
