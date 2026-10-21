@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { Coffee, Ellipsis, FileText, Info, Shield, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
+import { PendingIcon } from "@/components/LinkPending";
 import { navItems, isNavItemActive } from "./nav-items";
 import { LocaleSwitcher } from "./LocaleSwitcher";
 import { KOFI_URL } from "@/lib/links";
@@ -36,7 +37,9 @@ export function BottomNav() {
               className={active ? "dock-active" : undefined}
               aria-current={active ? "page" : undefined}
             >
-              <Icon className="size-5" aria-hidden />
+              <PendingIcon>
+                <Icon className="size-5" aria-hidden />
+              </PendingIcon>
               <span className="dock-label">{t(key)}</span>
             </Link>
           );

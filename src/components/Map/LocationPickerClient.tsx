@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
-import { LoadingSwing } from "@/components/LoadingSwing";
+import { LoadingState } from "@/components/Loader";
 
 const LocationPicker = dynamic(
   () => import("./LocationPicker").then((m) => m.LocationPicker),
@@ -14,7 +14,7 @@ const LocationPicker = dynamic(
 
 function Loading() {
   const t = useTranslations("map");
-  return <LoadingSwing label={t("loading")} />;
+  return <LoadingState variant="pin" label={t("loading")} />;
 }
 
 type LatLng = { lat: number; lng: number };

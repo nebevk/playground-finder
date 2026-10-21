@@ -3,7 +3,7 @@
 import { useActionState, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { PhotoPicker } from "@/components/Playground/PhotoPicker";
+import { PhotoPicker, UploadingPhotos } from "@/components/Playground/PhotoPicker";
 import { Turnstile } from "@/components/Turnstile";
 import { MAX_PHOTOS, MAX_TOTAL_PHOTO_BYTES } from "@/lib/photo-checks";
 import { addPhotosAction, type AddPhotosState } from "../actions";
@@ -25,6 +25,7 @@ export function AddPhotosForm({
   const tAdd = useTranslations("add");
   const tCommon = useTranslations("common");
   const [photos, setPhotos] = useState<File[]>([]);
+  const [preparing, setPreparing] = useState(false);
   const [state, action, pending] = useActionState<AddPhotosState, FormData>(addPhotosAction, undefined);
 
   const back = (
@@ -62,8 +63,10 @@ export function AddPhotosForm({
       }}
       className="flex flex-col gap-4"
     >
-      <PhotoPicker photos={photos} onChange={setPhotos} max={remaining} />
+      <PhotoPicker photos={photos} onChange={setPhotos} max={remaining} onProcessingChange={setPreparing} />
       <Turnstile />
+
+      {pending && <UploadingPhotos />}
 
       {error && (
         <p role="alert" className="text-sm text-error">
@@ -74,6 +77,7 @@ export function AddPhotosForm({
           {error === "photo_metadata" && tAdd("errors.photoMetadata")}
           {error === "upload_failed" && tAdd("errors.uploadFailed")}
           {error === "turnstile_failed" && tAdd("errors.turnstile")}
+          {error === "rate_limited" && tAdd("errors.rateLimited")}
           {error === "no_photos" && t("noPhotos")}
           {error === "not_found" && t("notFound")}
           {error === "generic" && tAdd("errors.generic")}
@@ -85,7 +89,7 @@ export function AddPhotosForm({
         <Link href={`/playground/${playgroundId}`} className="btn btn-ghost">
           {tCommon("cancel")}
         </Link>
-        <button type="submit" disabled={pending || photos.length === 0} className="btn btn-primary min-w-32">
+        <button type="submit" disabled={pending || preparing || photos.length === 0} className="btn btn-primary min-w-32">
           {pending ? t("uploading") : t("submit")}
         </button>
       </div>

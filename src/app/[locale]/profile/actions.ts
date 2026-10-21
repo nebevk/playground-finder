@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { invalidateMapSnapshot } from "@/lib/playgrounds";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 
@@ -105,6 +106,8 @@ export async function deleteAccountAction(
     return { error: "generic" };
   }
 
+  // Their reviews went with the account, and so did their part of each playground's rating.
+  invalidateMapSnapshot();
   await supabase.auth.signOut();
   redirect(`/${locale}`);
 }

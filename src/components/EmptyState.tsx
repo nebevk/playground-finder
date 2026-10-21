@@ -25,15 +25,35 @@ function Illustration({ variant }: { variant: Variant }) {
         </svg>
       );
     case "playgrounds":
+      // The design kit's empty-state swing, rocking gently (stops with reduced motion).
       return (
-        <svg viewBox="0 0 120 100" className="h-16 w-16 text-primary" aria-hidden>
-          <line x1="25" y1="20" x2="25" y2="80" stroke={stroke} strokeWidth="3" strokeLinecap="round" />
-          <line x1="50" y1="20" x2="50" y2="80" stroke={stroke} strokeWidth="3" strokeLinecap="round" />
-          <line x1="25" y1="30" x2="50" y2="30" stroke={stroke} strokeWidth="2" />
-          <line x1="25" y1="45" x2="50" y2="45" stroke={stroke} strokeWidth="2" />
-          <line x1="25" y1="60" x2="50" y2="60" stroke={stroke} strokeWidth="2" />
-          <path d="M50 25 Q100 50 90 85" fill="none" stroke={stroke} strokeWidth="3" strokeLinecap="round" />
-          <circle cx="90" cy="88" r="4" fill={fill} />
+        <svg viewBox="0 0 160 140" className="h-auto w-24" aria-hidden>
+          <svg x="10" y="10" width="140" height="120" viewBox="0 0 140 120" overflow="visible">
+            <defs>
+              <filter id="ksi-empty-glow" x="-40%" y="-120%" width="180%" height="340%">
+                <feGaussianBlur stdDeviation="4.5" />
+              </filter>
+            </defs>
+            <g filter="url(#ksi-empty-glow)">
+              <ellipse cx="52" cy="108" rx="34" ry="7" fill="#d6b6f3" />
+              <ellipse cx="90" cy="109" rx="32" ry="6" fill="#f3c1e1" />
+            </g>
+            <g
+              className="ksi-motion"
+              style={{
+                transformBox: "view-box",
+                transformOrigin: "70px 22px",
+                animation: "ksi-rock 2.4s cubic-bezier(.45,0,.55,1) infinite alternate both",
+              }}
+            >
+              <line x1="61" y1="23" x2="61" y2="84" stroke="#8e4ae2" strokeWidth="2.4" strokeLinecap="round" />
+              <line x1="79" y1="23" x2="79" y2="84" stroke="#8e4ae2" strokeWidth="2.4" strokeLinecap="round" />
+              <rect x="55" y="82" width="30" height="6" rx="3" fill="#ac46b9" />
+            </g>
+            <line x1="30" y1="108" x2="36" y2="20" stroke="#8e4ae2" strokeWidth="5" strokeLinecap="round" />
+            <line x1="110" y1="108" x2="104" y2="20" stroke="#8e4ae2" strokeWidth="5" strokeLinecap="round" />
+            <line x1="22" y1="20" x2="118" y2="20" stroke="#8e4ae2" strokeWidth="6" strokeLinecap="round" />
+          </svg>
         </svg>
       );
     case "moderation":

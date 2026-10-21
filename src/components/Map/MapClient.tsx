@@ -7,8 +7,9 @@ import { MapPinned, SlidersHorizontal } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { FiltersProvider, useFilters } from "@/components/Filters/FiltersContext";
 import { FiltersDrawer } from "@/components/Filters/FiltersDrawer";
-import { LoadingSwing } from "@/components/LoadingSwing";
+import { LoadingState } from "@/components/Loader";
 import { useToast } from "@/components/Toast/ToastProvider";
+import { unpackSnapshot, type PackedPlayground } from "@/lib/map-snapshot";
 import type { MapPlayground } from "@/lib/playgrounds";
 
 const PlaygroundMap = dynamic(
@@ -21,7 +22,7 @@ const PlaygroundMap = dynamic(
 
 function MapLoading() {
   const t = useTranslations("map");
-  return <LoadingSwing label={t("loading")} />;
+  return <LoadingState variant="pin" label={t("loading")} />;
 }
 
 function MapWithFilters({
@@ -88,12 +89,14 @@ function MapWithFilters({
 }
 
 export function MapClient({
-  playgrounds,
+  packed,
   addedId = null,
 }: {
-  playgrounds: MapPlayground[];
+  /** The map snapshot, as the server sends it (ADR-0001). */
+  packed: PackedPlayground[];
   addedId?: string | null;
 }) {
+  const playgrounds = useMemo(() => unpackSnapshot(packed), [packed]);
   return (
     <FiltersProvider>
       <MapWithFilters playgrounds={playgrounds} addedId={addedId} />

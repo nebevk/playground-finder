@@ -4,7 +4,7 @@ One file per significant technical decision: what we chose, what else we conside
 
 | ADR | Title | Status |
 |---|---|---|
-| [0001](0001-map-data-loading.md) | Map data loading — cached shared snapshot | Proposed |
+| [0001](0001-map-data-loading.md) | Map data loading — cached shared snapshot | Accepted (ops 0013) |
 | [0002](0002-photo-pipeline.md) | Photo pipeline — server-validated uploads, private bucket, signed URLs | Accepted |
 
 ## Writing a new ADR

@@ -6,6 +6,7 @@ import {
   type PhotoType,
 } from "./photo-checks";
 import { PHOTO_BUCKET, removePhotoFiles } from "./photo-storage";
+import { isRateLimited } from "./rate-limit";
 import type { createAdminClient } from "./supabase/admin";
 import type { createClient } from "./supabase/server";
 
@@ -13,7 +14,7 @@ const EXTENSION: Record<PhotoType, string> = { "image/png": "png", "image/jpeg":
 
 export type CheckedPhoto = { bytes: Uint8Array; type: PhotoType };
 export type PhotoReadError = "too_many_photos" | "verify_email" | "photos_too_large" | "upload_failed" | "photo_metadata";
-export type PhotoStoreError = "upload_failed" | "photo_limit" | "generic";
+export type PhotoStoreError = "upload_failed" | "photo_limit" | "rate_limited" | "generic";
 
 // The photos of a submission (form field "photos"), every byte checked here on the server
 // (ADR-0002): the real type from its magic bytes, the size, and no EXIF/XMP metadata, which can
@@ -82,7 +83,9 @@ export async function storePhotos({
     if (error || !row) {
       console.error("storePhotos: photo row insert failed", error);
       await undo();
-      // 23514: the database's "at most 8 photos per playground per person" (ops 0012).
+      // 23514: the database's "at most 8 photos per playground per person" (ops 0012);
+      // PT429: its hourly limit (ops 0013).
+      if (isRateLimited(error)) return { error: "rate_limited" };
       return { error: error?.code === "23514" ? "photo_limit" : "generic" };
     }
     rowIds.push(row.id);

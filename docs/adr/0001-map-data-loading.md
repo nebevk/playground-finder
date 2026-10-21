@@ -1,6 +1,6 @@
 # ADR-0001: Map data loading — cached shared snapshot
 
-**Status:** Proposed
+**Status:** Accepted, implemented in ops 0013 (2026-10-21). See *Implementation notes* for where it differs.
 **Date:** 2026-10-14
 **Deciders:** Nejc Bevk (owner)
 
@@ -114,12 +114,30 @@ The 2 MB Data Cache limit is the sharpest edge of B: if it is crossed, caching s
 
 ## Action Items
 
-1. [ ] Add `src/lib/supabase/anon.ts` — cookie-less anon client for cacheable public reads.
-2. [ ] Add `getMapSnapshot()` (`unstable_cache`, tag `playgrounds:map`, `revalidate: 3600`) and `invalidateMapSnapshot()` in `src/lib/playgrounds.ts`; switch `/` and `/map` to it.
-3. [ ] Slim `MapPlayground`: remove `view_count`, truncate `description` to 160 chars, round coordinates to 5 decimals.
-4. [ ] Call `invalidateMapSnapshot()` from: `add/actions.ts` (before `redirect`), `admin/actions.ts`, `admin/add/actions.ts`, `admin/import/actions.ts`, `playground/[id]/actions.ts` (review create/update/delete, report), `profile/actions.ts` (account deletion removes reviews).
-5. [ ] Confirm `updateTag` expires `unstable_cache` tags in 16.2.4 (the docs only show `fetch` and `cacheTag` examples); if it doesn't, use `revalidateTag("playgrounds:map", { expire: 0 })`.
-6. [ ] Cache `getMostViewedPlaygrounds` with a 10-min TTL and no tag.
-7. [ ] Tests: payload budget (≤ 1 MB raw at 5,000 synthetic rows); flagged rows never appear in the snapshot; every map-affecting Server Action calls the invalidation helper.
-8. [ ] Document the out-of-band staleness (≤ 1 h) and how to force a refresh in `docs/deploy.md`.
+1. [x] Add `src/lib/supabase/anon.ts` — cookie-less anon client for cacheable public reads.
+2. [x] Add `getMapSnapshot()` (`unstable_cache`, tag `playgrounds:map`, `revalidate: 3600`) and `invalidateMapSnapshot()` in `src/lib/playgrounds.ts`; switch `/` and `/map` to it.
+3. [x] Slim `MapPlayground`: remove `view_count`, truncate `description` to 160 chars, round coordinates to 5 decimals.
+4. [x] Call `invalidateMapSnapshot()` from: `add/actions.ts` (before `redirect`), `admin/actions.ts`, `admin/add/actions.ts`, `admin/import/actions.ts`, `playground/[id]/actions.ts` (review create/update/delete, report), `profile/actions.ts` (account deletion removes reviews).
+5. [x] Confirm `updateTag` expires `unstable_cache` tags in 16.2.4 (the docs only show `fetch` and `cacheTag` examples); if it doesn't, use `revalidateTag("playgrounds:map", { expire: 0 })`.
+6. [x] Cache `getMostViewedPlaygrounds` with a 10-min TTL and no tag.
+7. [x] Tests: payload budget (≤ 1 MB raw at 5,000 synthetic rows); flagged rows never appear in the snapshot; every map-affecting Server Action calls the invalidation helper.
+8. [x] Document the out-of-band staleness (≤ 1 h) and how to force a refresh in `docs/deploy.md`.
 9. [ ] Follow-up: write an ADR on the per-request `auth.getUser()` in the proxy.
+
+## Implementation notes (ops 0013)
+
+- **Packed, not just slimmed.** The size table above already shows that 160-character descriptions and no `view_count` leave about 1.4 MB at 3,000 rows. That breaks the 1 MB budget long before 5,000. Repeating a dozen keys per row cost about 140 bytes on its own. So the snapshot is a list of positional rows:
+  - the 5 features as a bitmask;
+  - the surface as an index;
+  - the rating × 10;
+  - the description cut at a word to 120 characters, and only when there is one.
+
+  `src/lib/map-snapshot.ts` packs and unpacks it. The map and Home receive it packed and unpack it in the browser, so phones download it packed too.
+- **Measured** (`tests/unit/map-snapshot.test.ts`, synthetic rows with long Slovenian names):
+  - 5,000 playgrounds, half of them with a description: about 0.95 MB (the budget test);
+  - 5,000, all with a long description: about 1.27 MB, still under the 2 MB Data Cache limit (tested);
+  - today's scale, about 1,500: about 0.3 MB, against about 0.74 MB in the old shape.
+- **Home** gets only ids from the "latest" (map tag) and "most viewed" (10 minutes, no tag) queries, and looks them up in the snapshot.
+- **`updateTag` and `unstable_cache`:** the add flow redirects to `/map?added=<id>`, and the e2e test finds the new pin there. This confirms that the tag expires the snapshot for the person who saved.
+- **Cache keys carry a version** (`map-snapshot-v2-packed`). The Data Cache outlives deploys, so bump the version whenever the shape changes.
+- Still open: action item 9, the ADR on the proxy's per-request `auth.getUser()`.

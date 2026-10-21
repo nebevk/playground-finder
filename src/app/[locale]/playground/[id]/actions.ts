@@ -6,8 +6,10 @@ import { REVIEW_COMMENT_MAX } from "@/lib/limits";
 import { MAX_PHOTOS } from "@/lib/photo-checks";
 import { readSubmittedPhotos, storePhotos, type PhotoReadError, type PhotoStoreError } from "@/lib/photo-upload";
 import { PLAYGROUND_FEATURE_KEYS, SURFACE_TYPES, type SurfaceType } from "@/lib/playground-types";
+import { invalidateMapSnapshot } from "@/lib/playgrounds";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
+import { isRateLimited } from "@/lib/rate-limit";
 import { verifyTurnstile } from "@/lib/turnstile";
 
 export type ReviewState = { error?: string; success?: boolean } | undefined;
@@ -110,6 +112,7 @@ export async function updateOwnPlaygroundAction(_prev: EditState, formData: Form
   }
   if (!data) return { error: "not_found" };
 
+  invalidateMapSnapshot();
   revalidatePath(`/${locale}/playground/${id}`);
   revalidatePath(`/${locale}/map`);
   revalidatePath(`/${locale}`);
@@ -153,10 +156,13 @@ export async function submitReviewAction(
 
   if (error) {
     if (error.code === "23505") return { error: "duplicate" };
+    if (isRateLimited(error)) return { error: "rate_limited" };
     console.error("submitReviewAction failed", error);
     return { error: "generic" };
   }
 
+  // The map shows each playground's rating.
+  invalidateMapSnapshot();
   revalidatePath(`/${locale}/playground/${playground_id}`);
   return { success: true };
 }
@@ -192,6 +198,7 @@ export async function updateReviewAction(_prev: ReviewState, formData: FormData)
     return { error: "generic" };
   }
 
+  invalidateMapSnapshot();
   revalidatePath(`/${locale}/playground/${playground_id}`);
   return { success: true };
 }
@@ -208,6 +215,7 @@ export async function deleteReviewAction(formData: FormData) {
   const locale = String(formData.get("locale") ?? "sl");
 
   await supabase.from("reviews").delete().eq("id", review_id).eq("user_id", user.id);
+  invalidateMapSnapshot();
   revalidatePath(`/${locale}/playground/${playground_id}`);
 }
 
@@ -261,10 +269,13 @@ export async function submitReportAction(
 
   if (error) {
     if (error.code === "23505") return { error: "duplicate" };
+    if (isRateLimited(error)) return { error: "rate_limited" };
     console.error("submitReportAction failed", error);
     return { error: "generic" };
   }
 
+  // A third report flags its target, which can take a playground (or a rating) off the map.
+  invalidateMapSnapshot();
   if (playground_id) revalidatePath(`/${locale}/playground/${playground_id}`);
   return { success: true };
 }

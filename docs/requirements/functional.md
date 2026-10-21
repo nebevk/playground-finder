@@ -65,7 +65,7 @@ Conventions and the ID scheme are in [README.md](README.md). Status last reviewe
 
 | ID | Requirement | Pri | Status | Verify |
 |---|---|---|---|---|
-| FR-ADM-01 | Admin role (`profiles.is_admin`). Every `/admin` page shows the not-found page (no admin content, `noindex`) to non-admins, and users cannot grant themselves the role. The HTTP status is 200, because `[locale]/loading.tsx` streams the shell before `notFound()` runs. | Must | Done | db, e2e |
+| FR-ADM-01 | Admin role (`profiles.is_admin`). Every `/admin` page shows the not-found page (no admin content, `noindex`) to non-admins, and users cannot grant themselves the role. The HTTP status is 404. | Must | Done | db, e2e |
 | FR-ADM-02 | Moderation queue for flagged content: approve (clears flag and reports), dismiss, delete. Flagged and reported photos are shown as previews, since the bucket is private. | Must | Done — previews in ops 0007 | e2e, manual |
 | FR-ADM-03 | Playgrounds table: edit, bulk delete, bulk flag. | Should | Done | manual |
 | FR-ADM-04 | CSV bulk import with a review step before anything is inserted. | Should | Done | unit |

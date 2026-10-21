@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { en, expectTouchTargets, sl } from "./fixtures";
+import { en, expectTouchTargets, playgroundPath, sl } from "./fixtures";
 
 test.describe("default locale", () => {
   // A browser that prefers neither sl nor en must fall back to Slovenian.
@@ -194,10 +194,9 @@ test.describe("anonymous visitor", () => {
     await expect(page).toHaveURL(/\/sl\/privacy/);
   });
 
-  test("[FR-ADM-01] admin pages show the not-found page to visitors", async ({ page }) => {
-    // HTTP status stays 200: [locale]/loading.tsx streams the shell before notFound() runs.
-    // What matters is that no admin content renders and the page is marked noindex.
-    await page.goto("/sl/admin");
+  test("[FR-ADM-01] admin pages show the not-found page to visitors, with a real 404", async ({ page }) => {
+    const res = await page.goto("/sl/admin");
+    expect(res?.status()).toBe(404);
     await expect(page.getByRole("heading", { level: 1, name: sl.common.notFoundTitle })).toBeVisible();
     await expect(page.locator('meta[name="robots"][content*="noindex"]').first()).toBeAttached();
   });
@@ -300,10 +299,41 @@ test.describe("platform", () => {
     expect(h["strict-transport-security"]).toContain("max-age=");
   });
 
-  // Known gap (backlog BL-21).
-  test.fixme("[NFR-SEC-03] responses carry a Content-Security-Policy", async ({ request }) => {
+  test("[NFR-SEC-03] responses carry a nonce-based Content-Security-Policy, new for every request", async ({ request }) => {
     const res = await request.get("/sl");
-    expect(res.headers()["content-security-policy"]).toBeTruthy();
+    const first = res.headers()["content-security-policy"] ?? "";
+    const second = (await request.get("/sl")).headers()["content-security-policy"] ?? "";
+    expect(first).toMatch(/script-src 'self' 'nonce-[A-Za-z0-9+/=]+' 'strict-dynamic'/);
+    expect(first).toContain("object-src 'none'");
+    expect(first).toContain("frame-ancestors 'none'");
+    const nonce = (policy: string) => policy.match(/'nonce-([^']+)'/)?.[1];
+    expect(nonce(first)).not.toEqual(nonce(second));
+    // Every script in the HTML carries this response's nonce (scripts added later by those are
+    // trusted through 'strict-dynamic').
+    const scripts = (await res.text()).match(/<script\b[^>]*>/g) ?? [];
+    expect(scripts.length).toBeGreaterThan(0);
+    for (const tag of scripts) expect(tag).toContain(`nonce="${nonce(first)}"`);
+  });
+
+  test("[NFR-SEC-03] the main pages run under the policy, with the analytics script pinned", async ({ page }) => {
+    await page.addInitScript(() => {
+      (window as unknown as { __csp: string[] }).__csp = [];
+      document.addEventListener("securitypolicyviolation", (e) =>
+        (window as unknown as { __csp: string[] }).__csp.push(`${e.violatedDirective} ${e.blockedURI}`),
+      );
+    });
+    for (const path of ["/sl", "/sl/map", await playgroundPath(), "/sl/signup"]) {
+      await page.goto(path);
+      await page.waitForLoadState("networkidle");
+      expect(await page.evaluate(() => (window as unknown as { __csp: string[] }).__csp), path).toEqual([]);
+    }
+    await expect(page.locator('script[src*="simpleanalyticscdn.com/sri/"][integrity]')).toHaveCount(1);
+  });
+
+  test("[NFR-SEO-01] missing pages answer with a real 404", async ({ request }) => {
+    for (const path of ["/sl/playground/00000000-0000-4000-8000-000000000000", "/en/playground/not-a-playground", "/sl/no-such-page"]) {
+      expect((await request.get(path)).status(), path).toBe(404);
+    }
   });
 
   test("[NFR-PWA-01] the web manifest makes the app installable", async ({ request }) => {

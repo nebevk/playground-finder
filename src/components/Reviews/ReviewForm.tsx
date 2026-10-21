@@ -94,6 +94,7 @@ export function ReviewForm({
           {state.error === "duplicate" && t("reviewError.duplicate")}
           {state.error === "bad_rating" && t("reviewError.bad_rating")}
           {state.error === "too_long" && t("reviewError.too_long", { max: REVIEW_COMMENT_MAX })}
+          {state.error === "rate_limited" && t("reviewError.rate_limited")}
           {(state.error === "generic" || state.error === "auth_required") && t("reviewError.generic")}
         </p>
       )}

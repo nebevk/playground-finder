@@ -1,13 +1,24 @@
 import createIntlMiddleware from "next-intl/middleware";
-import { type NextRequest } from "next/server";
+import { NextRequest } from "next/server";
 import { routing } from "./i18n/routing";
+import { contentSecurityPolicy } from "./lib/csp";
 import { updateSession } from "./lib/supabase/middleware";
 
 const intlMiddleware = createIntlMiddleware(routing);
 
 export default async function proxy(request: NextRequest) {
-  const response = intlMiddleware(request);
-  return updateSession(request, response);
+  // A fresh nonce for every request (NFR-SEC-03). Next reads the policy from the request to put
+  // the nonce on its own scripts, and the layout reads x-nonce; next-intl passes both on.
+  const nonce = btoa(crypto.randomUUID());
+  const csp = contentSecurityPolicy(nonce);
+  const headers = new Headers(request.headers);
+  headers.set("x-nonce", nonce);
+  headers.set("content-security-policy", csp);
+  const withNonce = new NextRequest(request, { headers });
+
+  const response = intlMiddleware(withNonce);
+  response.headers.set("Content-Security-Policy", csp);
+  return updateSession(withNonce, response);
 }
 
 export const config = {

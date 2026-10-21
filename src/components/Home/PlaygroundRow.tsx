@@ -4,6 +4,7 @@ import { memo } from "react";
 import { ChevronRight } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import { PendingIcon } from "@/components/LinkPending";
 import { RatingSummary } from "@/components/RatingSummary";
 import { formatDistance } from "@/lib/geo";
 import { PLAYGROUND_FEATURE_KEYS, type MapPlayground } from "@/lib/playground-types";
@@ -74,7 +75,9 @@ export const PlaygroundRow = memo(function PlaygroundRow({
             {formatDistance(distance, locale)}
           </span>
         )}
-        <ChevronRight className="size-4 shrink-0 text-base-content/60" aria-hidden />
+        <PendingIcon className="size-4 shrink-0">
+          <ChevronRight className="size-4 shrink-0 text-base-content/60" aria-hidden />
+        </PendingIcon>
       </Link>
     </li>
   );

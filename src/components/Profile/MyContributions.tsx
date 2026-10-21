@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { Pencil, Star } from "lucide-react";
 import { Link } from "@/i18n/navigation";
+import { PendingIcon } from "@/components/LinkPending";
 import { getMyContributions } from "@/lib/contributions";
 
 // The profile's "Moji prispevki" (FR-COM-07): what this person has added, newest first. Items in
@@ -69,7 +70,9 @@ export async function MyContributions({ userId }: { userId: string }) {
                     className="btn btn-ghost -me-2 gap-1"
                     aria-label={t("editNamed", { name: p.name })}
                   >
-                    <Pencil className="size-4" aria-hidden />
+                    <PendingIcon className="size-4">
+                      <Pencil className="size-4" aria-hidden />
+                    </PendingIcon>
                     {t("edit")}
                   </Link>
                 )}

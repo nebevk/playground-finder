@@ -36,8 +36,11 @@ const supabase = {
   storage: { from: () => ({ createSignedUrls: async () => ({ data: [] }) }) },
 };
 vi.mock("@/lib/supabase/server", () => ({ createClient: async () => supabase }));
+vi.mock("@/lib/supabase/anon", () => ({ createAnonClient: () => supabase }));
+// The cache is Next's; here the cached loaders run straight through.
+vi.mock("next/cache", () => ({ unstable_cache: <T,>(fn: T) => fn, updateTag: () => {} }));
 
-const { getMapPlaygrounds, getLatestPlaygrounds, getMostViewedPlaygrounds, getPlaygroundById } = await import(
+const { getMapSnapshot, getLatestPlaygroundIds, getMostViewedPlaygroundIds, getPlaygroundById } = await import(
   "@/lib/playgrounds"
 );
 const { getReviewsForPlayground } = await import("@/lib/reviews");
@@ -51,9 +54,9 @@ beforeEach(() => {
 
 describe("public queries hide flagged rows explicitly", () => {
   it("[FR-COM-06] map, latest and most-viewed listings", async () => {
-    await getMapPlaygrounds();
-    await getLatestPlaygrounds();
-    await getMostViewedPlaygrounds();
+    await getMapSnapshot();
+    await getLatestPlaygroundIds(9);
+    await getMostViewedPlaygroundIds(6);
     expect(queries).toHaveLength(3);
     for (const q of queries) expect(filtersFlagged(q), `${q.table} query`).toBe(true);
   });

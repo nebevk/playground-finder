@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { clampText, DESCRIPTION_MAX, NAME_MAX } from "@/lib/limits";
 import { getAdminActionContext } from "@/lib/admin";
+import { invalidateMapSnapshot } from "@/lib/playgrounds";
 import { PLAYGROUND_FEATURE_KEYS, SURFACE_TYPES } from "@/lib/playground-types";
 
 export type ExistingPoint = { id: string; name: string; lat: number; lng: number };
@@ -68,6 +69,7 @@ export async function bulkInsertPlaygroundsAction(
     return { ok: false, inserted: 0 };
   }
 
+  invalidateMapSnapshot();
   revalidatePath(`/${locale}/admin/playgrounds`);
   revalidatePath(`/${locale}/admin`);
   revalidatePath(`/${locale}`);

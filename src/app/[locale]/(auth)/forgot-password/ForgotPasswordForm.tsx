@@ -29,12 +29,17 @@ export function ForgotPasswordForm({ locale }: { locale: string }) {
         />
       </label>
 
+      {state?.error === "rate_limited" && (
+        <p role="alert" className="text-sm text-error">
+          {t("rateLimited")}
+        </p>
+      )}
       {state?.error === "turnstile_failed" && (
         <p role="alert" className="text-sm text-error">
           {t("turnstileFailed")}
         </p>
       )}
-      {state?.error && state.error !== "turnstile_failed" && (
+      {state?.error && !["turnstile_failed", "rate_limited"].includes(state.error) && (
         <p role="alert" className="text-sm text-error">
           {t("errorGeneric")}
         </p>

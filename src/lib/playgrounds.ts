@@ -1,5 +1,8 @@
 import { cache } from "react";
+import { unstable_cache, updateTag } from "next/cache";
+import { MAP_TAG, packPlayground, type PackedPlayground } from "./map-snapshot";
 import { PHOTO_BUCKET } from "./photo-storage";
+import { createAnonClient } from "./supabase/anon";
 import { createClient } from "./supabase/server";
 import type {
   MapPlayground,
@@ -14,7 +17,7 @@ export * from "./playground-types";
 const PHOTO_URL_TTL_SECONDS = 60 * 60;
 
 const MAP_SELECT =
-  "id, name, description, lat, lng, is_fenced, has_shade, has_water, has_toilets, has_parking, surface_type, review_count, avg_rating, view_count";
+  "id, name, description, lat, lng, is_fenced, has_shade, has_water, has_toilets, has_parking, surface_type, review_count, avg_rating";
 
 type GeoRow = {
   id: string | null;
@@ -30,7 +33,6 @@ type GeoRow = {
   surface_type: string | null;
   review_count: number | null;
   avg_rating: number | null;
-  view_count: number | null;
 };
 
 function toMapPlayground(row: GeoRow): MapPlayground | null {
@@ -49,52 +51,82 @@ function toMapPlayground(row: GeoRow): MapPlayground | null {
     surface_type: (row.surface_type ?? null) as SurfaceType | null,
     review_count: row.review_count ?? 0,
     avg_rating: row.avg_rating,
-    view_count: row.view_count ?? 0,
   };
 }
 
-export async function getMapPlaygrounds(): Promise<MapPlayground[]> {
-  const supabase = await createClient();
-  // Public listings filter flagged rows explicitly: RLS also lets owners (and admins) read
-  // their flagged rows, which must not leak into what everyone sees.
-  const { data, error } = await supabase.from("playgrounds_geo").select(MAP_SELECT).eq("flagged", false);
-  if (error) throw error;
-  return (data ?? []).flatMap((r) => {
-    const m = toMapPlayground(r as GeoRow);
-    return m ? [m] : [];
+// The map's data (ADR-0001): every public playground, packed, built once and shared by all
+// visitors instead of a full query per page view. Read with the cookie-less client, so everyone
+// (admins too) gets the public, unflagged set. Expires when a Server Action changes the map
+// (invalidateMapSnapshot) and after an hour at the latest, which covers changes made outside the
+// app (SQL, imports, the auto-flag trigger). Bump the key's version when the shape changes.
+export const getMapSnapshot = unstable_cache(
+  async (): Promise<PackedPlayground[]> => {
+    const { data, error } = await createAnonClient().from("playgrounds_geo").select(MAP_SELECT).eq("flagged", false);
+    if (error) throw error;
+    const rows = (data ?? []).flatMap((r) => {
+      const m = toMapPlayground(r as GeoRow);
+      return m ? [packPlayground(m)] : [];
+    });
+    console.info(`map snapshot built: ${rows.length} playgrounds, ${JSON.stringify(rows).length} bytes`);
+    return rows;
+  },
+  ["map-snapshot-v2-packed"],
+  { tags: [MAP_TAG], revalidate: 3600 },
+);
+
+// Every Server Action that changes what the map shows calls this: the person who made the change
+// sees it at once, everyone else on their next page load.
+export function invalidateMapSnapshot() {
+  updateTag(MAP_TAG);
+}
+
+// Home's "Novo" list: the newest playgrounds' ids (Home looks them up in the snapshot). Expires
+// with the map, since a new playground changes both.
+const latestPlaygroundIds = unstable_cache(
+  async (limit: number): Promise<string[]> => {
+    const { data, error } = await createAnonClient()
+      .from("playgrounds_geo")
+      .select("id")
+      .eq("flagged", false)
+      .order("created_at", { ascending: false })
+      .limit(limit);
+    if (error) throw error;
+    return (data ?? []).flatMap((r) => (r.id ? [r.id] : []));
+  },
+  ["latest-playground-ids-v1"],
+  { tags: [MAP_TAG], revalidate: 3600 },
+);
+
+// Home's "Najbolj priljubljena": the most-viewed playgrounds' ids (at least one view). Views
+// change on every detail page visit, so this refreshes every 10 minutes, not with the map.
+const mostViewedPlaygroundIds = unstable_cache(
+  async (limit: number): Promise<string[]> => {
+    const { data, error } = await createAnonClient()
+      .from("playgrounds_geo")
+      .select("id")
+      .eq("flagged", false)
+      .gt("view_count", 0)
+      .order("view_count", { ascending: false })
+      .limit(limit);
+    if (error) throw error;
+    return (data ?? []).flatMap((r) => (r.id ? [r.id] : []));
+  },
+  ["most-viewed-playground-ids-v1"],
+  { revalidate: 600 },
+);
+
+// Failures aren't cached (the cached functions throw); Home just shows the list empty.
+export async function getLatestPlaygroundIds(limit: number): Promise<string[]> {
+  return latestPlaygroundIds(limit).catch((err) => {
+    console.error("getLatestPlaygroundIds failed", err);
+    return [];
   });
 }
 
-// Most recently added playgrounds (not flagged) for the home welcome screen.
-export async function getLatestPlaygrounds(limit = 3): Promise<MapPlayground[]> {
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("playgrounds_geo")
-    .select(MAP_SELECT)
-    .eq("flagged", false)
-    .order("created_at", { ascending: false })
-    .limit(limit);
-  if (error) return [];
-  return (data ?? []).flatMap((r) => {
-    const m = toMapPlayground(r as GeoRow);
-    return m ? [m] : [];
-  });
-}
-
-// Most-viewed ("most clicked") playgrounds with at least one view, for the home screen.
-export async function getMostViewedPlaygrounds(limit = 3): Promise<MapPlayground[]> {
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("playgrounds_geo")
-    .select(MAP_SELECT)
-    .eq("flagged", false)
-    .gt("view_count", 0)
-    .order("view_count", { ascending: false })
-    .limit(limit);
-  if (error) return [];
-  return (data ?? []).flatMap((r) => {
-    const m = toMapPlayground(r as GeoRow);
-    return m ? [m] : [];
+export async function getMostViewedPlaygroundIds(limit: number): Promise<string[]> {
+  return mostViewedPlaygroundIds(limit).catch((err) => {
+    console.error("getMostViewedPlaygroundIds failed", err);
+    return [];
   });
 }
 

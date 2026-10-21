@@ -2,9 +2,11 @@
 
 import { redirect } from "next/navigation";
 import { MAX_PHOTOS } from "@/lib/photo-checks";
+import { invalidateMapSnapshot } from "@/lib/playgrounds";
 import { readSubmittedPhotos, storePhotos } from "@/lib/photo-upload";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
+import { isRateLimited } from "@/lib/rate-limit";
 import { verifyTurnstile } from "@/lib/turnstile";
 
 const SURFACE_TYPES = ["tartan", "sand", "grass", "gravel"] as const;
@@ -73,6 +75,7 @@ export async function createPlaygroundAction(
     .single();
 
   if (insertErr || !inserted) {
+    if (isRateLimited(insertErr)) return { error: "rate_limited" };
     console.error("createPlaygroundAction: insert failed", insertErr);
     return { error: "generic" };
   }
@@ -86,5 +89,7 @@ export async function createPlaygroundAction(
     }
   }
 
+  // The map this redirects to must already show the new pin.
+  invalidateMapSnapshot();
   redirect(`/${locale}/map?added=${inserted.id}`);
 }

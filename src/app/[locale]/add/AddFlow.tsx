@@ -5,7 +5,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { LocationPickerClient } from "@/components/Map/LocationPickerClient";
 import { DetailsFields } from "@/components/Playground/DetailsFields";
-import { PhotoPicker } from "@/components/Playground/PhotoPicker";
+import { PhotoPicker, UploadingPhotos } from "@/components/Playground/PhotoPicker";
 import type { ExistingPlayground } from "@/components/Map/LocationPicker";
 import { Turnstile } from "@/components/Turnstile";
 import { formatDistance, haversineMeters } from "@/lib/geo";
@@ -38,6 +38,7 @@ export function AddFlow({
   const [surface, setSurface] = useState<string>("");
   const [features, setFeatures] = useState<Record<string, boolean>>({});
   const [photos, setPhotos] = useState<File[]>([]);
+  const [preparingPhotos, setPreparingPhotos] = useState(false);
   // Validate on tap: "Naprej" is always enabled and says what's missing (design critique).
   const [stepError, setStepError] = useState<"noLocation" | "noName" | null>(null);
   const nameInput = useRef<HTMLInputElement>(null);
@@ -133,7 +134,7 @@ export function AddFlow({
               {t("step3.verifyEmail")}
             </div>
           ) : (
-            <PhotoPicker photos={photos} onChange={setPhotos} max={MAX_PHOTOS} />
+            <PhotoPicker photos={photos} onChange={setPhotos} max={MAX_PHOTOS} onProcessingChange={setPreparingPhotos} />
           )}
 
           {/* The submit button lives in the sticky bar below (form attribute); the Turnstile
@@ -159,6 +160,8 @@ export function AddFlow({
         </section>
       )}
 
+      {pending && photos.length > 0 && <UploadingPhotos />}
+
       {(stepError === "noLocation" || state?.error) && (
         <p role="alert" className="text-sm text-error">
           {stepError === "noLocation" && t("errors.noLocation")}
@@ -166,6 +169,7 @@ export function AddFlow({
           {state?.error === "no_name" && t("errors.noName")}
           {state?.error === "upload_failed" && t("errors.uploadFailed")}
           {state?.error === "turnstile_failed" && t("errors.turnstile")}
+          {state?.error === "rate_limited" && t("errors.rateLimited")}
           {state?.error === "verify_email" && t("step3.verifyEmail")}
           {state?.error === "too_many_photos" && t("step3.tooMany", { max: MAX_PHOTOS })}
           {state?.error === "photos_too_large" && t("step3.tooLarge", { mb: MAX_TOTAL_MB })}
@@ -190,7 +194,7 @@ export function AddFlow({
             {t("next")}
           </button>
         ) : (
-          <button key="submit" type="submit" form={FORM_ID} disabled={pending} className="btn btn-primary min-w-32">
+          <button key="submit" type="submit" form={FORM_ID} disabled={pending || preparingPhotos} className="btn btn-primary min-w-32">
             {pending ? t("submitting") : t("submit")}
           </button>
         )}

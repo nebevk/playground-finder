@@ -16,7 +16,7 @@ const from = vi.fn((table: string) => ({
 const admin = { from, storage: { from: () => ({ remove }) } };
 
 vi.mock("@/lib/admin", () => ({ getAdminActionContext: async () => ({ admin }) }));
-vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }));
+vi.mock("next/cache", () => ({ revalidatePath: vi.fn(), updateTag: vi.fn(), unstable_cache: <T,>(fn: T) => fn }));
 
 const { deleteFlaggedAction, deletePlaygroundAction, bulkDeletePlaygroundsAction } = await import(
   "@/app/[locale]/admin/actions"

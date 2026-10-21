@@ -322,6 +322,10 @@ export type Database = {
       }
     }
     Functions: {
+      consume_rate_limit: {
+        Args: { p_key: string; p_max: number; p_window_seconds: number }
+        Returns: boolean
+      }
       increment_playground_views: { Args: { p_id: string }; Returns: undefined }
       playgrounds_near: {
         Args: { p_lat: number; p_lng: number; p_radius_m: number }

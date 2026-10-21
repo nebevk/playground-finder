@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { clampText, DESCRIPTION_MAX, NAME_MAX } from "@/lib/limits";
 import { getAdminActionContext } from "@/lib/admin";
+import { invalidateMapSnapshot } from "@/lib/playgrounds";
 import { photoPathsFor, removePhotoFiles } from "@/lib/photo-storage";
 
 const TARGETS = ["playground", "review", "photo"] as const;
@@ -37,6 +38,8 @@ export async function approveFlaggedAction(formData: FormData) {
     .eq("target_id", id);
   if (clearErr) console.error("approveFlaggedAction: clear reports failed", clearErr);
 
+  // Unflagging puts a playground back on the map, or a review back into its rating.
+  invalidateMapSnapshot();
   revalidatePath(`/${locale}/admin/moderation`);
   revalidatePath(`/${locale}/admin`);
 }
@@ -72,6 +75,7 @@ export async function flagTargetAction(formData: FormData) {
     console.error("flagTargetAction failed", error);
     return;
   }
+  invalidateMapSnapshot();
   revalidatePath(`/${locale}/admin/moderation`);
   revalidatePath(`/${locale}/admin`);
 }
@@ -97,6 +101,7 @@ export async function deleteFlaggedAction(formData: FormData) {
     return;
   }
   await removePhotoFiles(ctx.admin, paths);
+  invalidateMapSnapshot();
   revalidatePath(`/${locale}/admin/moderation`);
   revalidatePath(`/${locale}/admin`);
 }
@@ -134,6 +139,7 @@ export async function updatePlaygroundAction(formData: FormData) {
     return;
   }
 
+  invalidateMapSnapshot();
   revalidatePath(`/${locale}/admin/playgrounds`);
   revalidatePath(`/${locale}/playground/${id}`);
   revalidatePath(`/${locale}`);
@@ -154,6 +160,7 @@ export async function deletePlaygroundAction(formData: FormData) {
     return;
   }
   await removePhotoFiles(ctx.admin, paths);
+  invalidateMapSnapshot();
   revalidatePath(`/${locale}/admin/playgrounds`);
   revalidatePath(`/${locale}`);
 }
@@ -175,6 +182,7 @@ export async function bulkDeletePlaygroundsAction(
     return { ok: false, count: 0 };
   }
   await removePhotoFiles(ctx.admin, paths);
+  invalidateMapSnapshot();
   revalidatePath(`/${locale}/admin/playgrounds`);
   revalidatePath(`/${locale}/admin`);
   revalidatePath(`/${locale}`);
@@ -194,6 +202,7 @@ export async function bulkSetFlaggedPlaygroundsAction(
     console.error("bulkSetFlaggedPlaygroundsAction failed", error);
     return { ok: false, count: 0 };
   }
+  invalidateMapSnapshot();
   revalidatePath(`/${locale}/admin/playgrounds`);
   revalidatePath(`/${locale}/admin`);
   revalidatePath(`/${locale}`);

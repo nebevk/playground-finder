@@ -13,6 +13,7 @@ import { RecordView } from "@/components/RecordView";
 import { FEATURE_ICONS, FeatureBadge, SURFACE_ICON } from "@/components/FeatureChip";
 import { PhotoButton, PhotoViewer } from "@/components/Photos/PhotoViewer";
 import { FlashToast } from "@/components/Toast/FlashToast";
+import { PendingIcon } from "@/components/LinkPending";
 
 export async function generateMetadata({
   params,
@@ -113,7 +114,9 @@ export default async function PlaygroundDetailPage({
             </div>
             {isOwner ? (
               <Link href={`/playground/${playground.id}/edit`} className="btn btn-ghost shrink-0 gap-1">
-                <Pencil className="size-4" aria-hidden />
+                <PendingIcon className="size-4">
+                  <Pencil className="size-4" aria-hidden />
+                </PendingIcon>
                 {t("edit")}
               </Link>
             ) : (
@@ -185,7 +188,9 @@ export default async function PlaygroundDetailPage({
             <div className="mb-2 flex items-center justify-between gap-3">
               <h2 className="text-lg font-semibold">{t("photos")}</h2>
               <Link href={`/playground/${playground.id}/photos`} className="btn btn-ghost -me-3 gap-1">
-                <ImagePlus className="size-4" aria-hidden />
+                <PendingIcon className="size-4">
+                  <ImagePlus className="size-4" aria-hidden />
+                </PendingIcon>
                 {t("addPhotos")}
               </Link>
             </div>

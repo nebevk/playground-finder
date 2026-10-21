@@ -97,7 +97,7 @@ export function ReportButton({
             )}
             {state?.error && state.error !== "duplicate" && (
               <p role="alert" className="text-sm text-error">
-                {t("reviewError.generic")}
+                {state.error === "rate_limited" ? t("reviewError.rate_limited") : t("reviewError.generic")}
               </p>
             )}
 

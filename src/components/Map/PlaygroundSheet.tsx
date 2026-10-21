@@ -4,6 +4,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { X, Navigation } from "lucide-react";
 import { Link } from "@/i18n/navigation";
+import { LinkPending } from "@/components/LinkPending";
 import { RatingSummary } from "@/components/RatingSummary";
 import { FEATURE_ICONS, FeatureBadge, SURFACE_ICON } from "@/components/FeatureChip";
 import { useUserLocation } from "@/components/Location/UserLocationContext";
@@ -124,6 +125,7 @@ export function PlaygroundSheet({
               {t("directions")}
             </a>
             <Link href={`/playground/${p.id}`} className="btn btn-primary flex-1">
+              <LinkPending />
               {t("seeDetails")}
             </Link>
           </div>

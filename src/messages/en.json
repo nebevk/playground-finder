@@ -227,7 +227,8 @@
         "Email address and password (for authentication)",
         "Username (derived from your email address)",
         "Content you submit (playgrounds, reviews, photos)",
-        "Essential session cookies for login"
+        "Essential session cookies for login",
+        "For abuse protection: when you sign up or ask for an email (password reset, confirmation), we keep a one-way (hashed) record of your IP address for at most 24 hours, to limit repeated attempts."
       ]
     },
     "processors": {
@@ -317,7 +318,8 @@
       "duplicate": "You already reviewed this playground.",
       "bad_rating": "Rating must be between 1 and 5.",
       "generic": "Could not save review. Try again.",
-      "too_long": "The comment is too long (at most {max} characters)."
+      "too_long": "The comment is too long (at most {max} characters).",
+      "rate_limited": "That's enough for this hour. Please try again a little later."
     },
     "reportTitle": "Report a problem",
     "reportReasons": {
@@ -433,7 +435,8 @@
       "tooMany": "You can upload up to {max} photos. The rest were skipped.",
       "processingFailed": "Some photos couldn't be prepared, so they weren't added. Try another photo (JPG, PNG or WebP).",
       "tooLarge": "The photos are too large in total (max {mb} MB), so some weren't added.",
-      "heading": "Photos (optional)"
+      "heading": "Photos (optional)",
+      "uploading": "Uploading your photos. This can take a few seconds."
     },
     "errors": {
       "noLocation": "Pick a location on the map first.",
@@ -441,7 +444,8 @@
       "uploadFailed": "Photo upload failed.",
       "turnstile": "Spam check failed. Please try again.",
       "generic": "Could not save. Please try again.",
-      "photoMetadata": "A photo contains hidden data, such as its location. Select it again here so we can remove it."
+      "photoMetadata": "A photo contains hidden data, such as its location. Select it again here so we can remove it.",
+      "rateLimited": "That's enough adding for this hour. Please try again a little later."
     },
     "success": "Playground added!"
   },
@@ -517,7 +521,8 @@
     "turnstileFailed": "Spam check failed. Please try again.",
     "samePassword": "Your new password must be different from your current one.",
     "linkInvalid": "The link from your email is invalid or has expired. Log in, or request a new link.",
-    "emailNotConfirmed": "Please confirm your email address first: we sent you a link when you signed up."
+    "emailNotConfirmed": "Please confirm your email address first: we sent you a link when you signed up.",
+    "rateLimited": "Too many attempts. Please try again a little later."
   },
   "terms": {
     "title": "Terms of Use",

@@ -8,6 +8,7 @@ import { Wordmark } from "@/components/Brand";
 import { EmptyState } from "@/components/EmptyState";
 import { useUserLocation } from "@/components/Location/UserLocationContext";
 import { nearestPlaygrounds, pickHomeLists } from "@/lib/home-lists";
+import { unpackSnapshot, type PackedPlayground } from "@/lib/map-snapshot";
 import type { MapPlayground } from "@/lib/playground-types";
 import { useMediaQuery } from "@/lib/useMediaQuery";
 import type { HomeMapActive } from "./HomeMap";
@@ -20,16 +21,18 @@ import { PlaygroundRow } from "./PlaygroundRow";
 // full-height map, row and pin answering each other. Below lg the same column is the whole page,
 // with the map as a teaser between "near me" and the lists. Only the visible map is mounted.
 export function HomeLanding({
-  points,
+  packed,
   popularIds,
   latestIds,
 }: {
-  points: MapPlayground[];
+  /** The map snapshot, as the server sends it (ADR-0001). */
+  packed: PackedPlayground[];
   /** Most viewed first; more than a list shows, to refill rows taken by "V bližini". */
   popularIds: string[];
   /** Newest first, same idea. */
   latestIds: string[];
 }) {
+  const points = useMemo(() => unpackSnapshot(packed), [packed]);
   const t = useTranslations("home");
   const tMap = useTranslations("map");
   const router = useRouter();

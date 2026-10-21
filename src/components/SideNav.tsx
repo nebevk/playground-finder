@@ -3,6 +3,7 @@
 import { Coffee } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
+import { PendingIcon } from "@/components/LinkPending";
 import { navItems, isNavItemActive } from "./nav-items";
 import { BrandStack } from "./Brand";
 import { LocaleSwitcher } from "./LocaleSwitcher";
@@ -29,7 +30,9 @@ export function SideNav() {
                 className={`min-h-11 content-center${active ? " menu-active" : ""}`}
                 aria-current={active ? "page" : undefined}
               >
-                <Icon className="size-5" aria-hidden />
+                <PendingIcon>
+                  <Icon className="size-5" aria-hidden />
+                </PendingIcon>
                 {t(`nav.${key}`)}
               </Link>
             </li>

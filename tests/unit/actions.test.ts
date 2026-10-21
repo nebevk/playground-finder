@@ -14,6 +14,13 @@ const adminClient = { storage: { from: vi.fn(() => bucket) } };
 vi.mock("@/lib/supabase/server", () => ({ createClient: async () => supabase }));
 vi.mock("@/lib/supabase/admin", () => ({ createAdminClient: () => adminClient }));
 vi.mock("@/lib/turnstile", () => ({ verifyTurnstile: vi.fn(async () => true) }));
+// Per-client limits read the request's headers; every client is under its limit unless a test
+// says otherwise. The map snapshot's cache calls are Next's.
+vi.mock("@/lib/rate-limit", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/lib/rate-limit")>()),
+  withinRateLimit: vi.fn(async () => true),
+}));
+vi.mock("next/cache", () => ({ revalidatePath: vi.fn(), updateTag: vi.fn(), unstable_cache: <T,>(fn: T) => fn }));
 vi.mock("next/navigation", () => ({
   redirect: vi.fn((url: string) => {
     throw Object.assign(new Error("NEXT_REDIRECT"), { url });
@@ -23,6 +30,7 @@ vi.mock("next/navigation", () => ({
 const { loginAction, signupAction, updatePasswordAction } = await import("@/app/[locale]/(auth)/actions");
 const { createPlaygroundAction } = await import("@/app/[locale]/add/actions");
 const { verifyTurnstile } = await import("@/lib/turnstile");
+const { withinRateLimit } = await import("@/lib/rate-limit");
 
 function fd(fields: Record<string, string | File | File[]>) {
   const f = new FormData();
@@ -49,6 +57,7 @@ const photo = (bytes: Uint8Array<ArrayBuffer> = jpeg(), type = "image/jpeg") =>
 beforeEach(() => {
   vi.clearAllMocks();
   vi.mocked(verifyTurnstile).mockResolvedValue(true);
+  vi.mocked(withinRateLimit).mockResolvedValue(true);
   supabase.auth.signUp.mockResolvedValue({ error: null });
   bucket.upload.mockResolvedValue({ error: null });
 });
@@ -60,6 +69,13 @@ describe("signup", () => {
     expect(await signupAction(undefined, fd(without(valid, "consent")))).toEqual({
       error: "consent_required",
     });
+    expect(supabase.auth.signUp).not.toHaveBeenCalled();
+  });
+
+  it("[NFR-SEC-04] refuses signups over the per-client limit, before anything is sent", async () => {
+    vi.mocked(withinRateLimit).mockResolvedValue(false);
+    expect(await signupAction(undefined, fd(valid))).toEqual({ error: "rate_limited" });
+    expect(withinRateLimit).toHaveBeenCalledWith("signup");
     expect(supabase.auth.signUp).not.toHaveBeenCalled();
   });
 
@@ -155,6 +171,13 @@ describe("add playground", () => {
     supabase.from.mockImplementation((table: string) => ({ insert: table === "photos" ? photoInsert : insert }));
     return Object.assign(insert, { photoInsert });
   }
+
+  it("[NFR-SEC-04] says so when the database refuses a playground over the hourly limit", async () => {
+    supabase.auth.getUser.mockResolvedValue({ data: { user: verified } });
+    const single = vi.fn().mockResolvedValue({ data: null, error: { code: "PT429", message: "rate limit" } });
+    supabase.from.mockImplementation(() => ({ insert: () => ({ select: () => ({ single }) }) }));
+    expect(await createPlaygroundAction(undefined, fd(valid))).toEqual({ error: "rate_limited" });
+  });
 
   it("[FR-ADD-01] rejects anonymous submissions", async () => {
     supabase.auth.getUser.mockResolvedValue({ data: { user: null } });

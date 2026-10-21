@@ -80,6 +80,7 @@ test("[FR-ADD-03] [FR-ADD-04] [FR-COM-06] [GDPR-16] a verified user's photo is u
 
   // Goes through the real Storage upload under the database's insert policies.
   await page.locator('input[type="file"][multiple]').setInputFiles({ name: "p.png", mimeType: "image/png", buffer: PNG });
+  await expect(page.getByText(sl.add.step3.selected.replace("{count}", "1").replace("{max}", "8"))).toBeVisible({ timeout: 30_000 });
   await page.getByRole("button", { name: sl.add.submit }).click();
 
   await expect(page).toHaveURL(/\/sl\/map/, { timeout: 20_000 });
@@ -123,6 +124,7 @@ test("[FR-ADD-03] several real-size photos can be added in one submission", asyn
     buffer: noisePng(400, 300),
   }));
   await page.locator('input[type="file"][multiple]').setInputFiles(files);
+  await expect(page.getByText(sl.add.step3.selected.replace("{count}", String(files.length)).replace("{max}", "8"))).toBeVisible({ timeout: 30_000 });
   await page.getByRole("button", { name: sl.add.submit }).click();
 
   await expect(page).toHaveURL(/\/sl\/map/, { timeout: 20_000 });
@@ -435,7 +437,12 @@ async function addPlayground(page: Page, name: string, photos: { name: string; m
   await page.getByRole("button", { name: sl.add.next }).click();
   await page.getByPlaceholder(sl.add.step2.namePlaceholder).fill(name);
   await page.getByRole("button", { name: sl.add.next }).click();
-  if (photos.length > 0) await page.locator('input[type="file"][multiple]').setInputFiles(photos);
+  if (photos.length > 0) {
+    await page.locator('input[type="file"][multiple]').setInputFiles(photos);
+    // Submitting while the picker still prepares photos would leave them out.
+    const selected = sl.add.step3.selected.replace("{count}", String(photos.length)).replace("{max}", "8");
+    await expect(page.getByText(selected)).toBeVisible({ timeout: 30_000 });
+  }
   await page.getByRole("button", { name: sl.add.submit }).click();
   await expect(page).toHaveURL(/\/sl\/map/, { timeout: 20_000 });
   const sheet = page.getByRole("dialog");

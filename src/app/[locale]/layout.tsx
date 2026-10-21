@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import Script from "next/script";
 import { Geist_Mono, Nunito, Chewy } from "next/font/google";
@@ -35,10 +36,6 @@ export const viewport: Viewport = {
   viewportFit: "cover",
   themeColor: "#8e4ae2",
 };
-
-export function generateStaticParams() {
-  return routing.locales.map((locale) => ({ locale }));
-}
 
 export async function generateMetadata({
   params,
@@ -84,6 +81,9 @@ export default async function LocaleLayout({
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
+  // This request's CSP nonce (src/proxy.ts). Reading it renders every page per request, which a
+  // nonce needs: a page built ahead of time can't carry one.
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
 
   return (
     <html
@@ -109,10 +109,14 @@ export default async function LocaleLayout({
           </ToastProvider>
         </NextIntlClientProvider>
         <Analytics />
-        {/* Simple Analytics — privacy-first, cookieless visitor stats. */}
+        {/* Simple Analytics: privacy-first, cookieless visitor stats. Pinned to the SRI build, so a
+            changed file is refused rather than run (NFR-SEC-03). */}
         <Script
-          src="https://scripts.simpleanalyticscdn.com/latest.js"
+          src="https://scripts.simpleanalyticscdn.com/sri/v11.js"
+          integrity="sha384-rfv15RJy1bBYZ1Mf4xizO26jorXb2myipCvHXy4rkG0SuEET96S+m0sTzu5vfbSI"
+          crossOrigin="anonymous"
           strategy="afterInteractive"
+          nonce={nonce}
         />
       </body>
     </html>

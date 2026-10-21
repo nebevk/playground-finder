@@ -24,8 +24,8 @@ Conventions and the ID scheme are in [README.md](README.md). Status last reviewe
 |---|---|---|---|---|
 | NFR-SEC-01 | Row Level Security is enabled on every table in the `public` schema. | Must | Done | db |
 | NFR-SEC-02 | Cloudflare Turnstile is verified server-side on public submission forms (signup, password reset, add playground). In production, a missing secret key **blocks** submissions instead of letting them through. | Must | Done — fails closed; Vercel production builds require both keys (ops 0006) | unit |
-| NFR-SEC-03 | Responses send security headers: `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`, `Strict-Transport-Security` and a `Content-Security-Policy`. | Should | Partial — no CSP | e2e |
-| NFR-SEC-04 | Server-side rate limits on submissions (signup, add playground, review, report). | Should | Not started | manual |
+| NFR-SEC-03 | Responses send security headers: `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`, `Strict-Transport-Security` and a `Content-Security-Policy`. | Should | Done — nonce-based CSP with `'strict-dynamic'`, new for every request; the analytics script is pinned by SRI hash (ops 0013) | e2e |
+| NFR-SEC-04 | Server-side rate limits on submissions (signup, add playground, review, report). | Should | Done — per person in the database (an hour: 10 playgrounds, 20 reviews, 20 reports, 40 photos); signup, password reset and resending the confirmation 5 an hour per client (hashed IP, kept a day); admins and service-role tools exempt (ops 0013) | db, unit |
 | NFR-SEC-05 | Users cannot write moderation or privilege columns (`is_admin`, `flagged`, `helpful_count`). Admin actions run server-side behind `requireAdmin()`. | Must | Done | db |
 | NFR-SEC-06 | One person cannot hide content alone: auto-flagging (FR-COM-05) only counts reports from verified accounts. | Should | Done — ops 0002 (no minimum account age) | db |
 | NFR-SEC-07 | Every rule the app enforces on writes is also enforced by RLS or constraints, because the API is public. In particular, a photo row may only reference a file in the uploader's own storage folder. | Must | Done — photo rows and files are tied to the verified uploader's own folder (ops 0002); at most 8 photos per playground per person (trigger), a non-empty name of at most 120 characters, descriptions and review comments of at most 2,000 (check constraints) (ops 0012) | db |
@@ -34,9 +34,9 @@ Conventions and the ID scheme are in [README.md](README.md). Status last reviewe
 
 | ID | Requirement | Pri | Status | Verify |
 |---|---|---|---|---|
-| NFR-PERF-01 | Map data comes from a shared cache that is refreshed on writes, not from a full-table query on every page view. See [ADR-0001](../adr/0001-map-data-loading.md). | Should | Not started | unit |
+| NFR-PERF-01 | Map data comes from a shared cache that is refreshed on writes, not from a full-table query on every page view. See [ADR-0001](../adr/0001-map-data-loading.md). | Should | Done (ops 0013) | unit |
 | NFR-PERF-03 | Every foreign key is indexed, so cascading deletes (account deletion) and per-user lookups stay fast. | Should | Done — ops 0007 | db |
-| NFR-PERF-02 | The map snapshot stays ≤ 1 MB of raw JSON at 5,000 playgrounds ([ADR-0001](../adr/0001-map-data-loading.md)). | Should | Not started | unit |
+| NFR-PERF-02 | The map snapshot stays ≤ 1 MB of raw JSON at 5,000 playgrounds ([ADR-0001](../adr/0001-map-data-loading.md)). | Should | Done — packed rows: about 0.95 MB at 5,000 with half of them described, under 2 MB even if all were (ops 0013) | unit |
 
 ## Platform (`NFR-PWA`, `NFR-SEO`, `NFR-OPS`)
 
@@ -44,7 +44,7 @@ Conventions and the ID scheme are in [README.md](README.md). Status last reviewe
 |---|---|---|---|---|
 | NFR-PWA-01 | Installable: the web manifest has a name, icons (including a maskable one) and `display: standalone`. | Should | Done | e2e |
 | NFR-PWA-02 | Previously loaded map data still works offline. | Could | Not started | e2e |
-| NFR-SEO-01 | `sitemap.xml` lists public pages and playgrounds; `robots.txt` blocks `/admin`. | Should | Done | e2e |
+| NFR-SEO-01 | `sitemap.xml` lists public pages and playgrounds; `robots.txt` blocks `/admin`; missing pages answer with HTTP 404. | Should | Done — real 404s since ops 0013 | e2e |
 | NFR-SEO-02 | Every public page has its own title and description, plus `hreflang` alternates for `sl` and `en`. | Should | Partial — only detail, about and terms pages set metadata; no `hreflang` | e2e |
 | NFR-OPS-01 | All migrations apply cleanly to an empty database (`pnpm db:reset`), and DB tests pass in CI. | Must | Done | db |
 | NFR-OPS-02 | Local development, CI and Vercel use the same supported Node.js LTS version. | Should | Partial — Node 24 LTS pinned for Vercel (`engines`), CI and `.nvmrc` (ops 0007); the local machine still runs Node 20 | manual |

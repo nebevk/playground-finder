@@ -31,6 +31,14 @@ export default async function globalSetup() {
   // Clients can't write is_admin (column grants); the service role can.
   const { data: users, error: listErr } = await admin.auth.admin.listUsers({ perPage: 1000 });
   if (listErr) throw listErr;
+
+  // The suite adds far more than a person may per hour (rate limits, ops 0013). Only the service
+  // role can set app_metadata, which the database reads from the JWT.
+  for (const user of [E2E_USER, E2E_LOGOUT_USER, E2E_RESET_USER, E2E_ADMIN_USER]) {
+    const id = users.users.find((u) => u.email === user.email)?.id;
+    const { error } = await admin.auth.admin.updateUserById(id!, { app_metadata: { rate_limit_exempt: true } });
+    if (error) throw error;
+  }
   const adminId = users.users.find((u) => u.email === E2E_ADMIN_USER.email)?.id;
   const { error: promoteErr } = await admin.from("profiles").update({ is_admin: true }).eq("id", adminId!);
   if (promoteErr) throw promoteErr;

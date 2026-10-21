@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { clampText, DESCRIPTION_MAX, NAME_MAX } from "@/lib/limits";
 import { getAdminActionContext } from "@/lib/admin";
+import { invalidateMapSnapshot } from "@/lib/playgrounds";
 import { PLAYGROUND_FEATURE_KEYS, SURFACE_TYPES } from "@/lib/playground-types";
 
 export type GeoResult = { lat: number; lng: number; label: string };
@@ -104,6 +105,7 @@ export async function quickAddPlaygroundAction(
     return { ok: false };
   }
 
+  invalidateMapSnapshot();
   revalidatePath(`/${locale}/admin/playgrounds`);
   revalidatePath(`/${locale}`);
   return { ok: true, id: data.id };

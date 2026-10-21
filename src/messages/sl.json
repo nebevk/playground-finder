@@ -227,7 +227,8 @@
         "E-poštni naslov in geslo (za prijavo)",
         "Uporabniško ime (izpeljano iz e-poštnega naslova)",
         "Vsebino, ki jo objaviš (igrišča, mnenja, fotografije)",
-        "Nujne sejne piškotke za prijavo"
+        "Nujne sejne piškotke za prijavo",
+        "Za zaščito pred zlorabami: ko se registriraš ali zahtevaš e-pošto (ponastavitev gesla, potrditev), za največ 24 ur hranimo nepovraten (zgoščen) zapis tvojega naslova IP, da omejimo ponavljanje poskusov."
       ]
     },
     "processors": {
@@ -317,7 +318,8 @@
       "duplicate": "Mnenje za to igrišče že obstaja.",
       "bad_rating": "Ocena mora biti med 1 in 5.",
       "generic": "Mnenje ni bilo shranjeno. Poskusi znova.",
-      "too_long": "Komentar je predolg (največ {max} znakov)."
+      "too_long": "Komentar je predolg (največ {max} znakov).",
+      "rate_limited": "Za to uro je dovolj. Poskusi znova čez nekaj časa."
     },
     "reportTitle": "Sporoči težavo",
     "reportReasons": {
@@ -433,7 +435,8 @@
       "tooMany": "Naložiš lahko največ {max} fotografij. Ostale so bile preskočene.",
       "processingFailed": "Nekaterih fotografij ni bilo mogoče pripraviti, zato niso dodane. Poskusi z drugo fotografijo (JPG, PNG ali WebP).",
       "tooLarge": "Fotografije so skupaj prevelike (največ {mb} MB), zato nekatere niso dodane.",
-      "heading": "Fotografije (neobvezno)"
+      "heading": "Fotografije (neobvezno)",
+      "uploading": "Nalagam fotografije. To lahko traja nekaj sekund."
     },
     "errors": {
       "noLocation": "Najprej izberi lokacijo na zemljevidu.",
@@ -441,7 +444,8 @@
       "uploadFailed": "Nalaganje fotografije ni uspelo.",
       "turnstile": "Preverjanje proti neželeni vsebini ni uspelo. Poskusi znova.",
       "generic": "Shranjevanje ni uspelo. Poskusi znova.",
-      "photoMetadata": "Fotografija vsebuje skrite podatke, na primer lokacijo. Izberi jo znova tukaj, da jih odstranimo."
+      "photoMetadata": "Fotografija vsebuje skrite podatke, na primer lokacijo. Izberi jo znova tukaj, da jih odstranimo.",
+      "rateLimited": "Za to uro je dodajanja dovolj. Poskusi znova čez nekaj časa."
     },
     "success": "Igrišče dodano!"
   },
@@ -517,7 +521,8 @@
     "turnstileFailed": "Preverjanje proti neželeni vsebini ni uspelo. Poskusi znova.",
     "samePassword": "Novo geslo mora biti drugačno od trenutnega.",
     "linkInvalid": "Povezava iz e-pošte ni veljavna ali je potekla. Prijavi se ali zahtevaj novo povezavo.",
-    "emailNotConfirmed": "Najprej potrdi e-poštni naslov: povezavo smo ti poslali ob registraciji."
+    "emailNotConfirmed": "Najprej potrdi e-poštni naslov: povezavo smo ti poslali ob registraciji.",
+    "rateLimited": "Preveč poskusov. Poskusi znova čez nekaj časa."
   },
   "terms": {
     "title": "Pogoji uporabe",

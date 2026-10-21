@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Camera, Images, X } from "lucide-react";
+import { Loader } from "@/components/Loader";
 import { resizeImage } from "@/lib/image";
 import { MAX_TOTAL_PHOTO_BYTES } from "@/lib/photo-checks";
 
@@ -14,18 +15,26 @@ const NO_NOTICE: PhotoNotice = { tooMany: false, failed: false, tooLarge: false 
 // Choosing photos to upload, shared by the add flow and "add photos" (FR-ADD-06): the camera or
 // the gallery, each photo resized in the browser (which also drops metadata such as GPS,
 // GDPR-09), all kept within one request's size budget, under the children's-faces notice
-// (GDPR-07). `max` is how many more photos this person may add here.
+// (GDPR-07). `max` is how many more photos this person may add here. `onProcessingChange` tells
+// the form while photos are still being prepared, so it can hold its submit button: sending
+// then would leave them out.
 export function PhotoPicker({
   photos,
   onChange,
   max,
+  onProcessingChange,
 }: {
   photos: File[];
   onChange: (photos: File[]) => void;
   max: number;
+  onProcessingChange?: (processing: boolean) => void;
 }) {
   const t = useTranslations("add");
-  const [processing, setProcessing] = useState(false);
+  const [processing, setProcessingState] = useState(false);
+  const setProcessing = (busy: boolean) => {
+    setProcessingState(busy);
+    onProcessingChange?.(busy);
+  };
   const [notice, setNotice] = useState<PhotoNotice>(NO_NOTICE);
   // Thumbnails: object URLs, released when the selection changes or the picker goes away.
   const previews = useMemo(() => photos.map((file) => URL.createObjectURL(file)), [photos]);
@@ -157,5 +166,17 @@ export function PhotoPicker({
         </p>
       )}
     </>
+  );
+}
+
+// While photos upload: on a phone connection that can take a few seconds, so say so, with the
+// design kit's slide loader (its loader for long tasks).
+export function UploadingPhotos() {
+  const t = useTranslations("add");
+  return (
+    <div role="status" className="flex items-center gap-3 rounded-box bg-base-200/60 p-3 text-sm">
+      <Loader variant="slide" className="h-12 w-auto shrink-0" />
+      <p>{t("step3.uploading")}</p>
+    </div>
   );
 }

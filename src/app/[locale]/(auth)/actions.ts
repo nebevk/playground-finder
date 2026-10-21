@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { withinRateLimit } from "@/lib/rate-limit";
 import { getSiteUrl, safeNextPath } from "@/lib/site";
 import { verifyTurnstile } from "@/lib/turnstile";
 
@@ -37,6 +38,7 @@ export async function signupAction(_prev: AuthState, formData: FormData): Promis
   if (!consent) return { error: "consent_required" };
   if (!ageConfirmed) return { error: "age_required" };
   if (!(await verifyTurnstile(formData))) return { error: "turnstile_failed" };
+  if (!(await withinRateLimit("signup"))) return { error: "rate_limited" };
 
   const supabase = await createClient();
   const { error } = await supabase.auth.signUp({
@@ -69,6 +71,7 @@ export async function forgotPasswordAction(
 
   if (!email) return { error: "email_required" };
   if (!(await verifyTurnstile(formData))) return { error: "turnstile_failed" };
+  if (!(await withinRateLimit("password_reset"))) return { error: "rate_limited" };
 
   const supabase = await createClient();
   // The email's link comes from the recovery template (supabase/templates/recovery.html):
@@ -130,6 +133,7 @@ export async function resendVerificationAction(
   } = await supabase.auth.getUser();
   if (!user?.email) return { error: "auth_required" };
   if (user.email_confirmed_at) return { info: "already_verified" };
+  if (!(await withinRateLimit("resend_verification", user.id))) return { error: "rate_limited" };
 
   const { error } = await supabase.auth.resend({
     type: "signup",

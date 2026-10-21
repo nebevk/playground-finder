@@ -83,13 +83,18 @@ export function SignupForm({ locale, next }: { locale: string; next?: string }) 
           {t("ageRequired")}
         </p>
       )}
+      {state?.error === "rate_limited" && (
+        <p role="alert" className="text-sm text-error">
+          {t("rateLimited")}
+        </p>
+      )}
       {state?.error === "turnstile_failed" && (
         <p role="alert" className="text-sm text-error">
           {t("turnstileFailed")}
         </p>
       )}
       {state?.error &&
-        !["consent_required", "age_required", "turnstile_failed"].includes(state.error) && (
+        !["consent_required", "age_required", "turnstile_failed", "rate_limited"].includes(state.error) && (
           <p role="alert" className="text-sm text-error">
             {t("errorGeneric")}
           </p>

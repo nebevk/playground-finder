@@ -30,7 +30,6 @@ export type MapPlayground = {
   surface_type: SurfaceType | null;
   review_count: number;
   avg_rating: number | null;
-  view_count: number;
 };
 
 export type PlaygroundPhoto = {
