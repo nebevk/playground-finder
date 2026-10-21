@@ -1,7 +1,7 @@
 ---
 id: 0012
 title: Add photos later, edit your review, "My contributions", write rules in the database
-status: blocked
+status: done
 order: migrations-first
 destructive: false
 migrations: [20261021090000_db_write_rules.sql]
@@ -155,4 +155,5 @@ For the app, `git revert` the deploy commit and push. The two halves are indepen
 - **Applied** `db_write_rules`. Verify: trigger `photos_limit_per_person` present; constraints `playgrounds_name_length`, `playgrounds_description_length`, `reviews_comment_length` all `convalidated=true`.
 - **2026-10-21T11:26Z** pushed `a1a64e5` only (0013/0014 commits held locally until 0012 is done). Deploy `dpl_8kGQKpztGqWK7SdhQNwKkPAZ6Kjt` → `READY`. Smoke 200. Curl: "Dodaj fotografije" ≥ 1; `/photos` redirects to login (NEXT_REDIRECT). No non-flagged reviews with comments in prod yet — owner test covers listing. Security advisors unchanged (`increment_playground_views`; `auth_leaked_password_protection`).
 - **Blocked** on owner phone tests (step 7). 0013/0014 stay ready until 0012 is done. Say **process ops** when phone checks pass.
+- **2026-10-21T14:26Z** owner said process ops (phone tests accepted). **status → done**.
 

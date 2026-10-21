@@ -1,7 +1,7 @@
 ---
 id: 0013
 title: Real 404s and new loaders, cached map snapshot, rate limits, Content-Security-Policy
-status: ready
+status: in-progress
 order: migrations-first
 destructive: false
 migrations: [20261021150000_rate_limits.sql]
@@ -139,4 +139,7 @@ drop table if exists private.rate_limit_hits;
 For the app, `git revert` the deploy commit and push, or promote the previous deployment in Vercel, which is faster if the CSP breaks pages. The two halves are independent. Without the SQL, the new code treats every attempt as allowed: the limiter fails open, and inserts just aren't counted. Without the new code, the old code shows a generic error when a limit refuses an insert.
 
 ## Result log (Cursor)
+
+- **2026-10-21T14:26Z** started (status → in-progress). Preflight: 0012 → done; prod `READY` (`a1a64e5`); local ahead with 0013/0014 + ops commits; `incoming/` left untracked. Drift OK — `rate_limits` not in prod.
+- **Applied** `rate_limits`. Verify: 4 triggers (`photos|playgrounds|reports|reviews_rate_limit`); `consume_rate_limit` execute f|f|t; `private.rate_limit_hits` RLS on.
 
