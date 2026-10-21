@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { createClient } from "@supabase/supabase-js";
 import {
   E2E_ADMIN_USER,
   E2E_LOGOUT_USER,
@@ -269,8 +270,158 @@ test("[FR-ADD-08] the person who added a playground can edit it; nobody else can
   await other.close();
 });
 
-// Known gap (backlog BL-14).
-test.fixme("[FR-COM-02] a user can edit their own review", async () => {});
+test("[FR-ADD-06] photos can be added to an existing playground", async ({ page, browser }) => {
+  test.setTimeout(90_000);
+  await login(page);
+  const name = `E2E dodaj fotografije ${Date.now()}`;
+  const path = await addPlayground(page, name);
+  await page.goto(path);
+  await expect(page.getByText(sl.detail.noPhotos)).toBeVisible();
+
+  await page.getByRole("link", { name: sl.detail.addPhotos }).click();
+  await expect(page).toHaveURL(new RegExp(`${path}/photos$`));
+  await expect(page.getByText(sl.add.step3.disclaimer)).toBeVisible();
+  await page.locator('input[type="file"][multiple]').setInputFiles({ name: "p.png", mimeType: "image/png", buffer: PNG });
+  await expect(page.getByText(sl.add.step3.selected.replace("{count}", "1").replace("{max}", "8"))).toBeVisible();
+  await page.getByRole("button", { name: sl.addPhotos.submit }).click();
+
+  // FlashToast drops the "?photos=added" flag once the toast is up.
+  await expect(page.getByText(sl.detail.photosAdded)).toBeVisible({ timeout: 20_000 });
+  await expect(page).toHaveURL(new RegExp(`${path}$`));
+  await expect(page.locator('img[src*="/object/sign/playground-photos/"]').first()).toBeVisible();
+
+  // Visitors are asked to sign in first.
+  const anon = await browser.newContext();
+  const anonPage = await anon.newPage();
+  await anonPage.goto(`${path}/photos`);
+  await expect(anonPage).toHaveURL(/\/sl\/login\?next=/);
+  await anon.close();
+});
+
+test("[FR-COM-01] [FR-COM-02] [FR-PG-01] a review shows with its author, and its writer can edit it", async ({ page, browser }) => {
+  test.setTimeout(90_000);
+  await login(page);
+  const path = await addPlayground(page, `E2E mnenje ${Date.now()}`);
+  await page.goto(path);
+
+  const reviews = page.locator("section#reviews");
+  await reviews.getByRole("button", { name: starLabel(4) }).click();
+  await reviews.getByRole("textbox", { name: sl.detail.comment }).fill("Prvi vtis");
+  await reviews.getByRole("button", { name: sl.detail.submitReview }).click();
+  // Generous, like the other save round trips: with several workers, the local auth server can
+  // take seconds per call.
+  await expect(reviews.getByText("Prvi vtis")).toBeVisible({ timeout: 20_000 });
+
+  // Edit in place: the form opens prefilled.
+  await reviews.getByRole("button", { name: sl.detail.editReview }).click();
+  const comment = reviews.getByRole("textbox", { name: sl.detail.comment });
+  await expect(comment).toHaveValue("Prvi vtis");
+  await expect(reviews.getByRole("button", { name: starLabel(4) })).toHaveAttribute("aria-pressed", "true");
+  await reviews.getByRole("button", { name: starLabel(2) }).click();
+  await comment.fill("Popravljen vtis");
+  await reviews.getByRole("button", { name: sl.detail.saveReview }).click();
+
+  await expect(reviews.getByText("Popravljen vtis")).toBeVisible({ timeout: 20_000 });
+  await expect(reviews.getByText("Prvi vtis")).toHaveCount(0);
+  await expect(reviews.getByLabel("2/5")).toBeVisible();
+  // Still one review, and the edit form is closed.
+  await expect(reviews.getByRole("button", { name: sl.detail.saveReview })).toHaveCount(0);
+  await page.reload();
+  await expect(reviews.getByText("Popravljen vtis")).toBeVisible();
+
+  // Everyone sees it, with the author's username, and nobody else gets an edit button.
+  const anon = await browser.newContext();
+  const anonPage = await anon.newPage();
+  await anonPage.goto(path);
+  const anonReviews = anonPage.locator("section#reviews");
+  await expect(anonReviews.getByRole("listitem").filter({ hasText: "Popravljen vtis" })).toContainText("e2e-verified");
+  await expect(anonReviews.getByRole("button", { name: sl.detail.editReview })).toHaveCount(0);
+  await anon.close();
+});
+
+test("[FR-COM-07] the profile lists your contributions, including ones under review", async ({ page }) => {
+  test.setTimeout(90_000);
+  // A fresh account, so the list holds exactly what this test adds.
+  const db = service();
+  const user = { email: `e2e-contrib-${Date.now()}@example.com`, password: "e2e-Password-123" };
+  const { data: created, error: userErr } = await db.auth.admin.createUser({
+    ...user,
+    email_confirm: true,
+    user_metadata: { consent_privacy_at: new Date().toISOString(), age_confirmed: true },
+  });
+  expect(userErr).toBeNull();
+  const userId = created.user!.id;
+
+  await login(page, user);
+  await expect(page.getByText(sl.profile.contributions.empty)).toBeVisible();
+
+  // One visible playground with a review and two photos (one under review), and one playground
+  // under review.
+  const stamp = Date.now();
+  const visible = `E2E moj prispevek ${stamp}`;
+  const hidden = `E2E v pregledu ${stamp}`;
+  const { data: pgs, error: pgErr } = await db
+    .from("playgrounds")
+    .insert([
+      // Both rows name every column: a bulk insert sends a missing one as null, not its default.
+      { name: visible, location: "SRID=4326;POINT(14.52 46.05)", user_id: userId, flagged: false },
+      { name: hidden, location: "SRID=4326;POINT(14.53 46.05)", user_id: userId, flagged: true },
+    ])
+    .select("id, name");
+  expect(pgErr).toBeNull();
+  const visibleId = pgs!.find((p) => p.name === visible)!.id;
+  const { error: reviewErr } = await db
+    .from("reviews")
+    .insert({ playground_id: visibleId, user_id: userId, rating: 4, comment: "Lepo igrišče" });
+  expect(reviewErr).toBeNull();
+  for (const [i, flagged] of [false, true].entries()) {
+    const storagePath = `${userId}/${visibleId}/${i}-e2e.png`;
+    const { error: upErr } = await db.storage
+      .from("playground-photos")
+      .upload(storagePath, noisePng(64, 48), { contentType: "image/png" });
+    expect(upErr).toBeNull();
+    const { error: photoErr } = await db
+      .from("photos")
+      .insert({ playground_id: visibleId, user_id: userId, storage_path: storagePath, flagged });
+    expect(photoErr).toBeNull();
+  }
+
+  await page.reload();
+  const section = page.getByRole("region", { name: sl.profile.contributions.title });
+  await expect(section.getByText(sl.profile.contributions.flaggedNote)).toBeVisible();
+
+  const playgrounds = section.getByRole("region", { name: sl.profile.contributions.playgrounds });
+  await expect(playgrounds.getByRole("link", { name: visible, exact: true })).toHaveAttribute("href", `/sl/playground/${visibleId}`);
+  const hiddenRow = playgrounds.getByRole("listitem").filter({ hasText: hidden });
+  // Exact: the seeded name "E2E v pregledu …" contains the badge's text too.
+  await expect(hiddenRow.getByText(sl.profile.contributions.inReview, { exact: true })).toBeVisible();
+  await expect(hiddenRow.getByRole("link")).toHaveCount(0);
+
+  const reviewsList = section.getByRole("region", { name: sl.profile.contributions.reviews });
+  await expect(reviewsList.getByRole("link")).toHaveAttribute("href", `/sl/playground/${visibleId}#reviews`);
+  await expect(reviewsList.getByText("Lepo igrišče")).toBeVisible();
+
+  const photos = section.getByRole("region", { name: sl.profile.contributions.photos });
+  const photo = photos.getByRole("img", { name: sl.profile.contributions.photoOf.replace("{name}", visible) });
+  await expect(photo).toHaveAttribute("src", /\/object\/sign\/playground-photos\/.+\?token=/);
+  await expect(photos.getByText(sl.profile.contributions.inReview, { exact: true })).toBeVisible();
+
+  await expectTouchTargets(section, "my contributions");
+  await playgrounds.getByRole("link", { name: sl.profile.contributions.editNamed.replace("{name}", visible) }).click();
+  await expect(page.getByRole("heading", { level: 1, name: sl.edit.title })).toBeVisible();
+});
+
+// A star's name in the review form.
+function starLabel(n: number) {
+  return sl.detail.starLabel.replace("{n}", String(n));
+}
+
+// Service role, local stack only (global-setup refuses anything else): seeds data directly.
+function service() {
+  return createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SECRET_KEY!, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+}
 
 // The viewer's name for "open photo n of total".
 function openPhotoLabel(n: number, total: number) {

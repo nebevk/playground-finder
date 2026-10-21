@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { clampText, DESCRIPTION_MAX, NAME_MAX } from "@/lib/limits";
 import { getAdminActionContext } from "@/lib/admin";
 import { PLAYGROUND_FEATURE_KEYS, SURFACE_TYPES } from "@/lib/playground-types";
 
@@ -73,7 +74,7 @@ export async function quickAddPlaygroundAction(
   const ctx = await getAdminActionContext();
   if (!ctx) return { ok: false };
 
-  const name = payload.name.trim();
+  const name = clampText(payload.name, NAME_MAX);
   if (!name || !Number.isFinite(payload.lat) || !Number.isFinite(payload.lng)) {
     return { ok: false };
   }
@@ -89,7 +90,7 @@ export async function quickAddPlaygroundAction(
     .from("playgrounds")
     .insert({
       name,
-      description: payload.description.trim() || null,
+      description: clampText(payload.description, DESCRIPTION_MAX) || null,
       location: `SRID=4326;POINT(${payload.lng} ${payload.lat})`,
       surface_type,
       ...features,

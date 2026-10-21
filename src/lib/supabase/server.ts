@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import type { Database } from "./types";
@@ -27,3 +28,13 @@ export async function createClient() {
     },
   );
 }
+
+// The signed-in user, fetched once per request: a page and the server components inside it share
+// one round trip to Supabase Auth instead of making one each. (Server Actions aren't deduplicated.)
+export const getCurrentUser = cache(async () => {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  return user;
+});

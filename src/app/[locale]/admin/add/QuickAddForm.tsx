@@ -6,6 +6,7 @@ import { Search, AlertTriangle } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { LocationPickerClient } from "@/components/Map/LocationPickerClient";
 import { useToast } from "@/components/Toast/ToastProvider";
+import { DESCRIPTION_MAX, NAME_MAX } from "@/lib/limits";
 import { PLAYGROUND_FEATURE_KEYS, SURFACE_TYPES } from "@/lib/playground-types";
 import {
   geocodeAddressAction,
@@ -150,6 +151,7 @@ export function QuickAddForm({ locale }: { locale: string }) {
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder={tFields("namePlaceholder")}
+          maxLength={NAME_MAX}
           className="input input-sm w-full"
         />
       </label>
@@ -160,6 +162,7 @@ export function QuickAddForm({ locale }: { locale: string }) {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           rows={2}
+          maxLength={DESCRIPTION_MAX}
           placeholder={tFields("descriptionPlaceholder")}
           className="textarea textarea-sm w-full"
         />

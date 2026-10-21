@@ -3,6 +3,7 @@
 import { useId, useRef, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import { updatePlaygroundAction } from "@/app/[locale]/admin/actions";
+import { DESCRIPTION_MAX, NAME_MAX } from "@/lib/limits";
 
 const SURFACE_OPTIONS = ["tartan", "sand", "grass", "gravel"] as const;
 const FEATURE_KEYS = ["is_fenced", "has_shade", "has_water", "has_toilets", "has_parking"] as const;
@@ -65,6 +66,7 @@ export function EditPlaygroundForm({
                 name="name"
                 defaultValue={playground.name}
                 required
+                maxLength={NAME_MAX}
                 className="input w-full"
               />
             </label>
@@ -75,6 +77,7 @@ export function EditPlaygroundForm({
                 name="description"
                 rows={3}
                 defaultValue={playground.description ?? ""}
+                maxLength={DESCRIPTION_MAX}
                 className="textarea w-full"
               />
             </label>

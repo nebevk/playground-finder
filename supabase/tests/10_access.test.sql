@@ -239,6 +239,47 @@ select throws_ok(
   '42501', null,
   '[NFR-SEC-07] a user cannot upload into another user''s folder'
 );
+
+-- At most 8 photos per playground per person, however many batches (BL-47).
+select pg_temp.act_as(pg_temp.id('r3'));
+select lives_ok(
+  format($$ insert into public.photos (playground_id, user_id, storage_path)
+            select '00000000-0000-0000-0000-0000000000a3', %1$L, %1$L || '/a3/' || g || '.jpg'
+            from generate_series(1, 8) g $$, pg_temp.id('r3')),
+  '[NFR-SEC-07] a person can add up to 8 photos to a playground'
+);
+select throws_ok(
+  format($$ insert into public.photos (playground_id, user_id, storage_path)
+            values ('00000000-0000-0000-0000-0000000000a3', %1$L, %1$L || '/a3/9.jpg') $$, pg_temp.id('r3')),
+  '23514', null,
+  '[NFR-SEC-07] a 9th photo of the same playground by the same person is rejected'
+);
+
+-- Names and texts: a real name, bounded lengths (BL-47).
+select throws_ok(
+  format($$ insert into public.playgrounds (name, location, user_id)
+            values ('   ', 'SRID=4326;POINT(14.6 46.1)', %L) $$, pg_temp.id('r3')),
+  '23514', null,
+  '[NFR-SEC-07] a playground needs a name that isn''t blank'
+);
+select throws_ok(
+  format($$ insert into public.playgrounds (name, location, user_id)
+            values (repeat('a', 121), 'SRID=4326;POINT(14.6 46.1)', %L) $$, pg_temp.id('r3')),
+  '23514', null,
+  '[NFR-SEC-07] a playground name is at most 120 characters'
+);
+select throws_ok(
+  format($$ insert into public.playgrounds (name, description, location, user_id)
+            values ('Long', repeat('a', 2001), 'SRID=4326;POINT(14.6 46.1)', %L) $$, pg_temp.id('r3')),
+  '23514', null,
+  '[NFR-SEC-07] a playground description is at most 2000 characters'
+);
+select throws_ok(
+  format($$ insert into public.reviews (playground_id, user_id, rating, comment)
+            values ('00000000-0000-0000-0000-0000000000a1', %L, 4, repeat('a', 2001)) $$, pg_temp.id('r3')),
+  '23514', null,
+  '[NFR-SEC-07] a review comment is at most 2000 characters'
+);
 reset role;
 
 -- Reading a file (which is what creating a signed URL needs) only while neither the photo

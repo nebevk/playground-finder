@@ -36,7 +36,7 @@ Conventions and the ID scheme are in [README.md](README.md). Status last reviewe
 | FR-ADD-03 | Photo rules: at most 8 per submission and **3.5 MB in total**, PNG/JPEG/WebP judged by file contents (not the claimed type), at most 3 MiB each (also enforced by the storage bucket), re-encoded on the device before upload, shrunk to ≤ 420 KB each so all 8 always fit. | Must | Done — multi-photo bug fixed in ops 0003 ([ADR-0002](../adr/0002-photo-pipeline.md)); adaptive sizing in ops 0006 | unit, db, e2e |
 | FR-ADD-04 | Uploading photos requires a verified email, **enforced by the database and storage policies**, not only by the app. | Must | Done — Server Action, `photos` insert policy and Storage insert policy (ops 0002) | unit, db, e2e |
 | FR-ADD-05 | After submitting, the user lands on the map focused on the new playground, with a success message. | Should | Done | e2e |
-| FR-ADD-06 | Users can add photos to an existing playground (the unverified-email message already promises "add photos later"). | Should | Not started | e2e |
+| FR-ADD-06 | Users can add photos to an existing playground, under the same photo rules (FR-ADD-03, FR-ADD-04) and at most 8 per playground per person in total. The detail page always offers "Dodaj fotografije" (*add photos*). | Should | Done — limit also enforced by the database (ops 0012) | e2e |
 | FR-ADD-07 | Equipment can be entered when adding or editing a playground. | Should | Not started — only the importer and seed set it | e2e |
 | FR-ADD-08 | The person who added a playground can edit its name, description, surface and features, and move its pin. Nobody else can (the database's owner-only policy). | Should | Done | db, e2e |
 
@@ -44,13 +44,13 @@ Conventions and the ID scheme are in [README.md](README.md). Status last reviewe
 
 | ID | Requirement | Pri | Status | Verify |
 |---|---|---|---|---|
-| FR-COM-01 | Signed-in users rate a playground 1–5 stars with an optional comment; one review per user per playground. | Must | Done | db |
-| FR-COM-02 | Users can edit and delete their own review. | Should | Partial — delete only; the DB already allows editing `rating` and `comment` | db, e2e |
+| FR-COM-01 | Signed-in users rate a playground 1–5 stars with an optional comment; one review per user per playground. Reviews are listed on the playground page with their author. | Must | Done — the list was always empty until ops 0012 (a profile join that cannot work) | db, e2e |
+| FR-COM-02 | Users can edit and delete their own review. | Should | Done — edited in place on the playground's page (ops 0012) | db, e2e |
 | FR-COM-03 | "Helpful" vote: one per user per review, not on your own review, with the count kept in sync automatically. | Should | Done — self-votes blocked by RLS (ops 0002) | db |
 | FR-COM-04 | Signed-in users can report a playground, review or photo with reason *spam*, *incorrect info*, *privacy violation* or *other*; one report per user per target. | Must | Done | db, e2e |
 | FR-COM-05 | 3 or more reports automatically flag the target for admin review. | Must | Done | db |
 | FR-COM-06 | Flagged content is hidden from the public: database rows **and** photo files. | Must | Done — rows hidden by RLS; files are served only through 1-hour signed URLs, issued only while neither the photo nor its playground is flagged (ops 0003/0004) | db, e2e |
-| FR-COM-07 | The profile lists the user's own contributions (playgrounds, reviews, photos), including flagged ones with their status. | Should | Not started | e2e |
+| FR-COM-07 | The profile lists the user's own contributions (playgrounds, reviews, photos), including flagged ones with their status. | Should | Done — "Moji prispevki", with an edit link on each playground (ops 0012) | e2e |
 
 ## Accounts (`FR-ACC`)
 

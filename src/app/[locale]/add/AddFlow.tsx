@@ -2,14 +2,13 @@
 
 import { useActionState, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { Camera, Images, X } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { LocationPickerClient } from "@/components/Map/LocationPickerClient";
 import { DetailsFields } from "@/components/Playground/DetailsFields";
+import { PhotoPicker } from "@/components/Playground/PhotoPicker";
 import type { ExistingPlayground } from "@/components/Map/LocationPicker";
 import { Turnstile } from "@/components/Turnstile";
 import { formatDistance, haversineMeters } from "@/lib/geo";
-import { resizeImage } from "@/lib/image";
 import { MAX_PHOTOS, MAX_TOTAL_PHOTO_BYTES } from "@/lib/photo-checks";
 import { PLAYGROUND_FEATURE_KEYS } from "@/lib/playground-types";
 import { createPlaygroundAction, type AddState } from "./actions";
@@ -20,8 +19,6 @@ const DUPLICATE_RADIUS_M = 50;
 const FORM_ID = "add-playground-form";
 
 type LatLng = { lat: number; lng: number };
-type PhotoNotice = { tooMany: boolean; failed: boolean; tooLarge: boolean };
-const NO_NOTICE: PhotoNotice = { tooMany: false, failed: false, tooLarge: false };
 
 export function AddFlow({
   locale,
@@ -41,52 +38,9 @@ export function AddFlow({
   const [surface, setSurface] = useState<string>("");
   const [features, setFeatures] = useState<Record<string, boolean>>({});
   const [photos, setPhotos] = useState<File[]>([]);
-  const [processing, setProcessing] = useState(false);
-  const [notice, setNotice] = useState<PhotoNotice>(NO_NOTICE);
   // Validate on tap: "Naprej" is always enabled and says what's missing (design critique).
   const [stepError, setStepError] = useState<"noLocation" | "noName" | null>(null);
   const nameInput = useRef<HTMLInputElement>(null);
-
-  async function addPhotos(e: React.ChangeEvent<HTMLInputElement>) {
-    const incoming = Array.from(e.target.files ?? []);
-    // Allow the user to re-pick the same file later by clearing the input value.
-    e.target.value = "";
-    if (incoming.length === 0) return;
-
-    const room = MAX_PHOTOS - photos.length;
-    const accepted = incoming.slice(0, Math.max(0, room));
-    const next: PhotoNotice = { ...NO_NOTICE, tooMany: incoming.length > accepted.length };
-    if (accepted.length === 0) return setNotice(next);
-
-    setProcessing(true);
-    try {
-      // Never fall back to the original file: it may carry GPS metadata (GDPR-09).
-      const results = await Promise.allSettled(accepted.map((f) => resizeImage(f)));
-      const resized = results.flatMap((r) => (r.status === "fulfilled" ? [r.value] : []));
-      next.failed = resized.length < accepted.length;
-
-      // All photos go in one request, so keep the total within the server's budget.
-      const fitting: File[] = [];
-      let total = photos.reduce((sum, p) => sum + p.size, 0);
-      for (const file of resized) {
-        if (total + file.size > MAX_TOTAL_PHOTO_BYTES) {
-          next.tooLarge = true;
-          continue;
-        }
-        total += file.size;
-        fitting.push(file);
-      }
-      setPhotos((prev) => [...prev, ...fitting]);
-      setNotice(next);
-    } finally {
-      setProcessing(false);
-    }
-  }
-
-  function removePhoto(index: number) {
-    setPhotos((prev) => prev.filter((_, i) => i !== index));
-    setNotice(NO_NOTICE);
-  }
 
   function goNext() {
     if (step === 1 && !location) return setStepError("noLocation");
@@ -179,93 +133,7 @@ export function AddFlow({
               {t("step3.verifyEmail")}
             </div>
           ) : (
-            <>
-              <div role="alert" className="alert alert-info text-sm">
-                {t("step3.disclaimer")}
-              </div>
-
-              <div className="flex flex-wrap gap-2">
-                <label
-                  className={`btn btn-outline gap-2 ${processing || photos.length >= MAX_PHOTOS ? "btn-disabled" : ""}`}
-                >
-                  <Camera className="size-5" aria-hidden />
-                  {t("step3.takePhoto")}
-                  <input
-                    type="file"
-                    accept="image/*"
-                    capture="environment"
-                    onChange={addPhotos}
-                    disabled={processing || photos.length >= MAX_PHOTOS}
-                    className="hidden"
-                  />
-                </label>
-                <label
-                  className={`btn btn-outline gap-2 ${processing || photos.length >= MAX_PHOTOS ? "btn-disabled" : ""}`}
-                >
-                  <Images className="size-5" aria-hidden />
-                  {t("step3.chooseGallery")}
-                  <input
-                    type="file"
-                    accept="image/png,image/jpeg,image/webp"
-                    multiple
-                    onChange={addPhotos}
-                    disabled={processing || photos.length >= MAX_PHOTOS}
-                    className="hidden"
-                  />
-                </label>
-              </div>
-
-              {processing && (
-                <p role="status" className="flex items-center gap-2 text-sm text-base-content/70">
-                  <span className="loading loading-spinner loading-sm" aria-hidden />
-                  {t("step3.processing")}
-                </p>
-              )}
-
-              {photos.length > 0 && (
-                <>
-                  <p className="text-sm text-base-content/70">
-                    {t("step3.selected", { count: photos.length, max: MAX_PHOTOS })}
-                    {" · "}
-                    {t("step3.totalSize", {
-                      kb: Math.round(photos.reduce((acc, p) => acc + p.size, 0) / 1024),
-                    })}
-                  </p>
-                  <ul className="grid grid-cols-3 gap-2 sm:grid-cols-4">
-                    {photos.map((file, i) => (
-                      <li key={`${file.name}-${i}`} className="relative aspect-square overflow-hidden rounded-box bg-base-200">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={URL.createObjectURL(file)} alt="" className="h-full w-full object-cover" />
-                        <button
-                          type="button"
-                          onClick={() => removePhoto(i)}
-                          aria-label={t("step3.removePhoto", { n: i + 1, total: photos.length })}
-                          className="btn btn-circle absolute top-1 right-1 bg-base-100 shadow-sm"
-                        >
-                          <X className="size-5" aria-hidden />
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                </>
-              )}
-
-              {notice.tooMany && (
-                <p role="alert" className="text-sm text-warning">
-                  {t("step3.tooMany", { max: MAX_PHOTOS })}
-                </p>
-              )}
-              {notice.failed && (
-                <p role="alert" className="text-sm text-warning">
-                  {t("step3.processingFailed")}
-                </p>
-              )}
-              {notice.tooLarge && (
-                <p role="alert" className="text-sm text-warning">
-                  {t("step3.tooLarge", { mb: MAX_TOTAL_MB })}
-                </p>
-              )}
-            </>
+            <PhotoPicker photos={photos} onChange={setPhotos} max={MAX_PHOTOS} />
           )}
 
           {/* The submit button lives in the sticky bar below (form attribute); the Turnstile

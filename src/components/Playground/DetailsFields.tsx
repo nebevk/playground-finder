@@ -3,6 +3,7 @@
 import type { Ref } from "react";
 import { useTranslations } from "next-intl";
 import { FEATURE_ICONS, FeatureToggle } from "@/components/FeatureChip";
+import { DESCRIPTION_MAX, NAME_MAX } from "@/lib/limits";
 import { PLAYGROUND_FEATURE_KEYS, SURFACE_TYPES, type FeatureKey } from "@/lib/playground-types";
 
 // A playground's details, shared by the add flow (step 2) and the owner's edit page: the name
@@ -45,6 +46,7 @@ export function DetailsFields({
           required
           className="input w-full"
           placeholder={t("step2.namePlaceholder")}
+          maxLength={NAME_MAX}
           value={name}
           aria-invalid={nameError || undefined}
           aria-describedby={nameError ? "name-error" : undefined}
@@ -63,6 +65,7 @@ export function DetailsFields({
           className="textarea w-full"
           rows={3}
           placeholder={t("step2.descriptionPlaceholder")}
+          maxLength={DESCRIPTION_MAX}
           value={description}
           onChange={(e) => onDescriptionChange(e.target.value)}
         />

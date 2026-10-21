@@ -316,7 +316,8 @@
     "reviewError": {
       "duplicate": "Mnenje za to igrišče že obstaja.",
       "bad_rating": "Ocena mora biti med 1 in 5.",
-      "generic": "Mnenje ni bilo shranjeno. Poskusi znova."
+      "generic": "Mnenje ni bilo shranjeno. Poskusi znova.",
+      "too_long": "Komentar je predolg (največ {max} znakov)."
     },
     "reportTitle": "Sporoči težavo",
     "reportReasons": {
@@ -368,7 +369,12 @@
     "previousPhoto": "Prejšnja fotografija",
     "nextPhoto": "Naslednja fotografija",
     "zoomIn": "Povečaj",
-    "zoomOut": "Pomanjšaj"
+    "zoomOut": "Pomanjšaj",
+    "addPhotos": "Dodaj fotografije",
+    "photosAdded": "Fotografije so dodane.",
+    "editReview": "Uredi mnenje",
+    "saveReview": "Shrani mnenje",
+    "starLabel": "{n} od 5"
   },
   "search": {
     "title": "Iskanje",
@@ -465,7 +471,21 @@
     "resendVerification": "Ponovno pošlji potrditveno e-pošto",
     "resendSuccess": "Potrditvena e-pošta je poslana. Preveri nabiralnik.",
     "resendError": "E-pošte trenutno ni mogoče poslati. Poskusi znova pozneje.",
-    "emailConfirmed": "E-poštni naslov je potrjen. Dobrodošel/-a!"
+    "emailConfirmed": "E-poštni naslov je potrjen. Dobrodošel/-a!",
+    "contributions": {
+      "title": "Moji prispevki",
+      "playgrounds": "Igrišča",
+      "reviews": "Mnenja",
+      "photos": "Fotografije",
+      "empty": "Tu bodo igrišča, mnenja in fotografije, ki jih dodaš.",
+      "addFirst": "Dodaj igrišče",
+      "inReview": "V pregledu",
+      "flaggedNote": "Prijavljene vsebine so skrite, dokler jih ne pregledamo.",
+      "edit": "Uredi",
+      "editNamed": "Uredi {name}",
+      "photoOf": "Fotografija: {name}",
+      "unknownPlayground": "Igrišče v pregledu"
+    }
   },
   "auth": {
     "loginTitle": "Prijava",
@@ -546,5 +566,14 @@
     "errors": {
       "notFound": "Tega igrišča ne moreš urejati."
     }
+  },
+  "addPhotos": {
+    "title": "Dodaj fotografije",
+    "verifyEmail": "Fotografije lahko dodaš, ko potrdiš e-poštni naslov. Povezavo smo ti poslali ob registraciji.",
+    "limitReached": "Za to igrišče si že dodal/-a {max} fotografij, kolikor jih lahko doda ena oseba.",
+    "submit": "Dodaj fotografije",
+    "uploading": "Nalagam…",
+    "noPhotos": "Izberi vsaj eno fotografijo.",
+    "notFound": "Tega igrišča ni mogoče najti ali pa je v pregledu."
   }
 }

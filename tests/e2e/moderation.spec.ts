@@ -39,3 +39,25 @@ test("[FR-ADM-02] the moderation queue shows a flagged photo as a preview", asyn
   await expect(preview).toHaveAttribute("src", /\/object\/sign\/playground-photos\/.+\?token=/);
   await expect.poll(() => preview.evaluate((img: HTMLImageElement) => img.naturalWidth)).toBeGreaterThan(0);
 });
+
+test("[FR-ADM-02] reports are listed with who sent them", async ({ page }) => {
+  const db = service();
+  const { data: users } = await db.auth.admin.listUsers({ perPage: 1000 });
+  const reporterId = users!.users.find((u) => u.email === E2E_USER.email)!.id;
+  const { data: pg, error: pgErr } = await db
+    .from("playgrounds")
+    .insert({ name: `E2E prijava ${Date.now()}`, location: "SRID=4326;POINT(14.50 46.06)" })
+    .select("id")
+    .single();
+  expect(pgErr).toBeNull();
+  const { error: reportErr } = await db
+    .from("reports")
+    .insert({ target_type: "playground", target_id: pg!.id, user_id: reporterId, reason: "spam" });
+  expect(reportErr).toBeNull();
+
+  await login(page, E2E_ADMIN_USER);
+  await page.goto("/sl/admin/moderation");
+  const report = page.getByRole("listitem").filter({ has: page.locator(`a[href="/sl/playground/${pg!.id}"]`) });
+  await expect(report).toContainText(`${sl.admin.moderation.reportedBy}: e2e-verified`);
+  await expect(report).toContainText(sl.admin.moderation.reportReasons.spam);
+});

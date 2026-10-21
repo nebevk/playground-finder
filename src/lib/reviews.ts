@@ -1,3 +1,4 @@
+import { usernamesById } from "./profiles";
 import { createClient } from "./supabase/server";
 
 export type ReviewWithMeta = {
@@ -20,12 +21,13 @@ export async function getReviewsForPlayground(
 
   const { data: rows, error } = await supabase
     .from("reviews")
-    .select("id, rating, comment, helpful_count, created_at, user_id, profiles!inner(username)")
+    .select("id, rating, comment, helpful_count, created_at, user_id")
     .eq("playground_id", playgroundId)
     .eq("flagged", false)
     .order("helpful_count", { ascending: false })
     .order("created_at", { ascending: false });
 
+  if (error) console.error("getReviewsForPlayground failed", error);
   if (error || !rows) return [];
 
   const reviewIds = rows.map((r) => r.id);
@@ -39,8 +41,11 @@ export async function getReviewsForPlayground(
     myHelpful = new Set((helpRows ?? []).map((h) => h.review_id));
   }
 
+  const usernames = await usernamesById(
+    supabase,
+    rows.map((r) => r.user_id),
+  );
   return rows.map((r) => {
-    const profile = Array.isArray(r.profiles) ? r.profiles[0] : r.profiles;
     return {
       id: r.id,
       rating: r.rating,
@@ -48,7 +53,7 @@ export async function getReviewsForPlayground(
       helpful_count: r.helpful_count,
       created_at: r.created_at,
       user_id: r.user_id,
-      username: profile?.username ?? "",
+      username: usernames.get(r.user_id) ?? "",
       is_mine: currentUserId === r.user_id,
       i_marked_helpful: myHelpful.has(r.id),
     };

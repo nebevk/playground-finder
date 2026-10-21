@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
 import { setRequestLocale, getTranslations } from "next-intl/server";
-import { ArrowLeft, Navigation, Pencil } from "lucide-react";
+import { ArrowLeft, ImagePlus, Navigation, Pencil } from "lucide-react";
 import { Link } from "@/i18n/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { getCurrentUser } from "@/lib/supabase/server";
 import { EQUIPMENT_KEYS, getPlaygroundById, PLAYGROUND_FEATURE_KEYS, type EquipmentKey } from "@/lib/playgrounds";
 import { directionsUrl } from "@/lib/directions";
 import { StaticMapClient } from "@/components/Map/StaticMapClient";
@@ -40,20 +40,17 @@ export default async function PlaygroundDetailPage({
   searchParams,
 }: {
   params: Promise<{ locale: string; id: string }>;
-  searchParams: Promise<{ updated?: string }>;
+  searchParams: Promise<{ updated?: string; photos?: string }>;
 }) {
   const { locale, id } = await params;
-  const { updated } = await searchParams;
+  const { updated, photos: photosParam } = await searchParams;
   setRequestLocale(locale);
 
   const playground = await getPlaygroundById(id);
   if (!playground) notFound();
 
   const t = await getTranslations("detail");
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getCurrentUser();
   // The person who added it may edit it (FR-ADD-08); the database enforces the same on save.
   const isOwner = !!user && playground.user_id === user.id;
 
@@ -71,6 +68,7 @@ export default async function PlaygroundDetailPage({
       canReport={!!user}
     >
       {updated === "1" && <FlashToast message={t("updated")} />}
+      {photosParam === "added" && <FlashToast message={t("photosAdded")} />}
       <article className="flex flex-col">
         <RecordView id={playground.id} />
         {hero && (
@@ -181,13 +179,20 @@ export default async function PlaygroundDetailPage({
             </section>
           )}
 
-          {/* A lone photo is already the hero, so the section only lists the rest. */}
-          {(!hero || restPhotos.length > 0) && (
-            <section>
-              <h2 className="mb-2 text-lg font-semibold">{t("photos")}</h2>
-              {!hero ? (
-                <p className="text-sm text-base-content/70">{t("noPhotos")}</p>
-              ) : (
+          {/* Anyone signed in can add photos (FR-ADD-06; the page asks visitors to sign in). A lone
+              photo is already the hero, so the grid only lists the rest. */}
+          <section>
+            <div className="mb-2 flex items-center justify-between gap-3">
+              <h2 className="text-lg font-semibold">{t("photos")}</h2>
+              <Link href={`/playground/${playground.id}/photos`} className="btn btn-ghost -me-3 gap-1">
+                <ImagePlus className="size-4" aria-hidden />
+                {t("addPhotos")}
+              </Link>
+            </div>
+            {!hero ? (
+              <p className="text-sm text-base-content/70">{t("noPhotos")}</p>
+            ) : (
+              restPhotos.length > 0 && (
                 <ul className="grid grid-cols-2 gap-2 md:grid-cols-3">
                   {restPhotos.map((photo, i) => (
                     <li key={photo.id} className="aspect-square overflow-hidden rounded-box bg-base-200">
@@ -202,9 +207,9 @@ export default async function PlaygroundDetailPage({
                     </li>
                   ))}
                 </ul>
-              )}
-            </section>
-          )}
+              )
+            )}
+          </section>
 
           <ReviewsSection playgroundId={playground.id} locale={locale} />
         </div>

@@ -3,6 +3,7 @@ import { ArrowLeft } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { requireAdmin } from "@/lib/admin";
 import { adminPhotoPreviewUrls } from "@/lib/photo-storage";
+import { usernamesById } from "@/lib/profiles";
 import { EmptyState } from "@/components/EmptyState";
 import {
   approveFlaggedAction,
@@ -49,7 +50,7 @@ export default async function ModerationPage({
     supabase.from("photos").select("id, storage_path, playground_id").eq("flagged", true),
     supabase
       .from("reports")
-      .select("id, target_type, target_id, reason, created_at, profiles!inner(username)")
+      .select("id, target_type, target_id, reason, created_at, user_id")
       .order("created_at", { ascending: false }),
   ]);
 
@@ -89,15 +90,19 @@ export default async function ModerationPage({
     })),
   ];
 
+  if (reportsRes.error) console.error("moderation: reports query failed", reportsRes.error);
+  const reporters = await usernamesById(
+    supabase,
+    (reportsRes.data ?? []).map((r) => r.user_id),
+  );
   const reports: ReportRow[] = (reportsRes.data ?? []).map((r) => {
-    const profile = Array.isArray(r.profiles) ? r.profiles[0] : r.profiles;
     return {
       id: r.id,
       target_type: r.target_type as ReportRow["target_type"],
       target_id: r.target_id,
       reason: r.reason,
       created_at: r.created_at,
-      reporter: profile?.username ?? "",
+      reporter: reporters.get(r.user_id) ?? "",
       photo: r.target_type === "photo" ? previewById.get(r.target_id) : undefined,
     };
   });

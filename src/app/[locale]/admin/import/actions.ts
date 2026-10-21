@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { clampText, DESCRIPTION_MAX, NAME_MAX } from "@/lib/limits";
 import { getAdminActionContext } from "@/lib/admin";
 import { PLAYGROUND_FEATURE_KEYS, SURFACE_TYPES } from "@/lib/playground-types";
 
@@ -50,8 +51,8 @@ export async function bulkInsertPlaygroundsAction(
         PLAYGROUND_FEATURE_KEYS.map((k) => [k, r.features[k] === true]),
       );
       return {
-        name: r.name.trim(),
-        description: r.description.trim() || null,
+        name: clampText(r.name, NAME_MAX),
+        description: clampText(r.description, DESCRIPTION_MAX) || null,
         location: `SRID=4326;POINT(${r.lng} ${r.lat})`,
         surface_type,
         ...features,

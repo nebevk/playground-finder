@@ -6,6 +6,7 @@ import { logoutAction } from "../(auth)/actions";
 import { BrandStack } from "@/components/Brand";
 import { ExportDataButton } from "@/components/Profile/ExportDataButton";
 import { DeleteAccountButton } from "@/components/Profile/DeleteAccountButton";
+import { MyContributions } from "@/components/Profile/MyContributions";
 import { ResendVerificationButton } from "@/components/Profile/ResendVerificationButton";
 import { LocaleSwitcher } from "@/components/LocaleSwitcher";
 
@@ -91,6 +92,8 @@ export default async function ProfilePage({
           {t("adminLink")}
         </Link>
       )}
+
+      <MyContributions userId={user.id} />
 
       <section>
         <h2 className="mb-3 text-lg font-semibold">{t("data")}</h2>

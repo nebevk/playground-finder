@@ -150,7 +150,8 @@ describe("add playground", () => {
   function mockInsertOk() {
     const single = vi.fn().mockResolvedValue({ data: { id: "pg1" }, error: null });
     const insert = vi.fn(() => ({ select: () => ({ single }) }));
-    const photoInsert = vi.fn().mockResolvedValue({ error: null });
+    const photoRow = vi.fn().mockResolvedValue({ data: { id: "ph1" }, error: null });
+    const photoInsert = vi.fn(() => ({ select: () => ({ single: photoRow }) }));
     supabase.from.mockImplementation((table: string) => ({ insert: table === "photos" ? photoInsert : insert }));
     return Object.assign(insert, { photoInsert });
   }

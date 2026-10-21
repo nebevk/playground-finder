@@ -2,12 +2,67 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { REVIEW_COMMENT_MAX } from "@/lib/limits";
+import { MAX_PHOTOS } from "@/lib/photo-checks";
+import { readSubmittedPhotos, storePhotos, type PhotoReadError, type PhotoStoreError } from "@/lib/photo-upload";
 import { PLAYGROUND_FEATURE_KEYS, SURFACE_TYPES, type SurfaceType } from "@/lib/playground-types";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
+import { verifyTurnstile } from "@/lib/turnstile";
 
 export type ReviewState = { error?: string; success?: boolean } | undefined;
 export type ReportState = { error?: string; success?: boolean } | undefined;
 export type EditState = { error?: "no_name" | "no_location" | "not_found" | "generic" } | undefined;
+export type AddPhotosState =
+  | { error?: PhotoReadError | PhotoStoreError | "no_photos" | "not_found" | "turnstile_failed" }
+  | undefined;
+
+// Adds photos to an existing playground (FR-ADD-06), through the same checks as adding a
+// playground with photos. Everyone may add up to 8 photos per playground in total (the database
+// enforces the same, ops 0012); `remaining` in the form is only a hint.
+export async function addPhotosAction(_prev: AddPhotosState, formData: FormData): Promise<AddPhotosState> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: "not_found" };
+
+  const playgroundId = String(formData.get("playground_id") ?? "");
+  const locale = String(formData.get("locale") ?? "sl");
+  const { data: playground } = await supabase
+    .from("playgrounds")
+    .select("id")
+    .eq("id", playgroundId)
+    .eq("flagged", false)
+    .maybeSingle();
+  if (!playground) return { error: "not_found" };
+  if (!(await verifyTurnstile(formData))) return { error: "turnstile_failed" };
+
+  const { count } = await supabase
+    .from("photos")
+    .select("id", { count: "exact", head: true })
+    .eq("playground_id", playgroundId)
+    .eq("user_id", user.id);
+  const room = MAX_PHOTOS - (count ?? 0);
+  if (room <= 0) return { error: "photo_limit" };
+
+  const read = await readSubmittedPhotos(formData, { verified: !!user.email_confirmed_at, maxCount: room });
+  if (read.error) return { error: read.error };
+  if (read.photos.length === 0) return { error: "no_photos" };
+
+  let admin: ReturnType<typeof createAdminClient>;
+  try {
+    admin = createAdminClient();
+  } catch (err) {
+    console.error("addPhotosAction: storage client unavailable", err);
+    return { error: "upload_failed" };
+  }
+  const stored = await storePhotos({ supabase, admin, userId: user.id, playgroundId, photos: read.photos });
+  if (stored.error) return { error: stored.error };
+
+  revalidatePath(`/${locale}/playground/${playgroundId}`);
+  redirect(`/${locale}/playground/${playgroundId}?photos=added`);
+}
 
 // The person who added a playground edits its details and pin (FR-ADD-08). Runs with the
 // user's own client: the database's owner-only update policy and column grants decide, so a
@@ -90,6 +145,7 @@ export async function submitReviewAction(
 
   if (!playground_id) return { error: "missing_playground" };
   if (!Number.isInteger(rating) || rating < 1 || rating > 5) return { error: "bad_rating" };
+  if (comment && comment.length > REVIEW_COMMENT_MAX) return { error: "too_long" };
 
   const { error } = await supabase
     .from("reviews")
@@ -98,6 +154,41 @@ export async function submitReviewAction(
   if (error) {
     if (error.code === "23505") return { error: "duplicate" };
     console.error("submitReviewAction failed", error);
+    return { error: "generic" };
+  }
+
+  revalidatePath(`/${locale}/playground/${playground_id}`);
+  return { success: true };
+}
+
+// Editing your own review (FR-COM-02): the rating and the comment. The user's own client, so the
+// owner-only update policy and column grants decide.
+export async function updateReviewAction(_prev: ReviewState, formData: FormData): Promise<ReviewState> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: "auth_required" };
+
+  const review_id = String(formData.get("review_id") ?? "");
+  const playground_id = String(formData.get("playground_id") ?? "");
+  const rating = Number(formData.get("rating"));
+  const comment = String(formData.get("comment") ?? "").trim() || null;
+  const locale = String(formData.get("locale") ?? "sl");
+
+  if (!review_id) return { error: "generic" };
+  if (!Number.isInteger(rating) || rating < 1 || rating > 5) return { error: "bad_rating" };
+  if (comment && comment.length > REVIEW_COMMENT_MAX) return { error: "too_long" };
+
+  const { data, error } = await supabase
+    .from("reviews")
+    .update({ rating, comment })
+    .eq("id", review_id)
+    .eq("user_id", user.id)
+    .select("id")
+    .maybeSingle();
+  if (error || !data) {
+    console.error("updateReviewAction failed", error);
     return { error: "generic" };
   }
 

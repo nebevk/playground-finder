@@ -316,7 +316,8 @@
     "reviewError": {
       "duplicate": "You already reviewed this playground.",
       "bad_rating": "Rating must be between 1 and 5.",
-      "generic": "Could not save review. Try again."
+      "generic": "Could not save review. Try again.",
+      "too_long": "The comment is too long (at most {max} characters)."
     },
     "reportTitle": "Report a problem",
     "reportReasons": {
@@ -368,7 +369,12 @@
     "previousPhoto": "Previous photo",
     "nextPhoto": "Next photo",
     "zoomIn": "Zoom in",
-    "zoomOut": "Zoom out"
+    "zoomOut": "Zoom out",
+    "addPhotos": "Add photos",
+    "photosAdded": "Photos added.",
+    "editReview": "Edit review",
+    "saveReview": "Save review",
+    "starLabel": "{n} of 5"
   },
   "search": {
     "title": "Search",
@@ -465,7 +471,21 @@
     "resendVerification": "Resend verification email",
     "resendSuccess": "Verification email sent. Check your inbox.",
     "resendError": "Couldn't send the email right now. Please try again later.",
-    "emailConfirmed": "Your email address is confirmed. Welcome!"
+    "emailConfirmed": "Your email address is confirmed. Welcome!",
+    "contributions": {
+      "title": "My contributions",
+      "playgrounds": "Playgrounds",
+      "reviews": "Reviews",
+      "photos": "Photos",
+      "empty": "Playgrounds, reviews and photos you add will show up here.",
+      "addFirst": "Add a playground",
+      "inReview": "Under review",
+      "flaggedNote": "Reported items are hidden until we've reviewed them.",
+      "edit": "Edit",
+      "editNamed": "Edit {name}",
+      "photoOf": "Photo: {name}",
+      "unknownPlayground": "Playground under review"
+    }
   },
   "auth": {
     "loginTitle": "Log in",
@@ -546,5 +566,14 @@
     "errors": {
       "notFound": "You can't edit this playground."
     }
+  },
+  "addPhotos": {
+    "title": "Add photos",
+    "verifyEmail": "You can add photos once you've confirmed your email address. We sent you the link when you signed up.",
+    "limitReached": "You've already added {max} photos to this playground, the most one person can add.",
+    "submit": "Add photos",
+    "uploading": "Uploading…",
+    "noPhotos": "Choose at least one photo.",
+    "notFound": "This playground can't be found, or it's under review."
   }
 }

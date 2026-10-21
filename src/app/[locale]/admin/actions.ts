@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { clampText, DESCRIPTION_MAX, NAME_MAX } from "@/lib/limits";
 import { getAdminActionContext } from "@/lib/admin";
 import { photoPathsFor, removePhotoFiles } from "@/lib/photo-storage";
 
@@ -105,8 +106,8 @@ export async function updatePlaygroundAction(formData: FormData) {
   if (!ctx) return;
 
   const id = String(formData.get("id") ?? "");
-  const name = String(formData.get("name") ?? "").trim();
-  const description = String(formData.get("description") ?? "").trim() || null;
+  const name = clampText(String(formData.get("name") ?? ""), NAME_MAX);
+  const description = clampText(String(formData.get("description") ?? ""), DESCRIPTION_MAX) || null;
   const surfaceRaw = String(formData.get("surface_type") ?? "");
   const locale = String(formData.get("locale") ?? "sl");
 

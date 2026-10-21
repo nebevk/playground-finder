@@ -65,8 +65,15 @@ describe("photo upload disclaimer", () => {
     );
   });
 
-  it("[GDPR-07] the add flow's photo step renders the disclaimer", () => {
-    const addFlow = readFileSync(join(SRC, "app", "[locale]", "add", "AddFlow.tsx"), "utf8");
-    expect(addFlow).toContain('t("step3.disclaimer")');
+  it("[GDPR-07] every photo upload shows the disclaimer", () => {
+    // The shared picker renders it; both places that upload photos use the picker.
+    const picker = readFileSync(join(SRC, "components", "Playground", "PhotoPicker.tsx"), "utf8");
+    expect(picker).toContain('t("step3.disclaimer")');
+    for (const form of [
+      join(SRC, "app", "[locale]", "add", "AddFlow.tsx"),
+      join(SRC, "app", "[locale]", "playground", "[id]", "photos", "AddPhotosForm.tsx"),
+    ]) {
+      expect(readFileSync(form, "utf8")).toContain("<PhotoPicker ");
+    }
   });
 });

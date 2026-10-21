@@ -98,6 +98,19 @@ export async function getMostViewedPlaygrounds(limit = 3): Promise<MapPlayground
   });
 }
 
+// Private bucket (ADR-0002): short-lived signed URLs by storage path, created with the visitor's
+// own client so the storage select policy decides — it only covers photos that aren't flagged.
+export async function signedPhotoUrls(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  paths: string[],
+): Promise<Map<string, string>> {
+  if (paths.length === 0) return new Map();
+  const { data } = await supabase.storage.from(PHOTO_BUCKET).createSignedUrls(paths, PHOTO_URL_TTL_SECONDS);
+  return new Map(
+    (data ?? []).flatMap((s) => (s.path && s.signedUrl && !s.error ? [[s.path, s.signedUrl] as const] : [])),
+  );
+}
+
 // cache() dedupes the fetch between generateMetadata and the page render.
 export const getPlaygroundById = cache(async (id: string): Promise<PlaygroundDetail | null> => {
   const supabase = await createClient();
@@ -120,14 +133,9 @@ export const getPlaygroundById = cache(async (id: string): Promise<PlaygroundDet
     .order("created_at")
     .order("storage_path");
 
-  // Private bucket (ADR-0002): short-lived signed URLs, created with the visitor's own client
-  // so the storage select policy decides — it only covers photos that aren't flagged.
-  const paths = (photoRows ?? []).map((p) => p.storage_path);
-  const { data: signed } = paths.length
-    ? await supabase.storage.from(PHOTO_BUCKET).createSignedUrls(paths, PHOTO_URL_TTL_SECONDS)
-    : { data: [] };
-  const urlByPath = new Map(
-    (signed ?? []).flatMap((s) => (s.path && s.signedUrl && !s.error ? [[s.path, s.signedUrl] as const] : [])),
+  const urlByPath = await signedPhotoUrls(
+    supabase,
+    (photoRows ?? []).map((p) => p.storage_path),
   );
   const photos: PlaygroundPhoto[] = (photoRows ?? []).flatMap((p) => {
     const url = urlByPath.get(p.storage_path);

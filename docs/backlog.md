@@ -18,11 +18,7 @@ Work that's done in the repo but still has to reach production is tracked by its
 | # | Item | Moves | Size |
 |---|---|---|---|
 | BL-10 | Notify admins when content is auto-flagged, and consider a minimum account age before reports count. Verified-only counting shipped in ops 0002. | NFR-SEC-06 | S |
-| BL-47 | Move the remaining app-only write rules into the database: at most 8 photos per playground per user (trigger), and a non-empty, length-capped name and description (check constraints). | NFR-SEC-07 | S |
-| BL-14 | Let users edit their own review. | FR-COM-02 | S |
 | BL-15 | Favourites: add/remove on the sheet and detail page, list on the profile. | FR-PG-04 | M |
-| BL-16 | "My contributions" on the profile, including flagged items and their status, with an edit link on each playground (owners can already edit from the playground's page, FR-ADD-08). | FR-COM-07 | M |
-| BL-17 | Add photos to an existing playground, and give the detail page's "no photos yet" line an "add a photo" button. | FR-ADD-06 | M |
 | BL-18 | Equipment: constrain `equipment` in the database to the keys in `EQUIPMENT_KEYS` (`src/lib/playground-types.ts`), then add input in the add and admin forms and a filter. The detail page already shows translated labels. | FR-ADD-07, FR-MAP-07 | M |
 | BL-19 | Server-side rate limits on signup, add, review and report. | NFR-SEC-04 | M |
 | BL-20 | Stop deriving usernames from the email local part (random or user-chosen handle); decide what to do with existing usernames. | GDPR-04 | S |
@@ -31,6 +27,7 @@ Work that's done in the repo but still has to reach production is tracked by its
 | BL-23 | Text search by name or place. | FR-MAP-10 | M |
 | BL-43 | Decide the logout scope. `signOut()` defaults to `global`, so "Odjava" on one device signs the user out everywhere. Keep it, or use `scope: "local"`. Found by e2e. | FR-ACC-03 | S |
 | BL-44 | Missing pages return HTTP 200 (soft 404): `[locale]/loading.tsx` streams before `notFound()`. They do carry `noindex`. Move `loading.tsx` into the routes that need it so missing playgrounds return a real 404. | NFR-SEO-01 | S |
+| BL-69 | Saving a review can leave its form pending: the save is stored and the response arrives, but the page never re-renders. Seen only when the e2e journey runs 24 times in parallel locally (about 1 in 6); never in two full-suite runs. `refresh()` and a client `router.refresh()` made it worse; removing `loading.tsx` or server `children` didn't help. Each hang comes with bursts of cancelled link prefetches over HTTP/1.1 (`next start`), so suspect a Next 16.2 router race. Check on Vercel (HTTP/2), retest after a Next upgrade, and consider `prefetch={false}` on the detail page's secondary links. | FR-COM-01, FR-COM-02 | M |
 
 ## Design & UX
 
