@@ -1,7 +1,7 @@
 ---
 id: 0012
 title: Add photos later, edit your review, "My contributions", write rules in the database
-status: ready
+status: in-progress
 order: migrations-first
 destructive: false
 migrations: [20261021090000_db_write_rules.sql]
@@ -149,4 +149,8 @@ alter table public.reviews drop constraint if exists reviews_comment_length;
 For the app, `git revert` the deploy commit and push. The two halves are independent: the new code keeps to the limits on its own, and the old code works with the rules in place.
 
 ## Result log (Cursor)
+
+- **2026-10-21T11:22Z** started (status → in-progress). Preflight: clean except untracked `incoming/` (left untracked per 0013); 3 local commits ahead; prod `READY` (`15a2a83`); 0011 → done. Drift OK — `db_write_rules` not in prod.
+- **Pre-check:** bad_names=0, long_descriptions=0, long_comments=0.
+- **Applied** `db_write_rules`. Verify: trigger `photos_limit_per_person` present; constraints `playgrounds_name_length`, `playgrounds_description_length`, `reviews_comment_length` all `convalidated=true`.
 

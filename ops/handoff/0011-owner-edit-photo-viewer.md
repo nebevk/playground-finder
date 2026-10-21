@@ -1,7 +1,7 @@
 ---
 id: 0011
 title: Owners edit their playgrounds, full-screen photo viewer, "Brez …" features
-status: blocked
+status: done
 order: any
 destructive: false
 migrations: []
@@ -108,3 +108,4 @@ Expect:
 - **Verify:** `playgrounds_update_own` present (1 row). UPDATE grants for authenticated: exactly the 10 expected columns (no `flagged`/`user_id`).
 - **2026-10-20T20:01Z** pushed `e2bf4b0`. Deploy `dpl_5jUUCjLz7oBQpbeHxCKkp9GPhvbA` → `READY`. Smoke 200. Curl: playground `bfe60932-…` (no toilets) shows "Brez stranišča" ≥ 1. Unauthenticated `/edit` issues Next.js `NEXT_REDIRECT` 307 to `/sl/login?next=/sl/playground/…/edit` (document status 200 with redirect in payload — expected for App Router). Security advisors unchanged.
 - **Blocked** on owner phone tests (step 5): edit + save toast, photo viewer swipe/zoom/report, "Brez …", comment-box radius. Say **process ops** when done.
+- **2026-10-21T11:22Z** owner said process ops (phone tests accepted). **status → done**.
