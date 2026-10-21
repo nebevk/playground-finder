@@ -1,6 +1,7 @@
 "use client";
 
 import { useId, useRef, type ReactNode } from "react";
+import { EQUIPMENT_KEYS, type EquipmentKey } from "@/lib/playground-types";
 import { useTranslations } from "next-intl";
 import { updatePlaygroundAction } from "@/app/[locale]/admin/actions";
 import { DESCRIPTION_MAX, NAME_MAX } from "@/lib/limits";
@@ -18,6 +19,7 @@ type Playground = {
   has_water: boolean;
   has_toilets: boolean;
   has_parking: boolean;
+  equipment: EquipmentKey[];
 };
 
 export function EditPlaygroundForm({
@@ -32,6 +34,7 @@ export function EditPlaygroundForm({
   const t = useTranslations("admin.playgrounds");
   const tFields = useTranslations("add.step2");
   const tFeat = useTranslations("add.step2.featureOptions");
+  const tDetail = useTranslations("detail");
   const tSurf = useTranslations("add.step2.surfaceOptions");
   const tCommon = useTranslations("common");
   const id = useId();
@@ -110,6 +113,24 @@ export function EditPlaygroundForm({
                       className="checkbox checkbox-primary checkbox-sm"
                     />
                     <span>{tFeat(key)}</span>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <legend className="label-text mb-1">{tDetail("equipment")}</legend>
+              <div className="grid grid-cols-2 gap-2">
+                {EQUIPMENT_KEYS.map((key) => (
+                  <label key={key} className="flex cursor-pointer items-center gap-2">
+                    <input
+                      type="checkbox"
+                      name="equipment"
+                      value={key}
+                      defaultChecked={playground.equipment.includes(key)}
+                      className="checkbox checkbox-primary checkbox-sm"
+                    />
+                    <span>{tDetail(`equipmentOptions.${key}`)}</span>
                   </label>
                 ))}
               </div>

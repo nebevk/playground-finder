@@ -3,33 +3,24 @@
 import { revalidatePath } from "next/cache";
 import { clampText, DESCRIPTION_MAX, NAME_MAX } from "@/lib/limits";
 import { getAdminActionContext } from "@/lib/admin";
+import { geocodeInSlovenia } from "@/lib/geocode";
 import { invalidateMapSnapshot } from "@/lib/playgrounds";
-import { PLAYGROUND_FEATURE_KEYS, SURFACE_TYPES } from "@/lib/playground-types";
+import { isEquipmentKey, PLAYGROUND_FEATURE_KEYS, SURFACE_TYPES } from "@/lib/playground-types";
 
 export type GeoResult = { lat: number; lng: number; label: string };
 export type NearbyPlayground = { id: string; name: string; distance_m: number };
 
 const DUP_RADIUS_M = 150;
 
-// Geocode a Slovenian address/place via Nominatim. Admin-gated so it isn't a public proxy.
+// Geocode a Slovenian address or place (src/lib/geocode.ts). Admin-gated so it isn’t a public proxy.
 export async function geocodeAddressAction(query: string): Promise<GeoResult | null> {
   const ctx = await getAdminActionContext();
   if (!ctx) return null;
   const q = query.trim();
   if (!q) return null;
-
-  const url =
-    "https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=si&q=" +
-    encodeURIComponent(q);
   try {
-    const res = await fetch(url, {
-      headers: { "User-Agent": "kje-so-igrala/0.1 (admin geocode)" },
-    });
-    if (!res.ok) return null;
-    const data: Array<{ lat: string; lon: string; display_name: string }> = await res.json();
-    const first = data[0];
-    if (!first) return null;
-    return { lat: Number(first.lat), lng: Number(first.lon), label: first.display_name };
+    const place = await geocodeInSlovenia(q);
+    return place && { lat: place.lat, lng: place.lng, label: place.label };
   } catch (e) {
     console.error("geocodeAddressAction failed", e);
     return null;
@@ -66,6 +57,7 @@ export type QuickAddPayload = {
   description: string;
   surface_type: string;
   features: Record<string, boolean>;
+  equipment?: string[];
 };
 
 export async function quickAddPlaygroundAction(
@@ -95,6 +87,7 @@ export async function quickAddPlaygroundAction(
       location: `SRID=4326;POINT(${payload.lng} ${payload.lat})`,
       surface_type,
       ...features,
+      equipment: (payload.equipment ?? []).filter(isEquipmentKey),
       user_id: ctx.user.id,
     })
     .select("id")

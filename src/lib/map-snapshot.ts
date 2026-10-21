@@ -1,4 +1,5 @@
 import {
+  EQUIPMENT_KEYS,
   PLAYGROUND_FEATURE_KEYS,
   SURFACE_TYPES,
   type FeatureKey,
@@ -32,6 +33,8 @@ export type PackedPlayground = [
   reviewCount: number,
   /** Average rating × 10, rounded (the app shows one decimal); 0 when there are none. */
   rating: number,
+  /** Bit i set: has EQUIPMENT_KEYS[i]. */
+  equipment: number,
   description?: string,
 ];
 
@@ -47,12 +50,13 @@ export function packPlayground(p: MapPlayground): PackedPlayground {
     p.surface_type ? SURFACE_TYPES.indexOf(p.surface_type) : -1,
     p.review_count,
     p.avg_rating == null || p.review_count === 0 ? 0 : Math.round(p.avg_rating * 10),
+    EQUIPMENT_KEYS.reduce((bits, key, i) => (p.equipment.includes(key) ? bits | (1 << i) : bits), 0),
   ];
   if (p.description) packed.push(truncateAtWord(p.description, MAP_DESCRIPTION_MAX));
   return packed;
 }
 
-export function unpackPlayground([id, name, lat, lng, features, surface, reviewCount, rating, description]: PackedPlayground): MapPlayground {
+export function unpackPlayground([id, name, lat, lng, features, surface, reviewCount, rating, equipment, description]: PackedPlayground): MapPlayground {
   const has = Object.fromEntries(PLAYGROUND_FEATURE_KEYS.map((key, i) => [key, (features & (1 << i)) !== 0])) as Record<
     FeatureKey,
     boolean
@@ -67,6 +71,7 @@ export function unpackPlayground([id, name, lat, lng, features, surface, reviewC
     surface_type: surface >= 0 ? SURFACE_TYPES[surface] : null,
     review_count: reviewCount,
     avg_rating: rating > 0 ? rating / 10 : null,
+    equipment: EQUIPMENT_KEYS.filter((_, i) => (equipment & (1 << i)) !== 0),
   };
 }
 

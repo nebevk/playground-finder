@@ -3,6 +3,7 @@ import { readdirSync, readFileSync, renameSync, mkdirSync, existsSync } from "no
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createClient } from "@supabase/supabase-js";
+import { isEquipmentKey } from "../../src/lib/playground-types";
 import type { StagedFile } from "./types";
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -58,7 +59,8 @@ async function main() {
         has_toilets: pg.has_toilets,
         has_parking: pg.has_parking,
         surface_type: pg.surface_type,
-        equipment: pg.equipment,
+        // The database accepts only the equipment the app knows (ops 0014).
+        equipment: pg.equipment.filter(isEquipmentKey),
         user_id: null,
       });
 

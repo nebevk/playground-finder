@@ -1,4 +1,5 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { isEquipmentKey } from "@/lib/playground-types";
 import { ArrowLeft, Plus } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { requireAdmin } from "@/lib/admin";
@@ -32,7 +33,7 @@ export default async function AdminPlaygroundsPage({
   const { data } = await supabase
     .from("playgrounds_geo")
     .select(
-      "id, name, description, surface_type, is_fenced, has_shade, has_water, has_toilets, has_parking, flagged, review_count, created_at",
+      "id, name, description, surface_type, is_fenced, has_shade, has_water, has_toilets, has_parking, equipment, flagged, review_count, created_at",
     )
     .order("created_at", { ascending: false });
 
@@ -49,6 +50,7 @@ export default async function AdminPlaygroundsPage({
         has_water: r.has_water ?? false,
         has_toilets: r.has_toilets ?? false,
         has_parking: r.has_parking ?? false,
+        equipment: Array.isArray(r.equipment) ? r.equipment.filter(isEquipmentKey) : [],
         flagged: r.flagged ?? false,
         review_count: r.review_count ?? 0,
         created_at: r.created_at ?? new Date(0).toISOString(),

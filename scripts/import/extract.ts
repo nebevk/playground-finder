@@ -10,7 +10,7 @@ Output rules — read carefully:
 - Descriptions you write must be in Slovenian, written in your own words. Do NOT copy phrases verbatim from the source — paraphrase the facts.
 - Boolean fields default to false. Only set true when the source explicitly mentions the feature. Inferring "probably has a fence" from a photo description is not enough.
 - surface_type values: "tartan" (rubber/soft surface), "sand", "grass", "gravel". null if unknown.
-- equipment: snake_case English tags only (swings, slides, zipline, sandbox, climbing_wall, seesaw, spring_riders, trampoline, etc.). Empty array if no equipment mentioned.
+- equipment: only these tags: swings, slides, zipline, sandbox, climbing_wall (others are dropped on import). Empty array if no equipment mentioned.
 - latitude/longitude: only fill in if you find decimal coordinates IN the source text. Do not invent them.
 - address: a street, neighborhood, or town that could be geocoded. Fill it in even when you also have coordinates.
 - confidence: "high" if name + location + several features are clear; "low" if most fields were guesses; "medium" otherwise.

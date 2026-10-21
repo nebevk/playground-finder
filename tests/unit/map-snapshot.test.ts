@@ -34,6 +34,7 @@ function row(i: number, description: string | null = i % 2 === 0 ? LONG : null):
     surface_type: (["tartan", "sand", "grass", "gravel", null] as const)[i % 5],
     review_count: i % 4 === 0 ? 0 : i % 40,
     avg_rating: i % 4 === 0 ? null : 3.666666666666667,
+    equipment: i % 3 === 0 ? ["swings", "sandbox"] : i % 3 === 1 ? ["climbing_wall"] : [],
   };
 }
 const bytes = (value: unknown) => Buffer.byteLength(JSON.stringify(value), "utf8");
@@ -49,7 +50,7 @@ describe("map snapshot (ADR-0001)", () => {
     expect(bytes(snapshot)).toBeLessThan(DATA_CACHE_LIMIT_BYTES);
   });
 
-  it("[NFR-PERF-02] packing keeps what the map shows: features, surface, rating, a word-cut description", () => {
+  it("[NFR-PERF-02] packing keeps what the map shows: features, equipment, surface, rating, a word-cut description", () => {
     for (const i of [0, 1, 2, 3, 6, 35]) {
       const original = row(i);
       const back = unpackPlayground(packPlayground(original));

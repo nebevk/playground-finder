@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { MapPinned, SlidersHorizontal } from "lucide-react";
 import { Link } from "@/i18n/navigation";
+import { FavoritesProvider } from "@/components/Favorites";
 import { FiltersProvider, useFilters } from "@/components/Filters/FiltersContext";
 import { FiltersDrawer } from "@/components/Filters/FiltersDrawer";
 import { LoadingState } from "@/components/Loader";
@@ -91,15 +92,22 @@ function MapWithFilters({
 export function MapClient({
   packed,
   addedId = null,
+  signedIn,
+  favoriteIds,
 }: {
   /** The map snapshot, as the server sends it (ADR-0001). */
   packed: PackedPlayground[];
   addedId?: string | null;
+  signedIn: boolean;
+  /** The visitor's favourites, for the heart on the sheet. */
+  favoriteIds: string[];
 }) {
   const playgrounds = useMemo(() => unpackSnapshot(packed), [packed]);
   return (
-    <FiltersProvider>
-      <MapWithFilters playgrounds={playgrounds} addedId={addedId} />
-    </FiltersProvider>
+    <FavoritesProvider signedIn={signedIn} initial={favoriteIds}>
+      <FiltersProvider>
+        <MapWithFilters playgrounds={playgrounds} addedId={addedId} />
+      </FiltersProvider>
+    </FavoritesProvider>
   );
 }

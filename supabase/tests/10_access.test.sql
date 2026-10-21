@@ -153,10 +153,30 @@ select throws_ok(
   '[FR-COM-01] ratings outside 1–5 are rejected'
 );
 select lives_ok(
-  format($$ insert into public.reviews (id, playground_id, user_id, rating, comment)
-            values ('00000000-0000-0000-0000-0000000000b3', '00000000-0000-0000-0000-0000000000a3', %L, 4, 'Lepo') $$,
+  format($$ insert into public.reviews (playground_id, user_id, rating, comment)
+            values ('00000000-0000-0000-0000-0000000000a3', %L, 4, 'Lepo') $$,
          pg_temp.id('r1')),
   '[FR-COM-01] a signed-in user can review a playground'
+);
+-- Only the columns the app sends (ops 0014): ids, timestamps, counters and flags come from their
+-- defaults, so nobody can backdate past the rate limits, inflate a count or pick an id.
+select throws_ok(
+  format($$ insert into public.reviews (playground_id, user_id, rating, helpful_count)
+            values ('00000000-0000-0000-0000-0000000000a1', %L, 4, 99) $$, pg_temp.id('r1')),
+  '42501', null,
+  '[NFR-SEC-07] users cannot set a new review''s helpful_count'
+);
+select throws_ok(
+  format($$ insert into public.playgrounds (name, location, user_id, view_count)
+            values ('Popular', 'SRID=4326;POINT(14.5 46.05)', %L, 1000) $$, pg_temp.id('r1')),
+  '42501', null,
+  '[NFR-SEC-07] users cannot set a new playground''s view_count'
+);
+select throws_ok(
+  format($$ insert into public.reports (target_type, target_id, user_id, reason, created_at)
+            values ('playground', '00000000-0000-0000-0000-0000000000a1', %L, 'spam', '2000-01-01') $$, pg_temp.id('r1')),
+  '42501', null,
+  '[NFR-SEC-07] users cannot backdate what they add (rate limits count by created_at)'
 );
 select throws_ok(
   format($$ insert into public.reviews (playground_id, user_id, rating)
@@ -165,7 +185,8 @@ select throws_ok(
   '[FR-COM-01] only one review per user per playground'
 );
 select lives_ok(
-  $$ update public.reviews set rating = 5, comment = 'Res lepo' where id = '00000000-0000-0000-0000-0000000000b3' $$,
+  $$ update public.reviews set rating = 5, comment = 'Res lepo'
+     where playground_id = '00000000-0000-0000-0000-0000000000a3' and user_id = auth.uid() $$,
   '[FR-COM-02] the database lets users edit their own review'
 );
 
@@ -183,7 +204,8 @@ select throws_ok(
 );
 select throws_ok(
   format($$ insert into public.review_helpful (review_id, user_id)
-            values ('00000000-0000-0000-0000-0000000000b3', %L) $$, pg_temp.id('r1')),
+            select id, %1$L from public.reviews
+            where playground_id = '00000000-0000-0000-0000-0000000000a3' and user_id = %1$L $$, pg_temp.id('r1')),
   '42501', null,
   '[FR-COM-03] users cannot vote their own review helpful'
 );
@@ -432,6 +454,48 @@ select is(
   (select helpful_count from public.reviews where id = '00000000-0000-0000-0000-0000000000b1'),
   0,
   '[GDPR-05] helpful counts drop when a deleted user''s votes go'
+);
+
+-- Equipment: only the keys the app knows (ops 0014).
+select pg_temp.act_as(pg_temp.id('r2'));
+select lives_ok(
+  format($$ insert into public.playgrounds (name, location, user_id, equipment)
+            values ('With swings', 'SRID=4326;POINT(14.5 46.05)', %L, '["swings", "slides"]') $$, pg_temp.id('r2')),
+  '[FR-ADD-07] a playground can list known equipment'
+);
+select throws_ok(
+  format($$ insert into public.playgrounds (name, location, user_id, equipment)
+            values ('With a moat', 'SRID=4326;POINT(14.5 46.05)', %L, '["swings", "moat"]') $$, pg_temp.id('r2')),
+  '23514', null,
+  '[FR-ADD-07] unknown equipment is rejected'
+);
+
+-- Favourites: each person's own (FR-PG-04).
+select lives_ok(
+  format($$ insert into public.favorites (playground_id, user_id)
+            values ('00000000-0000-0000-0000-0000000000a1', %L) $$, pg_temp.id('r2')),
+  '[FR-PG-04] a user can save a favourite'
+);
+select throws_ok(
+  format($$ insert into public.favorites (playground_id, user_id)
+            values ('00000000-0000-0000-0000-0000000000a1', %L) $$, pg_temp.id('r1')),
+  '42501', null,
+  '[FR-PG-04] nobody can save a favourite for someone else'
+);
+select is(
+  (select array_agg(user_id) from public.favorites),
+  array[pg_temp.id('r2')],
+  '[FR-PG-04] people see only their own favourites'
+);
+select lives_ok(
+  $$ delete from public.favorites where playground_id = '00000000-0000-0000-0000-0000000000a1' and user_id = auth.uid() $$,
+  '[FR-PG-04] a user can remove a favourite'
+);
+reset role;
+select is(
+  (select count(*)::int from public.favorites where user_id = pg_temp.id('r2')),
+  0,
+  '[FR-PG-04] the favourite is gone'
 );
 
 select * from finish();

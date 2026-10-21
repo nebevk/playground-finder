@@ -4,6 +4,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { X, Navigation } from "lucide-react";
 import { Link } from "@/i18n/navigation";
+import { FavoriteButton } from "@/components/Favorites";
 import { LinkPending } from "@/components/LinkPending";
 import { RatingSummary } from "@/components/RatingSummary";
 import { FEATURE_ICONS, FeatureBadge, SURFACE_ICON } from "@/components/FeatureChip";
@@ -94,9 +95,12 @@ export function PlaygroundSheet({
                 </div>
               )}
             </div>
-            <button type="button" onClick={onClose} aria-label={t("close")} className="btn btn-ghost btn-circle shrink-0">
-              <X className="size-5" aria-hidden />
-            </button>
+            <div className="flex shrink-0 items-center">
+              <FavoriteButton playgroundId={p.id} />
+              <button type="button" onClick={onClose} aria-label={t("close")} className="btn btn-ghost btn-circle shrink-0">
+                <X className="size-5" aria-hidden />
+              </button>
+            </div>
           </div>
 
           {p.description && (

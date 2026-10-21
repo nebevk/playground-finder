@@ -3,7 +3,8 @@
 import type { CSSProperties } from "react";
 import { useMap } from "react-leaflet";
 import { useTranslations } from "next-intl";
-import { LocateFixed, Minus, Plus, SlidersHorizontal } from "lucide-react";
+import { LocateFixed, Minus, Plus, Search, SlidersHorizontal } from "lucide-react";
+import { Link } from "@/i18n/navigation";
 import { useFilters } from "@/components/Filters/FiltersContext";
 import { useUserLocation } from "@/components/Location/UserLocationContext";
 
@@ -20,6 +21,7 @@ export function MapControls({ lift }: { lift: number }) {
   const map = useMap();
   const t = useTranslations("map");
   const tf = useTranslations("filters");
+  const ts = useTranslations("search");
   const { setOpen, activeCount } = useFilters();
   const { locate, locating } = useUserLocation();
 
@@ -33,9 +35,18 @@ export function MapControls({ lift }: { lift: number }) {
   return (
     <>
       <div
-        className="absolute bottom-[calc(var(--lift)+1rem)] left-4 z-1000 transition-[bottom] duration-200 md:bottom-4"
+        className="absolute bottom-[calc(var(--lift)+1rem)] left-4 z-1000 flex gap-2 transition-[bottom] duration-200 md:bottom-4"
         style={liftVar}
       >
+        <Link
+          href="/search"
+          aria-label={ts("open")}
+          // Important: Leaflet’s own stylesheet (unlayered, so it beats utilities) colours every link
+          // inside the map blue.
+          className="btn btn-circle border-base-300 bg-base-100 text-base-content! shadow-sm"
+        >
+          <Search className="size-5" aria-hidden />
+        </Link>
         <button
           type="button"
           onClick={() => setOpen(true)}

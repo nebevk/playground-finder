@@ -239,7 +239,7 @@
       "cloudflare": "Cloudflare: zaščita pred neželeno vsebino (Turnstile)",
       "simpleAnalytics": "Simple Analytics: statistika obiska, prijazna do zasebnosti (brez piškotkov in brez osebnih podatkov)",
       "kofi": "Ko-fi: prostovoljni prispevki (zunanja stran, odpre se le ob kliku na povezavo za podporo)",
-      "osm": "OpenStreetMap: slike zemljevida (ploščice); ob nalaganju njihovi strežniki vidijo tvoj naslov IP in prikazano območje zemljevida",
+      "osm": "OpenStreetMap: slike zemljevida (ploščice); ob nalaganju njihovi strežniki vidijo tvoj naslov IP in prikazano območje zemljevida. Iskanje po kraju pošlje vpisano besedilo (brez tvojega naslova IP) njihovi storitvi Nominatim.",
       "sentry": "Sentry: poročila o napakah v aplikaciji, brez osebnih podatkov (strežniki v EU)"
     },
     "location": {
@@ -288,7 +288,8 @@
     },
     "clear": "Počisti",
     "apply": "Pokaži {results}",
-    "results": "{count, plural, one {# igrišče} two {# igrišči} few {# igrišča} other {# igrišč}}"
+    "results": "{count, plural, one {# igrišče} two {# igrišči} few {# igrišča} other {# igrišč}}",
+    "equipment": "Igrala"
   },
   "detail": {
     "notFound": "Igrišče ni bilo najdeno.",
@@ -298,7 +299,7 @@
     "reviewsCount": "{count, plural, one {# mnenje} two {# mnenji} few {# mnenja} other {# mnenj}}",
     "features": "Lastnosti",
     "surface": "Podlaga",
-    "equipment": "Oprema",
+    "equipment": "Igrala",
     "photos": "Fotografije",
     "noPhotos": "Še ni fotografij.",
     "coordinates": "Koordinate",
@@ -380,7 +381,18 @@
   },
   "search": {
     "title": "Iskanje",
-    "placeholder": "Iskalnik bo tukaj."
+    "placeholder": "Ime igrišča ali kraj",
+    "submit": "Išči",
+    "hint": "Vpiši ime igrišča ali kraj, na primer Tivoli ali Šiška.",
+    "byName": "Igrišča",
+    "noNameMatches": "Nobeno igrišče nima »{query}« v imenu. Pritisni Išči in poiščemo kraj s tem imenom.",
+    "searchingPlace": "Iščem kraj …",
+    "placeNotFound": "Kraja »{query}« ne najdemo.",
+    "nearPlace": "Blizu kraja {place}",
+    "nothingNear": "V bližini kraja {place} še ni igrišč.",
+    "rateLimited": "Preveč iskanj. Poskusi znova čez nekaj časa.",
+    "failed": "Iskanje kraja trenutno ne deluje. Poskusi znova.",
+    "open": "Išči igrišče ali kraj"
   },
   "add": {
     "title": "Dodaj igrišče",
@@ -419,7 +431,8 @@
         "has_water": "Pitnik",
         "has_toilets": "Stranišče",
         "has_parking": "Parkirišče"
-      }
+      },
+      "equipment": "Igrala"
     },
     "step3": {
       "title": "Fotografije",
@@ -489,6 +502,10 @@
       "editNamed": "Uredi {name}",
       "photoOf": "Fotografija: {name}",
       "unknownPlayground": "Igrišče v pregledu"
+    },
+    "favorites": {
+      "title": "Priljubljena igrišča",
+      "empty": "Ko igrišče označiš s srčkom, ga najdeš tukaj."
     }
   },
   "auth": {
@@ -580,5 +597,10 @@
     "uploading": "Nalagam…",
     "noPhotos": "Izberi vsaj eno fotografijo.",
     "notFound": "Tega igrišča ni mogoče najti ali pa je v pregledu."
+  },
+  "favorites": {
+    "label": "Priljubljeno",
+    "signIn": "Prijavi se in shrani med priljubljene",
+    "error": "Ni uspelo. Poskusi znova."
   }
 }

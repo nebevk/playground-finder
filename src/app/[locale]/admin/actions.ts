@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { clampText, DESCRIPTION_MAX, NAME_MAX } from "@/lib/limits";
 import { getAdminActionContext } from "@/lib/admin";
 import { invalidateMapSnapshot } from "@/lib/playgrounds";
+import { equipmentFrom } from "@/lib/playground-types";
 import { photoPathsFor, removePhotoFiles } from "@/lib/photo-storage";
 
 const TARGETS = ["playground", "review", "photo"] as const;
@@ -132,7 +133,7 @@ export async function updatePlaygroundAction(formData: FormData) {
 
   const { error } = await ctx.admin
     .from("playgrounds")
-    .update({ name, description, surface_type, ...features })
+    .update({ name, description, surface_type, ...features, equipment: equipmentFrom(formData) })
     .eq("id", id);
   if (error) {
     console.error("updatePlaygroundAction failed", error);

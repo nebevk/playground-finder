@@ -7,6 +7,7 @@ import { BrandStack } from "@/components/Brand";
 import { ExportDataButton } from "@/components/Profile/ExportDataButton";
 import { DeleteAccountButton } from "@/components/Profile/DeleteAccountButton";
 import { MyContributions } from "@/components/Profile/MyContributions";
+import { MyFavorites } from "@/components/Profile/MyFavorites";
 import { ResendVerificationButton } from "@/components/Profile/ResendVerificationButton";
 import { LocaleSwitcher } from "@/components/LocaleSwitcher";
 
@@ -92,6 +93,8 @@ export default async function ProfilePage({
           {t("adminLink")}
         </Link>
       )}
+
+      <MyFavorites userId={user.id} />
 
       <MyContributions userId={user.id} />
 

@@ -101,6 +101,23 @@ test.describe("anonymous visitor", () => {
     await expect(page.getByText(sl.map.locateDenied)).toBeVisible();
   });
 
+  test("[FR-MAP-10] search finds a playground by name, without accents, from Home and the map", async ({ page }) => {
+    await page.goto("/sl");
+    await page.getByRole("link", { name: sl.search.open }).click();
+    await expect(page).toHaveURL(/\/sl\/search$/);
+    const box = page.getByRole("searchbox", { name: sl.search.placeholder });
+    await box.fill("fuzine");
+    const results = page.getByRole("region", { name: sl.search.byName });
+    await results.getByRole("link", { name: /Fužine Otroško Igrišče/ }).click();
+    await expect(page.getByRole("heading", { level: 1, name: "Fužine Otroško Igrišče" })).toBeVisible();
+
+    await page.goto("/sl/map");
+    await page.getByRole("link", { name: sl.search.open }).click();
+    await expect(page).toHaveURL(/\/sl\/search$/);
+    await page.getByRole("searchbox", { name: sl.search.placeholder }).fill("ni takega igrišča");
+    await expect(page.getByText(sl.search.noNameMatches.split("»")[0])).toBeVisible();
+  });
+
   test("[FR-MAP-08] one tap opens the filters, and the button shows how many are active", async ({ page }) => {
     await page.goto("/sl/map");
     await page.getByRole("button", { name: sl.filters.open, exact: true }).click();

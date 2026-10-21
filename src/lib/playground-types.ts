@@ -11,10 +11,20 @@ export const PLAYGROUND_FEATURE_KEYS = [
 
 export type FeatureKey = (typeof PLAYGROUND_FEATURE_KEYS)[number];
 
-// Equipment values with translations (detail.equipmentOptions); anything else in the jsonb
-// column is not shown until it has a label (BL-18 will constrain the column itself).
+// Equipment a playground can list (detail.equipmentOptions has the labels). The database accepts
+// only these (constraint playgrounds_equipment_known, ops 0014): change both together.
 export const EQUIPMENT_KEYS = ["swings", "slides", "zipline", "sandbox", "climbing_wall"] as const;
 export type EquipmentKey = (typeof EQUIPMENT_KEYS)[number];
+
+export function isEquipmentKey(value: unknown): value is EquipmentKey {
+  return (EQUIPMENT_KEYS as readonly unknown[]).includes(value);
+}
+
+// The equipment ticked in a form (checkboxes named "equipment"), known keys only, in list order.
+export function equipmentFrom(formData: FormData): EquipmentKey[] {
+  const ticked = new Set(formData.getAll("equipment").map(String));
+  return EQUIPMENT_KEYS.filter((key) => ticked.has(key));
+}
 
 export type MapPlayground = {
   id: string;
@@ -30,6 +40,7 @@ export type MapPlayground = {
   surface_type: SurfaceType | null;
   review_count: number;
   avg_rating: number | null;
+  equipment: EquipmentKey[];
 };
 
 export type PlaygroundPhoto = {
@@ -38,7 +49,6 @@ export type PlaygroundPhoto = {
 };
 
 export type PlaygroundDetail = MapPlayground & {
-  equipment: string[];
   photos: PlaygroundPhoto[];
   /** Who added it. Server-side only: decides whether the visitor may edit it. */
   user_id: string | null;

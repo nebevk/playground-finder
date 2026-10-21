@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Search } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
 import { Wordmark } from "@/components/Brand";
@@ -35,6 +35,7 @@ export function HomeLanding({
   const points = useMemo(() => unpackSnapshot(packed), [packed]);
   const t = useTranslations("home");
   const tMap = useTranslations("map");
+  const tSearch = useTranslations("search");
   const router = useRouter();
   const { position, locating, locate, distanceTo } = useUserLocation();
   const isLg = useMediaQuery("(min-width: 1024px)");
@@ -113,6 +114,10 @@ export function HomeLanding({
               {t("title")}
             </h1>
             <p className="text-base text-base-content/80 md:text-base-content/70">{t("intro")}</p>
+            <Link href="/search" className="input mt-2 w-full text-base-content/60 md:mt-1 md:max-w-sm">
+              <Search className="size-5 opacity-60" aria-hidden />
+              {tSearch("open")}
+            </Link>
           </header>
 
           {points.length === 0 ? (

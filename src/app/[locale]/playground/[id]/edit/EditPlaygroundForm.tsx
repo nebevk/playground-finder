@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { LocationPickerClient } from "@/components/Map/LocationPickerClient";
 import { DetailsFields } from "@/components/Playground/DetailsFields";
-import { PLAYGROUND_FEATURE_KEYS, type FeatureKey } from "@/lib/playground-types";
+import { PLAYGROUND_FEATURE_KEYS, type EquipmentKey, type FeatureKey } from "@/lib/playground-types";
 import { updateOwnPlaygroundAction, type EditState } from "../actions";
 
 export type EditablePlayground = {
@@ -16,6 +16,7 @@ export type EditablePlayground = {
   lat: number;
   lng: number;
   features: Record<FeatureKey, boolean>;
+    equipment: EquipmentKey[];
 };
 
 // The owner's edit form (FR-ADD-08): move the pin, fix the details. Same fields as the add flow.
@@ -28,6 +29,7 @@ export function EditPlaygroundForm({ playground, locale }: { playground: Editabl
   const [description, setDescription] = useState(playground.description);
   const [surface, setSurface] = useState(playground.surface);
   const [features, setFeatures] = useState(playground.features);
+  const [equipment, setEquipment] = useState(playground.equipment);
   const [nameError, setNameError] = useState(false);
   const nameInput = useRef<HTMLInputElement>(null);
   const [state, action, pending] = useActionState<EditState, FormData>(updateOwnPlaygroundAction, undefined);
@@ -49,6 +51,7 @@ export function EditPlaygroundForm({ playground, locale }: { playground: Editabl
         fd.set("description", description);
         if (surface) fd.set("surface_type", surface);
         for (const k of PLAYGROUND_FEATURE_KEYS) if (features[k]) fd.set(k, "on");
+        for (const k of equipment) fd.append("equipment", k);
         return action(fd);
       }}
       className="flex flex-col gap-6"
@@ -77,6 +80,8 @@ export function EditPlaygroundForm({ playground, locale }: { playground: Editabl
           onSurfaceChange={setSurface}
           features={features}
           onFeatureToggle={(key) => setFeatures({ ...features, [key]: !features[key] })}
+          equipment={equipment}
+          onEquipmentToggle={(key) => setEquipment((list) => (list.includes(key) ? list.filter((k) => k !== key) : [...list, key]))}
         />
       </section>
 

@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { MAX_PHOTOS } from "@/lib/photo-checks";
+import { equipmentFrom } from "@/lib/playground-types";
 import { invalidateMapSnapshot } from "@/lib/playgrounds";
 import { readSubmittedPhotos, storePhotos } from "@/lib/photo-upload";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -69,6 +70,7 @@ export async function createPlaygroundAction(
       location: `SRID=4326;POINT(${lng} ${lat})`,
       surface_type,
       ...features,
+      equipment: equipmentFrom(formData),
       user_id: user.id,
     })
     .select("id")

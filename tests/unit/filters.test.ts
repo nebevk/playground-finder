@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { matchesFilters } from "@/lib/filters";
-import type { FeatureKey, SurfaceType } from "@/lib/playground-types";
+import type { EquipmentKey, FeatureKey, SurfaceType } from "@/lib/playground-types";
 
 const base = {
   is_fenced: false,
@@ -9,10 +9,12 @@ const base = {
   has_toilets: false,
   has_parking: false,
   surface_type: null as SurfaceType | null,
+  equipment: [] as EquipmentKey[],
 };
 
 const features = (...keys: FeatureKey[]) => new Set<FeatureKey>(keys);
 const surfaces = (...keys: SurfaceType[]) => new Set<SurfaceType>(keys);
+const equipment = (...keys: EquipmentKey[]) => new Set<EquipmentKey>(keys);
 
 describe("map filters", () => {
   it("[FR-MAP-05] [FR-MAP-06] matches everything when no filter is active", () => {
@@ -44,5 +46,18 @@ describe("map filters", () => {
     expect(matchesFilters(p, features("has_toilets"), surfaces("gravel"))).toBe(false);
   });
 
-  it.todo("[FR-MAP-07] filters by equipment (swings, slides, zipline, sandbox, climbing wall)");
+  it("[FR-MAP-07] requires every selected piece of equipment (AND)", () => {
+    const p = { ...base, equipment: ["swings", "sandbox"] as EquipmentKey[] };
+    expect(matchesFilters(p, features(), surfaces(), equipment())).toBe(true);
+    expect(matchesFilters(p, features(), surfaces(), equipment("swings"))).toBe(true);
+    expect(matchesFilters(p, features(), surfaces(), equipment("swings", "sandbox"))).toBe(true);
+    expect(matchesFilters(p, features(), surfaces(), equipment("swings", "zipline"))).toBe(false);
+    expect(matchesFilters(base, features(), surfaces(), equipment("slides"))).toBe(false);
+  });
+
+  it("[FR-MAP-07] combines equipment with features and surfaces", () => {
+    const p = { ...base, has_shade: true, surface_type: "sand" as const, equipment: ["climbing_wall"] as EquipmentKey[] };
+    expect(matchesFilters(p, features("has_shade"), surfaces("sand"), equipment("climbing_wall"))).toBe(true);
+    expect(matchesFilters(p, features("has_water"), surfaces("sand"), equipment("climbing_wall"))).toBe(false);
+  });
 });

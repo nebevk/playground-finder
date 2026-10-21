@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { REVIEW_COMMENT_MAX } from "@/lib/limits";
 import { MAX_PHOTOS } from "@/lib/photo-checks";
 import { readSubmittedPhotos, storePhotos, type PhotoReadError, type PhotoStoreError } from "@/lib/photo-upload";
-import { PLAYGROUND_FEATURE_KEYS, SURFACE_TYPES, type SurfaceType } from "@/lib/playground-types";
+import { equipmentFrom, PLAYGROUND_FEATURE_KEYS, SURFACE_TYPES, type SurfaceType } from "@/lib/playground-types";
 import { invalidateMapSnapshot } from "@/lib/playgrounds";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
@@ -100,6 +100,7 @@ export async function updateOwnPlaygroundAction(_prev: EditState, formData: Form
       // PostGIS WKT: longitude first, then latitude.
       location: `SRID=4326;POINT(${lng} ${lat})`,
       ...features,
+      equipment: equipmentFrom(formData),
     })
     .eq("id", id)
     .eq("user_id", user.id)
@@ -217,6 +218,26 @@ export async function deleteReviewAction(formData: FormData) {
   await supabase.from("reviews").delete().eq("id", review_id).eq("user_id", user.id);
   invalidateMapSnapshot();
   revalidatePath(`/${locale}/playground/${playground_id}`);
+}
+
+// Saving or removing a favourite (FR-PG-04). No revalidation: the heart already shows the new
+// state, and the profile reads favourites fresh whenever it opens.
+export async function setFavoriteAction(playgroundId: string, favorite: boolean): Promise<{ ok: boolean }> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user || !playgroundId) return { ok: false };
+
+  const { error } = favorite
+    ? await supabase.from("favorites").insert({ playground_id: playgroundId, user_id: user.id })
+    : await supabase.from("favorites").delete().eq("playground_id", playgroundId).eq("user_id", user.id);
+  // 23505: already saved (another tab, a double tap), which is what was wanted.
+  if (error && error.code !== "23505") {
+    console.error("setFavoriteAction failed", error);
+    return { ok: false };
+  }
+  return { ok: true };
 }
 
 export async function toggleHelpfulAction(formData: FormData) {

@@ -5,6 +5,7 @@ import { X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { FEATURE_ICONS, FeatureToggle } from "@/components/FeatureChip";
 import {
+  EQUIPMENT_KEYS,
   PLAYGROUND_FEATURE_KEYS,
   SURFACE_TYPES,
   useFilters,
@@ -12,9 +13,10 @@ import {
 
 export function FiltersDrawer({ visibleCount }: { visibleCount: number }) {
   const t = useTranslations("filters");
+  const tDetail = useTranslations("detail");
   const tCommon = useTranslations("common");
   const titleId = useId();
-  const { state, open, setOpen, toggleFeature, toggleSurface, clearAll, activeCount } =
+  const { state, open, setOpen, toggleFeature, toggleSurface, toggleEquipment, clearAll, activeCount } =
     useFilters();
 
   useEffect(() => {
@@ -83,6 +85,20 @@ export function FiltersDrawer({ visibleCount }: { visibleCount: number }) {
                   label={t(`surfaceOption.${s}`)}
                   checked={state.surfaces.has(s)}
                   onChange={() => toggleSurface(s)}
+                />
+              ))}
+            </div>
+          </fieldset>
+
+          <fieldset className="mt-6">
+            <legend className="mb-3 text-sm font-semibold">{t("equipment")}</legend>
+            <div className="flex flex-wrap gap-2">
+              {EQUIPMENT_KEYS.map((key) => (
+                <FeatureToggle
+                  key={key}
+                  label={tDetail(`equipmentOptions.${key}`)}
+                  checked={state.equipment.has(key)}
+                  onChange={() => toggleEquipment(key)}
                 />
               ))}
             </div>

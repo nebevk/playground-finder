@@ -12,7 +12,7 @@ import {
   bulkDeletePlaygroundsAction,
   bulkSetFlaggedPlaygroundsAction,
 } from "@/app/[locale]/admin/actions";
-import type { SurfaceType } from "@/lib/playground-types";
+import type { EquipmentKey, SurfaceType } from "@/lib/playground-types";
 
 export type AdminPlaygroundRow = {
   id: string;
@@ -24,6 +24,7 @@ export type AdminPlaygroundRow = {
   has_water: boolean;
   has_toilets: boolean;
   has_parking: boolean;
+  equipment: EquipmentKey[];
   flagged: boolean;
   review_count: number;
   created_at: string;
@@ -274,6 +275,7 @@ export function AdminPlaygroundsTable({
                             has_water: pg.has_water,
                             has_toilets: pg.has_toilets,
                             has_parking: pg.has_parking,
+                            equipment: pg.equipment,
                           }}
                           locale={locale}
                           trigger={

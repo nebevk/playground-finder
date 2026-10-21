@@ -17,6 +17,7 @@ const point = (id: string, i: number): MapPlayground => ({
   surface_type: null,
   review_count: 0,
   avg_rating: null,
+  equipment: [],
 });
 const points = [..."abcdefghijkl"].map(point);
 const popularIds = ["a", "b", "c", "d", "e", "f"];

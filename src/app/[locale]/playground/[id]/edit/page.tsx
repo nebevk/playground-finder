@@ -49,6 +49,7 @@ export default async function EditPlaygroundPage({
           lat: playground.lat,
           lng: playground.lng,
           features,
+          equipment: playground.equipment,
         }}
       />
     </section>

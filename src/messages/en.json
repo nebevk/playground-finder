@@ -239,7 +239,7 @@
       "cloudflare": "Cloudflare: spam protection (Turnstile)",
       "simpleAnalytics": "Simple Analytics: privacy-friendly visitor statistics (no cookies, no personal data)",
       "kofi": "Ko-fi: voluntary donations (external site, opens only when you tap the support link)",
-      "osm": "OpenStreetMap: map images (tiles); when they load, OpenStreetMap's servers see your IP address and the map area shown",
+      "osm": "OpenStreetMap: map images (tiles); when they load, OpenStreetMap's servers see your IP address and the map area shown. Searching by place sends the text you typed (not your IP address) to their Nominatim service.",
       "sentry": "Sentry: error reports from the app, without personal data (EU servers)"
     },
     "location": {
@@ -288,7 +288,8 @@
     },
     "clear": "Clear",
     "apply": "Show {results}",
-    "results": "{count, plural, one {# playground} other {# playgrounds}}"
+    "results": "{count, plural, one {# playground} other {# playgrounds}}",
+    "equipment": "Play equipment"
   },
   "detail": {
     "notFound": "Playground not found.",
@@ -298,7 +299,7 @@
     "reviewsCount": "{count, plural, one {# review} other {# reviews}}",
     "features": "Features",
     "surface": "Surface",
-    "equipment": "Equipment",
+    "equipment": "Play equipment",
     "photos": "Photos",
     "noPhotos": "No photos yet.",
     "coordinates": "Coordinates",
@@ -380,7 +381,18 @@
   },
   "search": {
     "title": "Search",
-    "placeholder": "Search UI coming soon."
+    "placeholder": "Playground name or place",
+    "submit": "Search",
+    "hint": "Type a playground's name or a place, for example Tivoli or Šiška.",
+    "byName": "Playgrounds",
+    "noNameMatches": "No playground has “{query}” in its name. Press Search to look for a place with that name.",
+    "searchingPlace": "Looking for the place…",
+    "placeNotFound": "We can't find the place “{query}”.",
+    "nearPlace": "Near {place}",
+    "nothingNear": "No playgrounds near {place} yet.",
+    "rateLimited": "Too many searches. Please try again a little later.",
+    "failed": "Place search isn't working right now. Please try again.",
+    "open": "Search for a playground or place"
   },
   "add": {
     "title": "Add a playground",
@@ -419,7 +431,8 @@
         "has_water": "Drinking water",
         "has_toilets": "Toilets",
         "has_parking": "Parking"
-      }
+      },
+      "equipment": "Play equipment"
     },
     "step3": {
       "title": "Photos",
@@ -489,6 +502,10 @@
       "editNamed": "Edit {name}",
       "photoOf": "Photo: {name}",
       "unknownPlayground": "Playground under review"
+    },
+    "favorites": {
+      "title": "Favourite playgrounds",
+      "empty": "Playgrounds you mark with the heart show up here."
     }
   },
   "auth": {
@@ -580,5 +597,10 @@
     "uploading": "Uploading…",
     "noPhotos": "Choose at least one photo.",
     "notFound": "This playground can't be found, or it's under review."
+  },
+  "favorites": {
+    "label": "Favourite",
+    "signIn": "Sign in to save favourites",
+    "error": "That didn’t work. Please try again."
   }
 }

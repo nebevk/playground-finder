@@ -4,6 +4,7 @@ import { MAP_TAG, packPlayground, type PackedPlayground } from "./map-snapshot";
 import { PHOTO_BUCKET } from "./photo-storage";
 import { createAnonClient } from "./supabase/anon";
 import { createClient } from "./supabase/server";
+import { isEquipmentKey } from "./playground-types";
 import type {
   MapPlayground,
   PlaygroundDetail,
@@ -17,7 +18,7 @@ export * from "./playground-types";
 const PHOTO_URL_TTL_SECONDS = 60 * 60;
 
 const MAP_SELECT =
-  "id, name, description, lat, lng, is_fenced, has_shade, has_water, has_toilets, has_parking, surface_type, review_count, avg_rating";
+  "id, name, description, lat, lng, is_fenced, has_shade, has_water, has_toilets, has_parking, surface_type, review_count, avg_rating, equipment";
 
 type GeoRow = {
   id: string | null;
@@ -33,6 +34,7 @@ type GeoRow = {
   surface_type: string | null;
   review_count: number | null;
   avg_rating: number | null;
+  equipment: unknown;
 };
 
 function toMapPlayground(row: GeoRow): MapPlayground | null {
@@ -51,6 +53,7 @@ function toMapPlayground(row: GeoRow): MapPlayground | null {
     surface_type: (row.surface_type ?? null) as SurfaceType | null,
     review_count: row.review_count ?? 0,
     avg_rating: row.avg_rating,
+    equipment: Array.isArray(row.equipment) ? row.equipment.filter(isEquipmentKey) : [],
   };
 }
 
@@ -70,7 +73,7 @@ export const getMapSnapshot = unstable_cache(
     console.info(`map snapshot built: ${rows.length} playgrounds, ${JSON.stringify(rows).length} bytes`);
     return rows;
   },
-  ["map-snapshot-v2-packed"],
+  ["map-snapshot-v3-equipment"],
   { tags: [MAP_TAG], revalidate: 3600 },
 );
 
@@ -149,7 +152,7 @@ export const getPlaygroundById = cache(async (id: string): Promise<PlaygroundDet
 
   const { data, error } = await supabase
     .from("playgrounds_geo")
-    .select(`${MAP_SELECT}, equipment, user_id`)
+    .select(`${MAP_SELECT}, user_id`)
     .eq("id", id)
     .eq("flagged", false)
     .maybeSingle();
@@ -174,12 +177,8 @@ export const getPlaygroundById = cache(async (id: string): Promise<PlaygroundDet
     return url ? [{ id: p.id, url }] : [];
   });
 
-  const equipment = Array.isArray(data.equipment)
-    ? data.equipment.filter((x): x is string => typeof x === "string")
-    : [];
-
   // Who added it: decides, on the server, whether the visitor may edit it (FR-ADD-08).
   const user_id = typeof data.user_id === "string" ? data.user_id : null;
 
-  return { ...base, equipment, photos, user_id };
+  return { ...base, photos, user_id };
 });

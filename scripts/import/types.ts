@@ -40,7 +40,7 @@ export const PlaygroundRecord = z.object({
   equipment: z
     .array(z.string())
     .describe(
-      "Equipment list as snake_case English tags: swings, slides, zipline, sandbox, climbing_wall, seesaw, spring_riders, trampoline, etc. Empty array if none mentioned.",
+      "Equipment, only from these tags: swings, slides, zipline, sandbox, climbing_wall (anything else is dropped). Empty array if none mentioned.",
     ),
   confidence: z
     .enum(["high", "medium", "low"])

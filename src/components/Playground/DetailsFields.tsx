@@ -4,11 +4,18 @@ import type { Ref } from "react";
 import { useTranslations } from "next-intl";
 import { FEATURE_ICONS, FeatureToggle } from "@/components/FeatureChip";
 import { DESCRIPTION_MAX, NAME_MAX } from "@/lib/limits";
-import { PLAYGROUND_FEATURE_KEYS, SURFACE_TYPES, type FeatureKey } from "@/lib/playground-types";
+import {
+  EQUIPMENT_KEYS,
+  PLAYGROUND_FEATURE_KEYS,
+  SURFACE_TYPES,
+  type EquipmentKey,
+  type FeatureKey,
+} from "@/lib/playground-types";
 
 // A playground's details, shared by the add flow (step 2) and the owner's edit page: the name
-// (required), a description, the surface (tap the chosen one again to clear it, it's optional)
-// and what the playground has. An unticked feature means "doesn't have it" (shown as "Brez …").
+// (required), a description, the surface (tap the chosen one again to clear it, it's optional),
+// what the playground has (an unticked feature means "doesn't have it", shown as "Brez …") and
+// its play equipment.
 export function DetailsFields({
   name,
   onNameChange,
@@ -20,6 +27,8 @@ export function DetailsFields({
   onSurfaceChange,
   features,
   onFeatureToggle,
+  equipment,
+  onEquipmentToggle,
 }: {
   name: string;
   onNameChange: (name: string) => void;
@@ -32,9 +41,12 @@ export function DetailsFields({
   onSurfaceChange: (surface: string) => void;
   features: Partial<Record<FeatureKey, boolean>>;
   onFeatureToggle: (key: FeatureKey) => void;
+  equipment: readonly EquipmentKey[];
+  onEquipmentToggle: (key: EquipmentKey) => void;
 }) {
   const t = useTranslations("add");
   const tFilters = useTranslations("filters");
+  const tDetail = useTranslations("detail");
 
   return (
     <>
@@ -107,6 +119,20 @@ export function DetailsFields({
               label={tFilters(`feature.${key}`)}
               checked={!!features[key]}
               onChange={() => onFeatureToggle(key)}
+            />
+          ))}
+        </div>
+      </fieldset>
+
+      <fieldset className="fieldset">
+        <legend className="fieldset-legend text-sm">{t("step2.equipment")}</legend>
+        <div className="flex flex-wrap gap-2">
+          {EQUIPMENT_KEYS.map((key) => (
+            <FeatureToggle
+              key={key}
+              label={tDetail(`equipmentOptions.${key}`)}
+              checked={equipment.includes(key)}
+              onChange={() => onEquipmentToggle(key)}
             />
           ))}
         </div>

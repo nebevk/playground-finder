@@ -8,6 +8,7 @@ import {
   login,
   noisePng,
   playgroundPath,
+  SEEDED_PLAYGROUND,
   sl,
 } from "./fixtures";
 
@@ -411,6 +412,61 @@ test("[FR-COM-07] the profile lists your contributions, including ones under rev
   await expectTouchTargets(section, "my contributions");
   await playgrounds.getByRole("link", { name: sl.profile.contributions.editNamed.replace("{name}", visible) }).click();
   await expect(page.getByRole("heading", { level: 1, name: sl.edit.title })).toBeVisible();
+});
+
+test("[FR-PG-04] a favourite saved with the heart is listed on the profile, and can be removed", async ({ page }) => {
+  test.setTimeout(90_000);
+  await login(page);
+  const path = await playgroundPath();
+  const heart = page.getByRole("button", { name: sl.favorites.label });
+  const favourites = () => page.getByRole("region", { name: sl.profile.favorites.title });
+  // The heart changes at once; wait for the save itself (the Server Action call) before moving on.
+  const saved = (on: boolean) =>
+    page.waitForResponse((r) => r.request().method() === "POST" && (r.request().postData() ?? "").endsWith(`${on}]`));
+
+  // Start from "not a favourite": the local database keeps state between runs.
+  await page.goto(path);
+  if ((await heart.getAttribute("aria-pressed")) === "true") {
+    await Promise.all([saved(false), heart.click()]);
+    await expect(heart).toHaveAttribute("aria-pressed", "false");
+  }
+
+  await Promise.all([saved(true), heart.click()]);
+  await expect(heart).toHaveAttribute("aria-pressed", "true");
+  await page.goto("/sl/profile");
+  await expect(favourites().getByRole("link", { name: SEEDED_PLAYGROUND })).toBeVisible({ timeout: 20_000 });
+
+  // Saved for real: still on after a reload, then removed again.
+  await page.goto(path);
+  await expect(heart).toHaveAttribute("aria-pressed", "true");
+  await Promise.all([saved(false), heart.click()]);
+  await expect(heart).toHaveAttribute("aria-pressed", "false");
+  await page.goto("/sl/profile");
+  await expect(favourites().getByText(sl.profile.favorites.empty)).toBeVisible({ timeout: 20_000 });
+});
+
+test("[FR-ADD-07] play equipment chosen when adding shows on the playground's page", async ({ page }) => {
+  test.setTimeout(90_000);
+  await login(page);
+  await page.goto("/sl/add");
+  await page.locator(".leaflet-container").first().click({ position: { x: 140, y: 120 } });
+  await page.getByRole("button", { name: sl.add.next }).click();
+  const name = `E2E igrala ${Date.now()}`;
+  await page.getByPlaceholder(sl.add.step2.namePlaceholder).fill(name);
+  await page.getByText(sl.detail.equipmentOptions.swings, { exact: true }).click();
+  await page.getByText(sl.detail.equipmentOptions.sandbox, { exact: true }).click();
+  await page.getByRole("button", { name: sl.add.next }).click();
+  await page.getByRole("button", { name: sl.add.submit }).click();
+
+  await expect(page).toHaveURL(/\/sl\/map/, { timeout: 20_000 });
+  const sheet = page.getByRole("dialog");
+  await expect(sheet.getByText(name)).toBeVisible();
+  await sheet.locator('a[href*="/playground/"]').first().click();
+  await expect(page.getByRole("heading", { level: 1, name })).toBeVisible();
+  const equipment = page.locator("section", { has: page.getByRole("heading", { name: sl.detail.equipment }) });
+  await expect(equipment.getByText(sl.detail.equipmentOptions.swings, { exact: true })).toBeVisible();
+  await expect(equipment.getByText(sl.detail.equipmentOptions.sandbox, { exact: true })).toBeVisible();
+  await expect(equipment.getByText(sl.detail.equipmentOptions.slides, { exact: true })).toHaveCount(0);
 });
 
 // A star's name in the review form.

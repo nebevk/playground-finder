@@ -7,7 +7,7 @@ import { Link } from "@/i18n/navigation";
 import { LocationPickerClient } from "@/components/Map/LocationPickerClient";
 import { useToast } from "@/components/Toast/ToastProvider";
 import { DESCRIPTION_MAX, NAME_MAX } from "@/lib/limits";
-import { PLAYGROUND_FEATURE_KEYS, SURFACE_TYPES } from "@/lib/playground-types";
+import { EQUIPMENT_KEYS, PLAYGROUND_FEATURE_KEYS, SURFACE_TYPES, type EquipmentKey } from "@/lib/playground-types";
 import {
   geocodeAddressAction,
   nearbyPlaygroundsAction,
@@ -20,6 +20,7 @@ type LatLng = { lat: number; lng: number };
 export function QuickAddForm({ locale }: { locale: string }) {
   const t = useTranslations("admin.quickAdd");
   const tFields = useTranslations("add.step2");
+  const tDetail = useTranslations("detail");
   const { showToast } = useToast();
   const [pending, startTransition] = useTransition();
 
@@ -30,6 +31,7 @@ export function QuickAddForm({ locale }: { locale: string }) {
   const [description, setDescription] = useState("");
   const [surface, setSurface] = useState("");
   const [features, setFeatures] = useState<Record<string, boolean>>({});
+  const [equipment, setEquipment] = useState<EquipmentKey[]>([]);
   const [nearby, setNearby] = useState<NearbyPlayground[]>([]);
 
   // Live duplicate check whenever the pin moves (debounced).
@@ -69,6 +71,7 @@ export function QuickAddForm({ locale }: { locale: string }) {
           description,
           surface_type: surface,
           features,
+          equipment,
         },
         locale,
       );
@@ -196,6 +199,25 @@ export function QuickAddForm({ locale }: { locale: string }) {
                 className="checkbox checkbox-primary checkbox-sm"
               />
               <span className="text-sm">{tFields(`featureOptions.${key}`)}</span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend className="label-text mb-2">{tDetail("equipment")}</legend>
+        <div className="flex flex-wrap gap-x-4 gap-y-2">
+          {EQUIPMENT_KEYS.map((key) => (
+            <label key={key} className="flex cursor-pointer items-center gap-2">
+              <input
+                type="checkbox"
+                checked={equipment.includes(key)}
+                onChange={(e) =>
+                  setEquipment(e.target.checked ? [...equipment, key] : equipment.filter((k) => k !== key))
+                }
+                className="checkbox checkbox-primary checkbox-sm"
+              />
+              <span className="text-sm">{tDetail(`equipmentOptions.${key}`)}</span>
             </label>
           ))}
         </div>

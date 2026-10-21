@@ -2,12 +2,15 @@ import { createHmac } from "node:crypto";
 import { headers } from "next/headers";
 import { createAdminClient } from "./supabase/admin";
 
-// Rate limits for actions that create accounts or send email (NFR-SEC-04). Adding playgrounds,
-// reviews, reports and photos is limited in the database instead (migration rate_limits).
+// Rate limits for actions that create accounts, send email or call outside services (NFR-SEC-04).
+// Adding playgrounds, reviews, reports and photos is limited in the database instead (migration
+// rate_limits).
 const LIMITS = {
   signup: { max: 5, windowSeconds: 60 * 60 },
   password_reset: { max: 5, windowSeconds: 60 * 60 },
   resend_verification: { max: 5, windowSeconds: 60 * 60 },
+  // Searching by place calls a third-party geocoder (FR-MAP-10).
+  place_search: { max: 60, windowSeconds: 60 * 60 },
 } as const;
 export type LimitedAction = keyof typeof LIMITS;
 

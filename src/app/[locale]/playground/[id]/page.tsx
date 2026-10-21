@@ -13,6 +13,8 @@ import { RecordView } from "@/components/RecordView";
 import { FEATURE_ICONS, FeatureBadge, SURFACE_ICON } from "@/components/FeatureChip";
 import { PhotoButton, PhotoViewer } from "@/components/Photos/PhotoViewer";
 import { FlashToast } from "@/components/Toast/FlashToast";
+import { FavoriteButton, FavoritesProvider } from "@/components/Favorites";
+import { getFavoriteIds } from "@/lib/favorites";
 import { PendingIcon } from "@/components/LinkPending";
 
 export async function generateMetadata({
@@ -54,6 +56,7 @@ export default async function PlaygroundDetailPage({
   const user = await getCurrentUser();
   // The person who added it may edit it (FR-ADD-08); the database enforces the same on save.
   const isOwner = !!user && playground.user_id === user.id;
+  const isFavorite = !!user && (await getFavoriteIds(user.id)).includes(playground.id);
 
   const [hero, ...restPhotos] = playground.photos;
   const photoCount = playground.photos.length;
@@ -112,24 +115,29 @@ export default async function PlaygroundDetailPage({
               )}
               {playground.description && <p className="mt-2 text-base-content/80">{playground.description}</p>}
             </div>
-            {isOwner ? (
-              <Link href={`/playground/${playground.id}/edit`} className="btn btn-ghost shrink-0 gap-1">
-                <PendingIcon className="size-4">
-                  <Pencil className="size-4" aria-hidden />
-                </PendingIcon>
-                {t("edit")}
-              </Link>
-            ) : (
-              user && (
-                <ReportButton
-                  targetType="playground"
-                  targetId={playground.id}
-                  playgroundId={playground.id}
-                  locale={locale}
-                  label={t("reportPlayground")}
-                />
-              )
-            )}
+            <div className="flex shrink-0 items-center">
+              <FavoritesProvider signedIn={!!user} initial={isFavorite ? [playground.id] : []}>
+                <FavoriteButton playgroundId={playground.id} />
+              </FavoritesProvider>
+              {isOwner ? (
+                <Link href={`/playground/${playground.id}/edit`} className="btn btn-ghost shrink-0 gap-1">
+                  <PendingIcon className="size-4">
+                    <Pencil className="size-4" aria-hidden />
+                  </PendingIcon>
+                  {t("edit")}
+                </Link>
+              ) : (
+                user && (
+                  <ReportButton
+                    targetType="playground"
+                    targetId={playground.id}
+                    playgroundId={playground.id}
+                    locale={locale}
+                    label={t("reportPlayground")}
+                  />
+                )
+              )}
+            </div>
           </header>
 
           <section className="flex flex-col gap-3">
