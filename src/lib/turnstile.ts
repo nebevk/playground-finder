@@ -17,7 +17,11 @@ export async function verifyTurnstile(formData: FormData): Promise<boolean> {
   }
 
   const token = formData.get("cf-turnstile-response");
-  if (typeof token !== "string" || token.length === 0) return false;
+  if (typeof token !== "string" || token.length === 0) {
+    // The widget never ran or hadn't finished (unlike a rejected token, logged below).
+    console.warn("verifyTurnstile: no token in the form");
+    return false;
+  }
 
   try {
     const res = await fetch(SITEVERIFY_URL, {

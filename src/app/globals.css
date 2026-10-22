@@ -189,6 +189,10 @@ html:has(dialog.photo-viewer[open]) {
    a matching colour instead of a grey flash. */
 @theme {
   --color-map-land: oklch(95.4% 0.004 85);
+  /* Rating stars: the familiar gold (they used the theme’s orange-red warning colour), with a
+     darker edge so they stay crisp on the light background. */
+  --color-star: oklch(82% 0.165 82);
+  --color-star-edge: oklch(68% 0.15 72);
 }
 
 /* Home's maps: once the visitor has located, the pins outside "V bližini" (and their clusters)

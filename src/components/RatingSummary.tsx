@@ -29,7 +29,7 @@ export function RatingSummary({
   if (variant === "compact") {
     return (
       <span className="inline-flex shrink-0 items-center gap-1">
-        <Star className="size-3.5 fill-warning stroke-warning" aria-hidden />
+        <Star className="size-3.5 fill-star stroke-star-edge" aria-hidden />
         <span className="sr-only">{t("rating")} </span>
         <span className="font-semibold text-base-content">{formatRating(avg, locale)}</span>
         <span aria-hidden>({count})</span>
@@ -42,7 +42,7 @@ export function RatingSummary({
     <span className="inline-flex items-center gap-1.5">
       <span className="inline-flex items-center gap-1">
         <Star
-          className={`${size === "lg" ? "size-5" : "size-4"} fill-warning stroke-warning`}
+          className={`${size === "lg" ? "size-5" : "size-4"} fill-star stroke-star-edge`}
           aria-hidden
         />
         <span className={`font-bold ${size === "lg" ? "text-base" : "text-sm"}`}>

@@ -65,7 +65,7 @@ export function ReviewForm({
                 className="btn btn-ghost btn-circle p-0"
               >
                 <Star
-                  className={`size-6 ${filled ? "fill-warning stroke-warning" : "stroke-base-content/40"}`}
+                  className={`size-6 ${filled ? "fill-star stroke-star-edge" : "stroke-base-content/40"}`}
                   aria-hidden
                 />
               </button>

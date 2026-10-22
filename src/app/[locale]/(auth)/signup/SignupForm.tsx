@@ -105,7 +105,7 @@ export function SignupForm({ locale, next }: { locale: string; next?: string }) 
         </p>
       )}
 
-      <Turnstile />
+      <Turnstile resetKey={state} />
 
       <button type="submit" disabled={pending} className="btn btn-primary">
         {pending && <span className="loading loading-spinner loading-sm" aria-hidden />}

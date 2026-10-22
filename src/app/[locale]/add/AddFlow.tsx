@@ -159,7 +159,7 @@ export function AddFlow({
               return action(fd);
             }}
           >
-            <Turnstile />
+            <Turnstile resetKey={state} />
           </form>
         </section>
       )}

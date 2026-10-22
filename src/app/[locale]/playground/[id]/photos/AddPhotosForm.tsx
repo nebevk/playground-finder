@@ -64,7 +64,7 @@ export function AddPhotosForm({
       className="flex flex-col gap-4"
     >
       <PhotoPicker photos={photos} onChange={setPhotos} max={remaining} onProcessingChange={setPreparing} />
-      <Turnstile />
+      <Turnstile resetKey={state} />
 
       {pending && <UploadingPhotos />}
 

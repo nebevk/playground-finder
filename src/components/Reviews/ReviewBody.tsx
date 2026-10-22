@@ -22,7 +22,7 @@ export function ReviewBody({
           {[1, 2, 3, 4, 5].map((n) => (
             <Star
               key={n}
-              className={`size-4 ${n <= rating ? "fill-warning stroke-warning" : "stroke-base-content/30"}`}
+              className={`size-4 ${n <= rating ? "fill-star stroke-star-edge" : "stroke-base-content/30"}`}
               aria-hidden
             />
           ))}

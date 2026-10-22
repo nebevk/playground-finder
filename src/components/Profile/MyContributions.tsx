@@ -92,7 +92,7 @@ export async function MyContributions({ userId }: { userId: string }) {
                   <span className="block truncate font-semibold">{r.playground?.name ?? t("unknownPlayground")}</span>
                   <span className="mt-0.5 flex min-w-0 items-center gap-1.5 text-sm text-base-content/70">
                     <span className="inline-flex shrink-0 items-center gap-1">
-                      <Star className="size-3.5 fill-warning stroke-warning" aria-hidden />
+                      <Star className="size-3.5 fill-star stroke-star-edge" aria-hidden />
                       <span className="sr-only">{tDetail("rating")} </span>
                       <span className="font-semibold text-base-content">{r.rating}</span>
                     </span>
