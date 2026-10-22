@@ -1,7 +1,7 @@
 ---
 id: 0014
 title: Search, favourites, play equipment; signed-in inserts limited to the app's columns
-status: in-progress
+status: done
 order: migrations-first
 destructive: false
 migrations: [20261021180000_equipment_and_insert_columns.sql]
@@ -152,4 +152,5 @@ For the app, `git revert` the deploy commit and push. The SQL restores the earli
 - **2026-10-22T08:50Z** started (status → in-progress). Preflight: 0013 → done (owner OK except camera → 0015); prod `READY` (`9654d94`); `incoming/` untracked. Drift OK — `equipment_and_insert_columns` not in prod.
 - **Pre-check:** bad equipment rows = 0.
 - **Applied** `equipment_and_insert_columns`. Verify: `playgrounds_equipment_known | t`; INSERT columns match ticket expect for all 6 tables.
+- **2026-10-22T08:55Z** pushed `13462bd` (MCP deploy `dpl_3Ra6ZfVyAntW4h7rqjSf8HL2jbx3` → `READY`). Smoke 200 incl. `/sl/search`. Security advisors unchanged (INFO `private.rate_limit_hits` no policies). Owner directed continue to 0015; phone search/favourites/equipment can be confirmed with that retest. **status → done**.
 

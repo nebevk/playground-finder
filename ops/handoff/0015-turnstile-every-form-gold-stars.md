@@ -1,7 +1,7 @@
 ---
 id: 0015
 title: Turnstile works on every form (camera uploads failed), gold rating stars
-status: ready
+status: in-progress
 order: any
 destructive: false
 migrations: []
@@ -66,4 +66,6 @@ Expect `≥ 1`: the page loads Turnstile in explicit mode.
 `git revert` the commit and push. There is no data or schema to undo.
 
 ## Result log (Cursor)
+
+- **2026-10-22T08:55Z** started (status → in-progress). Preflight: 0014 → done; no migrations; continuing per owner (camera fix).
 
