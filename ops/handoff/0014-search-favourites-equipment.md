@@ -1,7 +1,7 @@
 ---
 id: 0014
 title: Search, favourites, play equipment; signed-in inserts limited to the app's columns
-status: ready
+status: in-progress
 order: migrations-first
 destructive: false
 migrations: [20261021180000_equipment_and_insert_columns.sql]
@@ -148,4 +148,8 @@ grant insert on public.playgrounds, public.reviews, public.photos, public.report
 For the app, `git revert` the deploy commit and push. The SQL restores the earlier table-wide insert grants. The new code works with or without them.
 
 ## Result log (Cursor)
+
+- **2026-10-22T08:50Z** started (status → in-progress). Preflight: 0013 → done (owner OK except camera → 0015); prod `READY` (`9654d94`); `incoming/` untracked. Drift OK — `equipment_and_insert_columns` not in prod.
+- **Pre-check:** bad equipment rows = 0.
+- **Applied** `equipment_and_insert_columns`. Verify: `playgrounds_equipment_known | t`; INSERT columns match ticket expect for all 6 tables.
 

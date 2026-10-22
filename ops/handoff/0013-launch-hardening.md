@@ -1,7 +1,7 @@
 ---
 id: 0013
 title: Real 404s and new loaders, cached map snapshot, rate limits, Content-Security-Policy
-status: blocked
+status: done
 order: migrations-first
 destructive: false
 migrations: [20261021150000_rate_limits.sql]
@@ -144,4 +144,5 @@ For the app, `git revert` the deploy commit and push, or promote the previous de
 - **Applied** `rate_limits`. Verify: 4 triggers (`photos|playgrounds|reports|reviews_rate_limit`); `consume_rate_limit` execute f|f|t; `private.rate_limit_hits` RLS on.
 - **2026-10-21T14:34Z** pushed `9654d94` (GitHub webhook missed; created deploy via Vercel MCP). Deploy `dpl_4ZKRzzuyJTGeMqNumofguYKeCgYX` → `READY`. Smoke 200. CSP present with nonce, strict-dynamic, supabase.co, upgrade-insecure-requests. Missing playground + signed-out `/sl/admin` → 404. Security advisors: prior WARNs unchanged; new INFO `rls_enabled_no_policy` on `private.rate_limit_hits` (expected: private table, service_role only via `consume_rate_limit`).
 - **Blocked** on owner CSP/look tests (step 6). 0014 held until 0013 done. Say **process ops** when checks pass.
+- **2026-10-22T08:50Z** owner confirmed (camera upload failure is separate → 0015): map/photos OK, signup Turnstile OK, 404 OK, no CSP console errors. **status → done**.
 
