@@ -68,6 +68,8 @@ export async function generateMetadata({
       description: slogan,
       locale: locale === "sl" ? "sl_SI" : "en_US",
     },
+    // A large image in previews (the cards come from opengraph-image.tsx), not a small square.
+    twitter: { card: "summary_large_image" },
   };
 }
 

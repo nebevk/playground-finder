@@ -17,6 +17,17 @@ test("[NFR-SEO-02] the detail page sets its own title and Open Graph tags", asyn
   await expect(page.locator('meta[property="og:title"]')).toHaveAttribute("content", new RegExp(SEEDED_PLAYGROUND));
 });
 
+test("[NFR-SEO-03] [GDPR-16] a shared playground link shows the playground's own card", async ({ page, request }) => {
+  const image = page.locator('meta[property="og:image"]');
+  await expect(image).toHaveCount(1);
+  const url = new URL((await image.getAttribute("content"))!);
+  expect(url.pathname).toMatch(/^\/sl\/playground\/[0-9a-f-]{36}\/opengraph-image\/card$/);
+  await expect(page.locator('meta[property="og:image:alt"]')).toHaveAttribute("content", new RegExp(SEEDED_PLAYGROUND));
+  const res = await request.get(url.pathname + url.search);
+  expect(res.status()).toBe(200);
+  expect(res.headers()["content-type"]).toBe("image/png");
+});
+
 test("[FR-PG-01] [NFR-I18N-03] equipment is shown with translated labels", async ({ page }) => {
   // Seeded Tivoli equipment: swings, slides, climbing_wall, sandbox.
   await expect(page.getByText(sl.detail.equipmentOptions.climbing_wall)).toBeVisible();

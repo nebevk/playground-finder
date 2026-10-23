@@ -26,8 +26,9 @@ export async function generateMetadata({
   const playground = await getPlaygroundById(id);
   if (!playground) return {};
 
-  // No user photos as preview images: link previews copy them onto other platforms' servers,
-  // beyond moderation and deletion (GDPR-16). The site-wide preview image applies instead.
+  // The preview image is the playground's card (opengraph-image.tsx in this folder). Never user
+  // photos: link previews copy them onto other platforms' servers, beyond moderation and deletion
+  // (GDPR-16).
   return {
     title: playground.name,
     description: playground.description ?? undefined,

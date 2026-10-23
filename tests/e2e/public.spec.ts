@@ -347,6 +347,21 @@ test.describe("platform", () => {
     await expect(page.locator('script[src*="simpleanalyticscdn.com/sri/"][integrity]')).toHaveCount(1);
   });
 
+  test("[NFR-SEO-03] shared links show the site's preview image, in the page's language", async ({ page, request }) => {
+    for (const [locale, messages] of [["sl", sl], ["en", en]] as const) {
+      await page.goto(`/${locale}`);
+      const image = page.locator('meta[property="og:image"]');
+      await expect(image).toHaveCount(1);
+      const url = new URL((await image.getAttribute("content"))!);
+      expect(url.pathname).toBe(`/${locale}/opengraph-image/site`);
+      await expect(page.locator('meta[property="og:image:alt"]')).toHaveAttribute("content", `${messages.app.name} ${messages.app.slogan}`);
+      const res = await request.get(url.pathname + url.search);
+      expect(res.status()).toBe(200);
+      expect(res.headers()["content-type"]).toBe("image/png");
+    }
+    await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute("content", "summary_large_image");
+  });
+
   test("[NFR-SEO-01] missing pages answer with a real 404", async ({ request }) => {
     for (const path of ["/sl/playground/00000000-0000-4000-8000-000000000000", "/en/playground/not-a-playground", "/sl/no-such-page"]) {
       expect((await request.get(path)).status(), path).toBe(404);
