@@ -4,33 +4,24 @@ import { MAP_TAG, packPlayground, type PackedPlayground } from "./map-snapshot";
 import { PHOTO_BUCKET } from "./photo-storage";
 import { createAnonClient } from "./supabase/anon";
 import { createClient } from "./supabase/server";
-import { isEquipmentKey } from "./playground-types";
-import type {
-  MapPlayground,
-  PlaygroundDetail,
-  PlaygroundPhoto,
-  SurfaceType,
-} from "./playground-types";
+import { isEquipmentKey, PLAYGROUND_FEATURE_KEYS, surfaceFrom } from "./playground-types";
+import type { FeatureKey, MapPlayground, PlaygroundDetail, PlaygroundPhoto } from "./playground-types";
 
 export * from "./playground-types";
 
 // A flagged photo stays viewable for at most this long by someone who already loaded the page.
 const PHOTO_URL_TTL_SECONDS = 60 * 60;
 
+// Every PLAYGROUND_FEATURE_KEYS column, spelled out so the query stays typed.
 const MAP_SELECT =
-  "id, name, description, lat, lng, is_fenced, has_shade, has_water, has_toilets, has_parking, surface_type, review_count, avg_rating, equipment";
+  "id, name, description, lat, lng, is_fenced, has_shade, has_water, has_toilets, has_parking, has_benches, has_toddler_area, is_accessible, has_lighting, surface_type, review_count, avg_rating, equipment";
 
-type GeoRow = {
+type GeoRow = Record<FeatureKey, boolean | null> & {
   id: string | null;
   name: string | null;
   description: string | null;
   lat: number | null;
   lng: number | null;
-  is_fenced: boolean | null;
-  has_shade: boolean | null;
-  has_water: boolean | null;
-  has_toilets: boolean | null;
-  has_parking: boolean | null;
   surface_type: string | null;
   review_count: number | null;
   avg_rating: number | null;
@@ -39,18 +30,15 @@ type GeoRow = {
 
 function toMapPlayground(row: GeoRow): MapPlayground | null {
   if (row.id == null || row.name == null || row.lat == null || row.lng == null) return null;
+  const features = Object.fromEntries(PLAYGROUND_FEATURE_KEYS.map((k) => [k, row[k] ?? false])) as Record<FeatureKey, boolean>;
   return {
     id: row.id,
     name: row.name,
     description: row.description,
     lat: row.lat,
     lng: row.lng,
-    is_fenced: row.is_fenced ?? false,
-    has_shade: row.has_shade ?? false,
-    has_water: row.has_water ?? false,
-    has_toilets: row.has_toilets ?? false,
-    has_parking: row.has_parking ?? false,
-    surface_type: (row.surface_type ?? null) as SurfaceType | null,
+    ...features,
+    surface_type: surfaceFrom(row.surface_type),
     review_count: row.review_count ?? 0,
     avg_rating: row.avg_rating,
     equipment: Array.isArray(row.equipment) ? row.equipment.filter(isEquipmentKey) : [],
@@ -73,7 +61,7 @@ export const getMapSnapshot = unstable_cache(
     console.info(`map snapshot built: ${rows.length} playgrounds, ${JSON.stringify(rows).length} bytes`);
     return rows;
   },
-  ["map-snapshot-v3-equipment"],
+  ["map-snapshot-v4-more-options"],
   { tags: [MAP_TAG], revalidate: 3600 },
 );
 
@@ -157,8 +145,9 @@ export const getPlaygroundById = cache(async (id: string): Promise<PlaygroundDet
     .eq("flagged", false)
     .maybeSingle();
 
-  const base = data ? toMapPlayground(data as GeoRow) : null;
-  if (error || !data || !base) return null;
+  const row = data as GeoRow | null;
+  const base = row ? toMapPlayground(row) : null;
+  if (error || !data || !row || !base) return null;
 
   const { data: photoRows } = await supabase
     .from("photos")
@@ -180,5 +169,7 @@ export const getPlaygroundById = cache(async (id: string): Promise<PlaygroundDet
   // Who added it: decides, on the server, whether the visitor may edit it (FR-ADD-08).
   const user_id = typeof data.user_id === "string" ? data.user_id : null;
 
-  return { ...base, photos, user_id };
+  const unknownFeatures = PLAYGROUND_FEATURE_KEYS.filter((k) => row[k] == null);
+
+  return { ...base, photos, unknownFeatures, user_id };
 });

@@ -1,5 +1,5 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { isEquipmentKey } from "@/lib/playground-types";
+import { isEquipmentKey, PLAYGROUND_FEATURE_KEYS, surfaceFrom, type FeatureKey } from "@/lib/playground-types";
 import { ArrowLeft, Plus } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { requireAdmin } from "@/lib/admin";
@@ -8,15 +8,6 @@ import {
   AdminPlaygroundsTable,
   type AdminPlaygroundRow,
 } from "@/components/Admin/AdminPlaygroundsTable";
-import type { SurfaceType } from "@/lib/playground-types";
-
-const SURFACE_TYPES = ["tartan", "sand", "grass", "gravel"] as const;
-
-function toSurfaceType(value: string | null): SurfaceType | null {
-  return (SURFACE_TYPES as readonly string[]).includes(value ?? "")
-    ? (value as SurfaceType)
-    : null;
-}
 
 export default async function AdminPlaygroundsPage({
   params,
@@ -33,7 +24,7 @@ export default async function AdminPlaygroundsPage({
   const { data } = await supabase
     .from("playgrounds_geo")
     .select(
-      "id, name, description, surface_type, is_fenced, has_shade, has_water, has_toilets, has_parking, equipment, flagged, review_count, created_at",
+      "id, name, description, surface_type, is_fenced, has_shade, has_water, has_toilets, has_parking, has_benches, has_toddler_area, is_accessible, has_lighting, equipment, flagged, review_count, created_at",
     )
     .order("created_at", { ascending: false });
 
@@ -44,12 +35,8 @@ export default async function AdminPlaygroundsPage({
         id: r.id,
         name: r.name,
         description: r.description,
-        surface_type: toSurfaceType(r.surface_type),
-        is_fenced: r.is_fenced ?? false,
-        has_shade: r.has_shade ?? false,
-        has_water: r.has_water ?? false,
-        has_toilets: r.has_toilets ?? false,
-        has_parking: r.has_parking ?? false,
+        surface_type: surfaceFrom(r.surface_type),
+        ...(Object.fromEntries(PLAYGROUND_FEATURE_KEYS.map((k) => [k, r[k] ?? false])) as Record<FeatureKey, boolean>),
         equipment: Array.isArray(r.equipment) ? r.equipment.filter(isEquipmentKey) : [],
         flagged: r.flagged ?? false,
         review_count: r.review_count ?? 0,

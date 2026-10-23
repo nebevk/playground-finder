@@ -5,7 +5,7 @@ import { clampText, DESCRIPTION_MAX, NAME_MAX } from "@/lib/limits";
 import { getAdminActionContext } from "@/lib/admin";
 import { geocodeInSlovenia } from "@/lib/geocode";
 import { invalidateMapSnapshot } from "@/lib/playgrounds";
-import { isEquipmentKey, PLAYGROUND_FEATURE_KEYS, SURFACE_TYPES } from "@/lib/playground-types";
+import { isEquipmentKey, PLAYGROUND_FEATURE_KEYS, surfaceFrom } from "@/lib/playground-types";
 
 export type GeoResult = { lat: number; lng: number; label: string };
 export type NearbyPlayground = { id: string; name: string; distance_m: number };
@@ -72,9 +72,7 @@ export async function quickAddPlaygroundAction(
     return { ok: false };
   }
 
-  const surface_type = (SURFACE_TYPES as readonly string[]).includes(payload.surface_type)
-    ? payload.surface_type
-    : null;
+  const surface_type = surfaceFrom(payload.surface_type);
   const features = Object.fromEntries(
     PLAYGROUND_FEATURE_KEYS.map((k) => [k, payload.features[k] === true]),
   );

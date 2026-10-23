@@ -33,7 +33,7 @@ export default async function AdminQualityPage({
     supabase
       .from("playgrounds_geo")
       .select(
-        "id, name, lat, lng, description, surface_type, review_count, is_fenced, has_shade, has_water, has_toilets, has_parking",
+        "id, name, lat, lng, description, surface_type, review_count, is_fenced, has_shade, has_water, has_toilets, has_parking, has_benches, has_toddler_area, is_accessible, has_lighting",
       ),
     supabase.from("photos").select("playground_id"),
   ]);

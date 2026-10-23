@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { clampText, DESCRIPTION_MAX, NAME_MAX } from "@/lib/limits";
 import { getAdminActionContext } from "@/lib/admin";
 import { invalidateMapSnapshot } from "@/lib/playgrounds";
-import { PLAYGROUND_FEATURE_KEYS, SURFACE_TYPES } from "@/lib/playground-types";
+import { statedFeatures, surfaceFrom } from "@/lib/playground-types";
 
 export type ExistingPoint = { id: string; name: string; lat: number; lng: number };
 
@@ -45,18 +45,12 @@ export async function bulkInsertPlaygroundsAction(
   const clean = rows
     .filter((r) => r.name.trim() && Number.isFinite(r.lat) && Number.isFinite(r.lng))
     .map((r) => {
-      const surface_type = (SURFACE_TYPES as readonly string[]).includes(r.surface_type)
-        ? r.surface_type
-        : null;
-      const features = Object.fromEntries(
-        PLAYGROUND_FEATURE_KEYS.map((k) => [k, r.features[k] === true]),
-      );
       return {
         name: clampText(r.name, NAME_MAX),
         description: clampText(r.description, DESCRIPTION_MAX) || null,
         location: `SRID=4326;POINT(${r.lng} ${r.lat})`,
-        surface_type,
-        ...features,
+        surface_type: surfaceFrom(r.surface_type),
+        ...statedFeatures((k) => r.features[k] === true),
         user_id: ctx.user.id,
       };
     });

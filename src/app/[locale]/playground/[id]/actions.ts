@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { REVIEW_COMMENT_MAX } from "@/lib/limits";
 import { MAX_PHOTOS } from "@/lib/photo-checks";
 import { readSubmittedPhotos, storePhotos, type PhotoReadError, type PhotoStoreError } from "@/lib/photo-upload";
-import { equipmentFrom, PLAYGROUND_FEATURE_KEYS, SURFACE_TYPES, type SurfaceType } from "@/lib/playground-types";
+import { equipmentFrom, featuresFrom, surfaceFrom } from "@/lib/playground-types";
 import { invalidateMapSnapshot } from "@/lib/playgrounds";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
@@ -80,16 +80,13 @@ export async function updateOwnPlaygroundAction(_prev: EditState, formData: Form
   const locale = String(formData.get("locale") ?? "sl");
   const name = String(formData.get("name") ?? "").trim();
   const description = String(formData.get("description") ?? "").trim() || null;
-  const surfaceRaw = String(formData.get("surface_type") ?? "");
-  const surface_type = (SURFACE_TYPES as readonly string[]).includes(surfaceRaw) ? (surfaceRaw as SurfaceType) : null;
+  const surface_type = surfaceFrom(formData.get("surface_type"));
   const lat = Number(formData.get("lat"));
   const lng = Number(formData.get("lng"));
 
   if (!id) return { error: "not_found" };
   if (!Number.isFinite(lat) || !Number.isFinite(lng)) return { error: "no_location" };
   if (!name) return { error: "no_name" };
-
-  const features = Object.fromEntries(PLAYGROUND_FEATURE_KEYS.map((k) => [k, formData.get(k) === "on"]));
 
   const { data, error } = await supabase
     .from("playgrounds")
@@ -99,7 +96,7 @@ export async function updateOwnPlaygroundAction(_prev: EditState, formData: Form
       surface_type,
       // PostGIS WKT: longitude first, then latitude.
       location: `SRID=4326;POINT(${lng} ${lat})`,
-      ...features,
+      ...featuresFrom(formData),
       equipment: equipmentFrom(formData),
     })
     .eq("id", id)

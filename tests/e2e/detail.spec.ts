@@ -40,6 +40,9 @@ test("[FR-PG-01] features a playground doesn't have say so ('Brez …'), not 'no
   await expect(page.getByText(sl.detail.feature.has_shade, { exact: true })).toBeVisible();
   await expect(page.getByText(sl.detail.featureAbsent.has_toilets, { exact: true })).toBeVisible();
   await expect(page.getByText(sl.detail.noData)).toHaveCount(0);
+  // Nobody was asked about the features added in ops 0017, so they aren't claimed missing.
+  await expect(page.getByText(sl.detail.featureAbsent.has_benches, { exact: true })).toHaveCount(0);
+  await expect(page.getByText(sl.detail.feature.has_benches, { exact: true })).toHaveCount(0);
 });
 
 // Known gap (backlog BL-22). The photo viewer is tested in account.spec.ts (it needs uploads).

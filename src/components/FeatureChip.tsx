@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { Fence, GlassWater, Layers, SquareParking, Toilet, Trees } from "lucide-react";
+import { Accessibility, Armchair, Baby, Fence, GlassWater, Layers, Lightbulb, SquareParking, Toilet, Trees } from "lucide-react";
 import type { FeatureKey } from "@/lib/playground-types";
 
 export const FEATURE_ICONS: Record<FeatureKey, LucideIcon> = {
@@ -8,6 +8,10 @@ export const FEATURE_ICONS: Record<FeatureKey, LucideIcon> = {
   has_water: GlassWater,
   has_toilets: Toilet,
   has_parking: SquareParking,
+  has_benches: Armchair,
+  has_toddler_area: Baby,
+  is_accessible: Accessibility,
+  has_lighting: Lightbulb,
 };
 export const SURFACE_ICON = Layers;
 

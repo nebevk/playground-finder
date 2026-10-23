@@ -3,7 +3,7 @@ import { readdirSync, readFileSync, renameSync, mkdirSync, existsSync } from "no
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createClient } from "@supabase/supabase-js";
-import { isEquipmentKey } from "../../src/lib/playground-types";
+import { isEquipmentKey, statedFeatures } from "../../src/lib/playground-types";
 import type { StagedFile } from "./types";
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -53,11 +53,7 @@ async function main() {
         name: pg.name,
         description: pg.description,
         location: `SRID=4326;POINT(${pg.longitude} ${pg.latitude})`,
-        is_fenced: pg.is_fenced,
-        has_shade: pg.has_shade,
-        has_water: pg.has_water,
-        has_toilets: pg.has_toilets,
-        has_parking: pg.has_parking,
+        ...statedFeatures((k) => pg[k]),
         surface_type: pg.surface_type,
         // The database accepts only the equipment the app knows (ops 0014).
         equipment: pg.equipment.filter(isEquipmentKey),

@@ -278,13 +278,21 @@
       "has_shade": "Senca",
       "has_water": "Pitnik",
       "has_toilets": "Stranišče",
-      "has_parking": "Parkirišče"
+      "has_parking": "Parkirišče",
+      "has_benches": "Klopi",
+      "has_toddler_area": "Del za malčke",
+      "is_accessible": "Dostop z vozičkom",
+      "has_lighting": "Razsvetljava"
     },
     "surfaceOption": {
       "tartan": "Tartan",
+      "rubber_tiles": "Gumijaste plošče",
       "sand": "Pesek",
       "grass": "Trava",
-      "gravel": "Gramoz"
+      "artificial_turf": "Umetna trava",
+      "woodchips": "Lesni sekanci",
+      "gravel": "Gramoz",
+      "asphalt": "Asfalt"
     },
     "clear": "Počisti",
     "apply": "Pokaži {results}",
@@ -338,23 +346,40 @@
       "has_shade": "Senca",
       "has_water": "Pitnik",
       "has_toilets": "Stranišče",
-      "has_parking": "Parkirišče"
+      "has_parking": "Parkirišče",
+      "has_benches": "Klopi",
+      "has_toddler_area": "Del za malčke",
+      "is_accessible": "Dostop z vozičkom",
+      "has_lighting": "Razsvetljava"
     },
     "surfaceOption": {
       "tartan": "Tartan",
+      "rubber_tiles": "Gumijaste plošče",
       "sand": "Pesek",
       "grass": "Trava",
-      "gravel": "Gramoz"
+      "artificial_turf": "Umetna trava",
+      "woodchips": "Lesni sekanci",
+      "gravel": "Gramoz",
+      "asphalt": "Asfalt"
     },
     "writeFirstReview": "Napiši prvo mnenje",
     "loginToWriteFirst": "Prijavi se in napiši prvo mnenje",
     "noData": "ni podatka",
     "equipmentOptions": {
       "swings": "Gugalnice",
+      "baby_swings": "Gugalnice za malčke",
+      "nest_swing": "Gugalnica gnezdo",
+      "seesaw": "Prevesna gugalnica",
+      "spring_riders": "Igrala na vzmet",
       "slides": "Tobogani",
+      "climbing_wall": "Plezalna stena",
+      "climbing_net": "Plezalna mreža",
       "zipline": "Žičnica",
+      "merry_go_round": "Vrtiljak",
+      "trampoline": "Trampolin",
       "sandbox": "Peskovnik",
-      "climbing_wall": "Plezalna stena"
+      "playhouse": "Hišica",
+      "water_play": "Igrala z vodo"
     },
     "reportPlayground": "Sporoči napako",
     "photoAlt": "{name}, fotografija {n}",
@@ -365,7 +390,11 @@
       "has_shade": "Brez sence",
       "has_water": "Brez pitnika",
       "has_toilets": "Brez stranišča",
-      "has_parking": "Brez parkirišča"
+      "has_parking": "Brez parkirišča",
+      "has_benches": "Brez klopi",
+      "has_toddler_area": "Brez dela za malčke",
+      "is_accessible": "Brez dostopa z vozičkom",
+      "has_lighting": "Brez razsvetljave"
     },
     "openPhoto": "Odpri fotografijo {n} od {total}",
     "photoPosition": "Fotografija {n} od {total}",
@@ -420,9 +449,13 @@
       "surface": "Podlaga",
       "surfaceOptions": {
         "tartan": "Tartan",
+        "rubber_tiles": "Gumijaste plošče",
         "sand": "Pesek",
         "grass": "Trava",
-        "gravel": "Gramoz"
+        "artificial_turf": "Umetna trava",
+        "woodchips": "Lesni sekanci",
+        "gravel": "Gramoz",
+        "asphalt": "Asfalt"
       },
       "features": "Kaj ima igrišče?",
       "featureOptions": {
@@ -430,7 +463,11 @@
         "has_shade": "Senca",
         "has_water": "Pitnik",
         "has_toilets": "Stranišče",
-        "has_parking": "Parkirišče"
+        "has_parking": "Parkirišče",
+        "has_benches": "Klopi",
+        "has_toddler_area": "Del za malčke",
+        "is_accessible": "Dostop z vozičkom",
+        "has_lighting": "Razsvetljava"
       },
       "equipment": "Igrala"
     },

@@ -156,12 +156,13 @@ export default async function PlaygroundDetailPage({
             </a>
           </section>
 
-          {/* All five features: what it has, and what it doesn't ("Brez stranišča": the add form's
-              unticked box means "doesn't have it"). Only the optional surface can be unknown. */}
+          {/* Every feature: what it has, and what it doesn't ("Brez stranišča": the add form's
+              unticked box means "doesn't have it"). Features nobody has answered yet (added in
+              ops 0017) are left out, and the optional surface says when it's unknown. */}
           <section>
             <h2 className="mb-2 text-lg font-semibold">{t("features")}</h2>
             <ul className="flex flex-wrap gap-2">
-              {PLAYGROUND_FEATURE_KEYS.map((key) => (
+              {PLAYGROUND_FEATURE_KEYS.filter((key) => !playground.unknownFeatures.includes(key)).map((key) => (
                 <FeatureBadge
                   key={key}
                   icon={FEATURE_ICONS[key]}

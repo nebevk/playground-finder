@@ -12,18 +12,13 @@ import {
   bulkDeletePlaygroundsAction,
   bulkSetFlaggedPlaygroundsAction,
 } from "@/app/[locale]/admin/actions";
-import type { EquipmentKey, SurfaceType } from "@/lib/playground-types";
+import type { EquipmentKey, FeatureKey, SurfaceType } from "@/lib/playground-types";
 
-export type AdminPlaygroundRow = {
+export type AdminPlaygroundRow = Record<FeatureKey, boolean> & {
   id: string;
   name: string;
   description: string | null;
   surface_type: SurfaceType | null;
-  is_fenced: boolean;
-  has_shade: boolean;
-  has_water: boolean;
-  has_toilets: boolean;
-  has_parking: boolean;
   equipment: EquipmentKey[];
   flagged: boolean;
   review_count: number;
@@ -265,18 +260,7 @@ export function AdminPlaygroundsTable({
                     <td>
                       <div className="flex gap-1">
                         <EditPlaygroundForm
-                          playground={{
-                            id: pg.id,
-                            name: pg.name,
-                            description: pg.description,
-                            surface_type: pg.surface_type,
-                            is_fenced: pg.is_fenced,
-                            has_shade: pg.has_shade,
-                            has_water: pg.has_water,
-                            has_toilets: pg.has_toilets,
-                            has_parking: pg.has_parking,
-                            equipment: pg.equipment,
-                          }}
+                          playground={pg}
                           locale={locale}
                           trigger={
                             <span className="btn btn-ghost btn-xs gap-1">

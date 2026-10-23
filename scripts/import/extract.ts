@@ -1,5 +1,6 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
+import { EQUIPMENT_KEYS } from "../../src/lib/playground-types";
 import { ExtractionResult } from "./types";
 import type { FetchedPage } from "./fetch";
 
@@ -9,8 +10,8 @@ Output rules — read carefully:
 - A page may describe ONE playground or MANY. Return one entry per distinct playground.
 - Descriptions you write must be in Slovenian, written in your own words. Do NOT copy phrases verbatim from the source — paraphrase the facts.
 - Boolean fields default to false. Only set true when the source explicitly mentions the feature. Inferring "probably has a fence" from a photo description is not enough.
-- surface_type values: "tartan" (rubber/soft surface), "sand", "grass", "gravel". null if unknown.
-- equipment: only these tags: swings, slides, zipline, sandbox, climbing_wall (others are dropped on import). Empty array if no equipment mentioned.
+- surface_type values: "tartan" (poured rubber), "rubber_tiles", "sand", "grass", "artificial_turf", "woodchips" (or bark), "gravel", "asphalt". null if unknown.
+- equipment: only these tags: ${EQUIPMENT_KEYS.join(", ")} (others are dropped on import). "baby_swings" are enclosed swing seats for babies and toddlers. Empty array if no equipment mentioned.
 - latitude/longitude: only fill in if you find decimal coordinates IN the source text. Do not invent them.
 - address: a street, neighborhood, or town that could be geocoded. Fill it in even when you also have coordinates.
 - confidence: "high" if name + location + several features are clear; "low" if most fields were guesses; "medium" otherwise.

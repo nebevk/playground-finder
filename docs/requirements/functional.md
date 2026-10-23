@@ -10,9 +10,9 @@ Conventions and the ID scheme are in [README.md](README.md). Status last reviewe
 | FR-MAP-02 | The map opens full-screen, centred on Ljubljana. An always-visible "Locate me" button centres it on the user's position after browser permission, marks it with a "you are here" dot, and tells the user when location is unavailable or denied. | Must | Done | e2e |
 | FR-MAP-03 | Markers cluster at low zoom levels. | Must | Done | e2e |
 | FR-MAP-04 | Tapping a marker opens a bottom sheet with the name, rating summary, a description of at most 2 lines, feature and surface badges, a Directions button and a link to the detail page. | Must | Done | e2e |
-| FR-MAP-05 | Feature filters (shade, fenced, drinking water, toilets, parking). A playground matches only if it has **all** selected features. | Must | Done | unit |
-| FR-MAP-06 | Surface filter (tartan, sand, grass, gravel). A playground matches if it has **any** selected surface; with none selected, all match. | Must | Done | unit |
-| FR-MAP-07 | Equipment filter (swings, slides, zipline, sandbox, climbing wall): a playground matches if it has **all** selected equipment. | Should | Done (ops 0014) | unit |
+| FR-MAP-05 | Feature filters (fenced, shade, drinking water, toilets, parking, benches, toddler area, pram and wheelchair access, lighting). A playground matches only if it has **all** selected features; one nobody has answered counts as not having it. | Must | Done — the last four since ops 0017 | unit |
+| FR-MAP-06 | Surface filter (tartan, rubber tiles, sand, grass, artificial grass, wood chips, gravel, asphalt). A playground matches if it has **any** selected surface; with none selected, all match. | Must | Done — four more surfaces since ops 0017 | unit |
+| FR-MAP-07 | Equipment filter (swings, baby swings, nest swing, seesaw, spring riders, slides, climbing wall, climbing net, zip line, merry-go-round, trampoline, sandbox, playhouse, water play): a playground matches if it has **all** selected equipment. | Should | Done (ops 0014; nine more kinds in ops 0017) | unit |
 | FR-MAP-08 | Filters open with one tap from the map, and the button shows how many are active. Filters show how many playgrounds match and offer "clear all". "Nothing matches your filters" and "no playgrounds yet" each have their own empty state. | Should | Done | e2e, manual |
 | FR-MAP-09 | Home shows a map plus the 3 most-viewed and 3 latest playgrounds. One tap lists the 3 nearest playgrounds with their distance, computed in the browser (GDPR-13). No playground is listed twice (nearby, then popular, then latest), and the lists refill from spare rows. From 1024 px the lists sit beside a full-height map whose pins answer the rows. | Should | Done | unit, e2e |
 | FR-MAP-10 | Text search by playground name or place. Names and descriptions match as you type, ignoring accents; submitting also looks the words up as a place (OpenStreetMap Nominatim, on the server, cached and rate-limited) and lists the playgrounds within 5 km. Reached from Home and the map. | Should | Done (ops 0014) | unit, e2e |
@@ -21,7 +21,7 @@ Conventions and the ID scheme are in [README.md](README.md). Status last reviewe
 
 | ID | Requirement | Pri | Status | Verify |
 |---|---|---|---|---|
-| FR-PG-01 | The detail page shows photos, features, surface, equipment, rating summary and reviews. Photos open in a full-screen viewer (swipe or arrows, zoom, report). Features the playground doesn't have say so ("Brez stranišča", *no toilets*); only an unset surface shows as unknown. | Must | Done | e2e |
+| FR-PG-01 | The detail page shows photos, features, surface, equipment, rating summary and reviews. Photos open in a full-screen viewer (swipe or arrows, zoom, report). Features the playground doesn't have say so ("Brez stranišča", *no toilets*). Features nobody has answered yet are left out (those added in ops 0017, on playgrounds listed before), and an unset surface shows as unknown. | Must | Done | e2e |
 | FR-PG-02 | "Directions" opens the device's maps app with the playground as the destination. | Must | Done | unit |
 | FR-PG-03 | Opening a detail page counts one view per session. Views drive "most viewed" on Home. | Could | Done — counter is gameable, see backlog | db |
 | FR-PG-04 | Signed-in users can save favourites (a heart on the map sheet and the playground's page) and see them on their profile. | Should | Done (ops 0014) | db, e2e |
@@ -37,7 +37,7 @@ Conventions and the ID scheme are in [README.md](README.md). Status last reviewe
 | FR-ADD-04 | Uploading photos requires a verified email, **enforced by the database and storage policies**, not only by the app. | Must | Done — Server Action, `photos` insert policy and Storage insert policy (ops 0002) | unit, db, e2e |
 | FR-ADD-05 | After submitting, the user lands on the map focused on the new playground, with a success message. | Should | Done | e2e |
 | FR-ADD-06 | Users can add photos to an existing playground, under the same photo rules (FR-ADD-03, FR-ADD-04) and at most 8 per playground per person in total. The detail page always offers "Dodaj fotografije" (*add photos*). | Should | Done — limit also enforced by the database (ops 0012) | e2e |
-| FR-ADD-07 | Equipment can be entered when adding or editing a playground (also in the admin forms); the database accepts only the known keys. | Should | Done (ops 0014) | unit, db, e2e |
+| FR-ADD-07 | Equipment can be entered when adding or editing a playground (also in the admin forms); the database accepts only the known keys, and only the known surfaces. | Should | Done (ops 0014; more options in ops 0017) | unit, db, e2e |
 | FR-ADD-08 | The person who added a playground can edit its name, description, surface and features, and move its pin. Nobody else can (the database's owner-only policy). | Should | Done | db, e2e |
 
 ## Community (`FR-COM`)

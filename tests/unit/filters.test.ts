@@ -8,6 +8,10 @@ const base = {
   has_water: false,
   has_toilets: false,
   has_parking: false,
+  has_benches: false,
+  has_toddler_area: false,
+  is_accessible: false,
+  has_lighting: false,
   surface_type: null as SurfaceType | null,
   equipment: [] as EquipmentKey[],
 };

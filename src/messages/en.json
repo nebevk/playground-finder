@@ -278,13 +278,21 @@
       "has_shade": "Shade",
       "has_water": "Drinking water",
       "has_toilets": "Toilets",
-      "has_parking": "Parking"
+      "has_parking": "Parking",
+      "has_benches": "Benches",
+      "has_toddler_area": "Toddler area",
+      "is_accessible": "Pram & wheelchair access",
+      "has_lighting": "Lighting"
     },
     "surfaceOption": {
       "tartan": "Tartan",
+      "rubber_tiles": "Rubber tiles",
       "sand": "Sand",
       "grass": "Grass",
-      "gravel": "Gravel"
+      "artificial_turf": "Artificial grass",
+      "woodchips": "Wood chips",
+      "gravel": "Gravel",
+      "asphalt": "Asphalt"
     },
     "clear": "Clear",
     "apply": "Show {results}",
@@ -338,23 +346,40 @@
       "has_shade": "Shade",
       "has_water": "Drinking water",
       "has_toilets": "Toilets",
-      "has_parking": "Parking"
+      "has_parking": "Parking",
+      "has_benches": "Benches",
+      "has_toddler_area": "Toddler area",
+      "is_accessible": "Pram & wheelchair access",
+      "has_lighting": "Lighting"
     },
     "surfaceOption": {
       "tartan": "Tartan",
+      "rubber_tiles": "Rubber tiles",
       "sand": "Sand",
       "grass": "Grass",
-      "gravel": "Gravel"
+      "artificial_turf": "Artificial grass",
+      "woodchips": "Wood chips",
+      "gravel": "Gravel",
+      "asphalt": "Asphalt"
     },
     "writeFirstReview": "Write the first review",
     "loginToWriteFirst": "Sign in to write the first review",
     "noData": "no data",
     "equipmentOptions": {
       "swings": "Swings",
+      "baby_swings": "Baby swings",
+      "nest_swing": "Nest swing",
+      "seesaw": "Seesaw",
+      "spring_riders": "Spring riders",
       "slides": "Slides",
+      "climbing_wall": "Climbing wall",
+      "climbing_net": "Climbing net",
       "zipline": "Zip line",
+      "merry_go_round": "Merry-go-round",
+      "trampoline": "Trampoline",
       "sandbox": "Sandbox",
-      "climbing_wall": "Climbing wall"
+      "playhouse": "Playhouse",
+      "water_play": "Water play"
     },
     "reportPlayground": "Report a problem",
     "photoAlt": "{name}, photo {n}",
@@ -365,7 +390,11 @@
       "has_shade": "No shade",
       "has_water": "No drinking water",
       "has_toilets": "No toilets",
-      "has_parking": "No parking"
+      "has_parking": "No parking",
+      "has_benches": "No benches",
+      "has_toddler_area": "No toddler area",
+      "is_accessible": "No step-free access",
+      "has_lighting": "No lighting"
     },
     "openPhoto": "Open photo {n} of {total}",
     "photoPosition": "Photo {n} of {total}",
@@ -420,9 +449,13 @@
       "surface": "Surface",
       "surfaceOptions": {
         "tartan": "Tartan",
+        "rubber_tiles": "Rubber tiles",
         "sand": "Sand",
         "grass": "Grass",
-        "gravel": "Gravel"
+        "artificial_turf": "Artificial grass",
+        "woodchips": "Wood chips",
+        "gravel": "Gravel",
+        "asphalt": "Asphalt"
       },
       "features": "What does it have?",
       "featureOptions": {
@@ -430,7 +463,11 @@
         "has_shade": "Shade",
         "has_water": "Drinking water",
         "has_toilets": "Toilets",
-        "has_parking": "Parking"
+        "has_parking": "Parking",
+        "has_benches": "Benches",
+        "has_toddler_area": "Toddler area",
+        "is_accessible": "Pram & wheelchair access",
+        "has_lighting": "Lighting"
       },
       "equipment": "Play equipment"
     },

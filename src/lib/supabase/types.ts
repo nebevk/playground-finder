@@ -122,11 +122,15 @@ export type Database = {
           description: string | null
           equipment: Json
           flagged: boolean
+          has_benches: boolean | null
+          has_lighting: boolean | null
           has_parking: boolean
           has_shade: boolean
+          has_toddler_area: boolean | null
           has_toilets: boolean
           has_water: boolean
           id: string
+          is_accessible: boolean | null
           is_fenced: boolean
           location: unknown
           name: string
@@ -139,11 +143,15 @@ export type Database = {
           description?: string | null
           equipment?: Json
           flagged?: boolean
+          has_benches?: boolean | null
+          has_lighting?: boolean | null
           has_parking?: boolean
           has_shade?: boolean
+          has_toddler_area?: boolean | null
           has_toilets?: boolean
           has_water?: boolean
           id?: string
+          is_accessible?: boolean | null
           is_fenced?: boolean
           location: unknown
           name: string
@@ -156,11 +164,15 @@ export type Database = {
           description?: string | null
           equipment?: Json
           flagged?: boolean
+          has_benches?: boolean | null
+          has_lighting?: boolean | null
           has_parking?: boolean
           has_shade?: boolean
+          has_toddler_area?: boolean | null
           has_toilets?: boolean
           has_water?: boolean
           id?: string
+          is_accessible?: boolean | null
           is_fenced?: boolean
           location?: unknown
           name?: string
@@ -304,11 +316,15 @@ export type Database = {
           description: string | null
           equipment: Json | null
           flagged: boolean | null
+          has_benches: boolean | null
+          has_lighting: boolean | null
           has_parking: boolean | null
           has_shade: boolean | null
+          has_toddler_area: boolean | null
           has_toilets: boolean | null
           has_water: boolean | null
           id: string | null
+          is_accessible: boolean | null
           is_fenced: boolean | null
           lat: number | null
           lng: number | null

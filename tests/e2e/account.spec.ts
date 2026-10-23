@@ -445,7 +445,7 @@ test("[FR-PG-04] a favourite saved with the heart is listed on the profile, and 
   await expect(favourites().getByText(sl.profile.favorites.empty)).toBeVisible({ timeout: 20_000 });
 });
 
-test("[FR-ADD-07] play equipment chosen when adding shows on the playground's page", async ({ page }) => {
+test("[FR-ADD-07] [FR-ADD-02] equipment (baby swings too), features and surface chosen when adding show on its page", async ({ page }) => {
   test.setTimeout(90_000);
   await login(page);
   await page.goto("/sl/add");
@@ -454,7 +454,10 @@ test("[FR-ADD-07] play equipment chosen when adding shows on the playground's pa
   const name = `E2E igrala ${Date.now()}`;
   await page.getByPlaceholder(sl.add.step2.namePlaceholder).fill(name);
   await page.getByText(sl.detail.equipmentOptions.swings, { exact: true }).click();
+  await page.getByText(sl.detail.equipmentOptions.baby_swings, { exact: true }).click();
   await page.getByText(sl.detail.equipmentOptions.sandbox, { exact: true }).click();
+  await page.getByText(sl.filters.feature.has_benches, { exact: true }).click();
+  await page.getByText(sl.add.step2.surfaceOptions.woodchips, { exact: true }).click();
   await page.getByRole("button", { name: sl.add.next }).click();
   await page.getByRole("button", { name: sl.add.submit }).click();
 
@@ -465,8 +468,14 @@ test("[FR-ADD-07] play equipment chosen when adding shows on the playground's pa
   await expect(page.getByRole("heading", { level: 1, name })).toBeVisible();
   const equipment = page.locator("section", { has: page.getByRole("heading", { name: sl.detail.equipment }) });
   await expect(equipment.getByText(sl.detail.equipmentOptions.swings, { exact: true })).toBeVisible();
+  await expect(equipment.getByText(sl.detail.equipmentOptions.baby_swings, { exact: true })).toBeVisible();
   await expect(equipment.getByText(sl.detail.equipmentOptions.sandbox, { exact: true })).toBeVisible();
   await expect(equipment.getByText(sl.detail.equipmentOptions.slides, { exact: true })).toHaveCount(0);
+  const features = page.locator("section", { has: page.getByRole("heading", { name: sl.detail.features }) });
+  await expect(features.getByText(sl.detail.feature.has_benches, { exact: true })).toBeVisible();
+  await expect(features.getByText(sl.detail.surfaceOption.woodchips, { exact: true })).toBeVisible();
+  // The form asked, so an unticked newer feature is a "no".
+  await expect(features.getByText(sl.detail.featureAbsent.has_lighting, { exact: true })).toBeVisible();
 });
 
 // A star's name in the review form.

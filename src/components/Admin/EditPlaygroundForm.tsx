@@ -1,24 +1,23 @@
 "use client";
 
 import { useId, useRef, type ReactNode } from "react";
-import { EQUIPMENT_KEYS, type EquipmentKey } from "@/lib/playground-types";
+import {
+  EQUIPMENT_KEYS,
+  PLAYGROUND_FEATURE_KEYS,
+  SURFACE_TYPES,
+  type EquipmentKey,
+  type FeatureKey,
+  type SurfaceType,
+} from "@/lib/playground-types";
 import { useTranslations } from "next-intl";
 import { updatePlaygroundAction } from "@/app/[locale]/admin/actions";
 import { DESCRIPTION_MAX, NAME_MAX } from "@/lib/limits";
 
-const SURFACE_OPTIONS = ["tartan", "sand", "grass", "gravel"] as const;
-const FEATURE_KEYS = ["is_fenced", "has_shade", "has_water", "has_toilets", "has_parking"] as const;
-
-type Playground = {
+type Playground = Record<FeatureKey, boolean> & {
   id: string;
   name: string;
   description: string | null;
-  surface_type: "tartan" | "sand" | "grass" | "gravel" | null;
-  is_fenced: boolean;
-  has_shade: boolean;
-  has_water: boolean;
-  has_toilets: boolean;
-  has_parking: boolean;
+  surface_type: SurfaceType | null;
   equipment: EquipmentKey[];
 };
 
@@ -93,7 +92,7 @@ export function EditPlaygroundForm({
                 className="select"
               >
                 <option value="">-</option>
-                {SURFACE_OPTIONS.map((s) => (
+                {SURFACE_TYPES.map((s) => (
                   <option key={s} value={s}>
                     {tSurf(s)}
                   </option>
@@ -104,7 +103,7 @@ export function EditPlaygroundForm({
             <fieldset>
               <legend className="label-text mb-1">{tFields("features")}</legend>
               <div className="grid grid-cols-2 gap-2">
-                {FEATURE_KEYS.map((key) => (
+                {PLAYGROUND_FEATURE_KEYS.map((key) => (
                   <label key={key} className="flex cursor-pointer items-center gap-2">
                     <input
                       type="checkbox"

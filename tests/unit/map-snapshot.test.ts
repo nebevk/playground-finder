@@ -31,10 +31,14 @@ function row(i: number, description: string | null = i % 2 === 0 ? LONG : null):
     has_water: i % 5 === 0,
     has_toilets: i % 7 === 0,
     has_parking: i % 11 === 0,
-    surface_type: (["tartan", "sand", "grass", "gravel", null] as const)[i % 5],
+    has_benches: i % 2 === 1,
+    has_toddler_area: i % 13 === 0,
+    is_accessible: i % 4 === 0,
+    has_lighting: false,
+    surface_type: (["tartan", "woodchips", "grass", "asphalt", null] as const)[i % 5],
     review_count: i % 4 === 0 ? 0 : i % 40,
     avg_rating: i % 4 === 0 ? null : 3.666666666666667,
-    equipment: i % 3 === 0 ? ["swings", "sandbox"] : i % 3 === 1 ? ["climbing_wall"] : [],
+    equipment: i % 3 === 0 ? ["swings", "baby_swings", "sandbox"] : i % 3 === 1 ? ["climbing_wall", "water_play"] : [],
   };
 }
 const bytes = (value: unknown) => Buffer.byteLength(JSON.stringify(value), "utf8");

@@ -2,16 +2,13 @@
 
 import { redirect } from "next/navigation";
 import { MAX_PHOTOS } from "@/lib/photo-checks";
-import { equipmentFrom } from "@/lib/playground-types";
+import { equipmentFrom, featuresFrom, surfaceFrom } from "@/lib/playground-types";
 import { invalidateMapSnapshot } from "@/lib/playgrounds";
 import { readSubmittedPhotos, storePhotos } from "@/lib/photo-upload";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import { isRateLimited } from "@/lib/rate-limit";
 import { verifyTurnstile } from "@/lib/turnstile";
-
-const SURFACE_TYPES = ["tartan", "sand", "grass", "gravel"] as const;
-const FEATURE_KEYS = ["is_fenced", "has_shade", "has_water", "has_toilets", "has_parking"] as const;
 
 export type AddState = { error?: string } | undefined;
 
@@ -29,10 +26,7 @@ export async function createPlaygroundAction(
   const lng = Number(formData.get("lng"));
   const name = String(formData.get("name") ?? "").trim();
   const description = String(formData.get("description") ?? "").trim() || null;
-  const surfaceRaw = String(formData.get("surface_type") ?? "");
-  const surface_type = (SURFACE_TYPES as readonly string[]).includes(surfaceRaw)
-    ? (surfaceRaw as (typeof SURFACE_TYPES)[number])
-    : null;
+  const surface_type = surfaceFrom(formData.get("surface_type"));
   const locale = String(formData.get("locale") ?? "sl");
 
   if (!Number.isFinite(lat) || !Number.isFinite(lng)) return { error: "no_location" };
@@ -57,10 +51,6 @@ export async function createPlaygroundAction(
     }
   }
 
-  const features = Object.fromEntries(
-    FEATURE_KEYS.map((k) => [k, formData.get(k) === "on"]),
-  ) as Record<(typeof FEATURE_KEYS)[number], boolean>;
-
   const { data: inserted, error: insertErr } = await supabase
     .from("playgrounds")
     .insert({
@@ -69,7 +59,7 @@ export async function createPlaygroundAction(
       // PostGIS WKT: longitude first, then latitude.
       location: `SRID=4326;POINT(${lng} ${lat})`,
       surface_type,
-      ...features,
+      ...featuresFrom(formData),
       equipment: equipmentFrom(formData),
       user_id: user.id,
     })

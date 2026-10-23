@@ -1,6 +1,7 @@
 import { z } from "zod";
+import { EQUIPMENT_KEYS, SURFACE_TYPES } from "../../src/lib/playground-types";
 
-export const SurfaceType = z.enum(["tartan", "sand", "grass", "gravel"]);
+export const SurfaceType = z.enum(SURFACE_TYPES);
 export type SurfaceType = z.infer<typeof SurfaceType>;
 
 export const PlaygroundRecord = z.object({
@@ -34,13 +35,17 @@ export const PlaygroundRecord = z.object({
   has_water: z.boolean().describe("True only if the source mentions a drinking fountain or water source."),
   has_toilets: z.boolean().describe("True only if the source mentions toilets nearby."),
   has_parking: z.boolean().describe("True only if the source mentions parking nearby."),
+  has_benches: z.boolean().describe("True only if the source mentions benches or seating for parents."),
+  has_toddler_area: z.boolean().describe("True only if the source mentions a separate area or equipment for toddlers or babies."),
+  is_accessible: z.boolean().describe("True only if the source says it is reachable with a pram or wheelchair (no steps)."),
+  has_lighting: z.boolean().describe("True only if the source mentions lighting in the evening."),
   surface_type: SurfaceType.nullable().describe(
-    "tartan = rubber/soft surface, sand, grass, or gravel. null if not stated.",
+    "tartan = poured rubber, rubber_tiles, sand, grass, artificial_turf, woodchips (or bark), gravel, asphalt. null if not stated.",
   ),
   equipment: z
     .array(z.string())
     .describe(
-      "Equipment, only from these tags: swings, slides, zipline, sandbox, climbing_wall (anything else is dropped). Empty array if none mentioned.",
+      `Equipment, only from these tags: ${EQUIPMENT_KEYS.join(", ")} (anything else is dropped). baby_swings = enclosed swing seats for babies and toddlers. Empty array if none mentioned.`,
     ),
   confidence: z
     .enum(["high", "medium", "low"])

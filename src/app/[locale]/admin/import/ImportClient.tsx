@@ -26,6 +26,10 @@ const COLS: Record<string, string[]> = {
   has_water: ["water", "has_water", "pitnik", "voda"],
   has_toilets: ["toilets", "has_toilets", "stranisce", "wc"],
   has_parking: ["parking", "has_parking", "parkirisce"],
+  has_benches: ["benches", "has_benches", "klopi"],
+  has_toddler_area: ["toddler_area", "has_toddler_area", "malcki", "del_za_malcke"],
+  is_accessible: ["accessible", "is_accessible", "dostopno", "vozicek"],
+  has_lighting: ["lighting", "has_lighting", "razsvetljava"],
 };
 
 const DUP_M = 60;
