@@ -1,7 +1,7 @@
 ---
 id: 0016
 title: Link previews show the brand, and each playground's own card
-status: ready
+status: done
 order: any
 destructive: false
 migrations: []
@@ -57,4 +57,7 @@ Expect:
 `git revert` the commit and push. There is no data or schema to undo.
 
 ## Result log (Cursor)
+
+- **2026-10-23T14:50Z** started. Preflight OK (ledger clean, prod READY on `8697c10`, `more_playground_options` not in prod). Pushing `3b2b132` only (0017 commits stay local until migration).
+- **2026-10-23T14:53Z** deploy `dpl_FSTy2yFntknQfgc8PcgnbFbiTrYT` READY on `3b2b132`. Smoke paths all 200. Site `og:image` → `/sl/opengraph-image/site?…` (200 image/png). Playground `55d281fd-…` card → `/sl/playground/…/opengraph-image/card?…` (200 image/png). Owner: paste `/sl` and a playground link into Teams/WhatsApp (add `?v=1` if cache shows the old placeholder). **status → done**.
 

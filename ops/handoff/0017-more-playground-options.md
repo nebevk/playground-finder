@@ -1,7 +1,7 @@
 ---
 id: 0017
 title: More options when describing a playground (baby swings among them)
-status: ready
+status: in-progress
 order: migrations-first
 destructive: false
 migrations: [20261023120000_more_playground_options.sql]
@@ -131,4 +131,7 @@ Expect:
 `git revert` the commit and push. The earlier code reads and writes `surface_type`, which this migration left in place and backfilled from, so it keeps working. **Leave the schema as it is**: narrowing the checks back would fail on any row that already uses a new value, and the `surfaces` column is harmless to the old code.
 
 ## Result log (Cursor)
+
+- **2026-10-23T14:53Z** started (0016 done). Pre-check count(*) = 0. Applying `more_playground_options`.
+- **2026-10-23T14:54Z** applied `more_playground_options` (prod version `20261023145425`). Verify: equipment_known+surfaces_known validated; not_a_list/still_tartan/unmapped_tartan all 0; geo has 5 new columns; INSERT/UPDATE grants match ticket. Pushing remaining commits (0017 + server-only fence).
 
