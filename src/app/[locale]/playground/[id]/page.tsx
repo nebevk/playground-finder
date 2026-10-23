@@ -170,12 +170,13 @@ export default async function PlaygroundDetailPage({
                   muted={!playground[key]}
                 />
               ))}
-              <FeatureBadge
-                icon={SURFACE_ICON}
-                label={playground.surface_type ? t(`surfaceOption.${playground.surface_type}`) : t("surface")}
-                muted={!playground.surface_type}
-                note={playground.surface_type ? undefined : t("noData")}
-              />
+              {playground.surfaces.length > 0 ? (
+                playground.surfaces.map((s) => (
+                  <FeatureBadge key={s} icon={SURFACE_ICON} label={t(`surfaceOption.${s}`)} />
+                ))
+              ) : (
+                <FeatureBadge icon={SURFACE_ICON} label={t("surface")} muted note={t("noData")} />
+              )}
             </ul>
           </section>
 

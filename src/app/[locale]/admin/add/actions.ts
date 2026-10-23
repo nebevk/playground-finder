@@ -5,7 +5,7 @@ import { clampText, DESCRIPTION_MAX, NAME_MAX } from "@/lib/limits";
 import { getAdminActionContext } from "@/lib/admin";
 import { geocodeInSlovenia } from "@/lib/geocode";
 import { invalidateMapSnapshot } from "@/lib/playgrounds";
-import { isEquipmentKey, PLAYGROUND_FEATURE_KEYS, surfaceFrom } from "@/lib/playground-types";
+import { isEquipmentKey, PLAYGROUND_FEATURE_KEYS, surfacesIn } from "@/lib/playground-types";
 
 export type GeoResult = { lat: number; lng: number; label: string };
 export type NearbyPlayground = { id: string; name: string; distance_m: number };
@@ -55,7 +55,7 @@ export type QuickAddPayload = {
   lng: number;
   name: string;
   description: string;
-  surface_type: string;
+  surfaces: string[];
   features: Record<string, boolean>;
   equipment?: string[];
 };
@@ -72,7 +72,6 @@ export async function quickAddPlaygroundAction(
     return { ok: false };
   }
 
-  const surface_type = surfaceFrom(payload.surface_type);
   const features = Object.fromEntries(
     PLAYGROUND_FEATURE_KEYS.map((k) => [k, payload.features[k] === true]),
   );
@@ -83,7 +82,7 @@ export async function quickAddPlaygroundAction(
       name,
       description: clampText(payload.description, DESCRIPTION_MAX) || null,
       location: `SRID=4326;POINT(${payload.lng} ${payload.lat})`,
-      surface_type,
+      surfaces: surfacesIn(payload.surfaces),
       ...features,
       equipment: (payload.equipment ?? []).filter(isEquipmentKey),
       user_id: ctx.user.id,

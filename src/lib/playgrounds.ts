@@ -4,7 +4,7 @@ import { MAP_TAG, packPlayground, type PackedPlayground } from "./map-snapshot";
 import { PHOTO_BUCKET } from "./photo-storage";
 import { createAnonClient } from "./supabase/anon";
 import { createClient } from "./supabase/server";
-import { isEquipmentKey, PLAYGROUND_FEATURE_KEYS, surfaceFrom } from "./playground-types";
+import { isEquipmentKey, PLAYGROUND_FEATURE_KEYS, surfacesIn } from "./playground-types";
 import type { FeatureKey, MapPlayground, PlaygroundDetail, PlaygroundPhoto } from "./playground-types";
 
 export * from "./playground-types";
@@ -14,7 +14,7 @@ const PHOTO_URL_TTL_SECONDS = 60 * 60;
 
 // Every PLAYGROUND_FEATURE_KEYS column, spelled out so the query stays typed.
 const MAP_SELECT =
-  "id, name, description, lat, lng, is_fenced, has_shade, has_water, has_toilets, has_parking, has_benches, has_toddler_area, is_accessible, has_lighting, surface_type, review_count, avg_rating, equipment";
+  "id, name, description, lat, lng, is_fenced, has_shade, has_water, has_toilets, has_parking, has_benches, has_toddler_area, is_accessible, has_lighting, surfaces, review_count, avg_rating, equipment";
 
 type GeoRow = Record<FeatureKey, boolean | null> & {
   id: string | null;
@@ -22,7 +22,7 @@ type GeoRow = Record<FeatureKey, boolean | null> & {
   description: string | null;
   lat: number | null;
   lng: number | null;
-  surface_type: string | null;
+  surfaces: unknown;
   review_count: number | null;
   avg_rating: number | null;
   equipment: unknown;
@@ -38,7 +38,7 @@ function toMapPlayground(row: GeoRow): MapPlayground | null {
     lat: row.lat,
     lng: row.lng,
     ...features,
-    surface_type: surfaceFrom(row.surface_type),
+    surfaces: Array.isArray(row.surfaces) ? surfacesIn(row.surfaces) : [],
     review_count: row.review_count ?? 0,
     avg_rating: row.avg_rating,
     equipment: Array.isArray(row.equipment) ? row.equipment.filter(isEquipmentKey) : [],
@@ -61,7 +61,7 @@ export const getMapSnapshot = unstable_cache(
     console.info(`map snapshot built: ${rows.length} playgrounds, ${JSON.stringify(rows).length} bytes`);
     return rows;
   },
-  ["map-snapshot-v4-more-options"],
+  ["map-snapshot-v5-surfaces"],
   { tags: [MAP_TAG], revalidate: 3600 },
 );
 

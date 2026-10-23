@@ -10,12 +10,12 @@ import {
   SURFACE_TYPES,
   type EquipmentKey,
   type FeatureKey,
+  type SurfaceType,
 } from "@/lib/playground-types";
 
 // A playground's details, shared by the add flow (step 2) and the owner's edit page: the name
-// (required), a description, the surface (tap the chosen one again to clear it, it's optional),
-// what the playground has (an unticked feature means "doesn't have it", shown as "Brez …") and
-// its play equipment.
+// (required), a description, its surfaces (any number, optional), what the playground has (an
+// unticked feature means "doesn't have it", shown as "Brez …") and its play equipment.
 export function DetailsFields({
   name,
   onNameChange,
@@ -23,8 +23,8 @@ export function DetailsFields({
   nameInput,
   description,
   onDescriptionChange,
-  surface,
-  onSurfaceChange,
+  surfaces,
+  onSurfaceToggle,
   features,
   onFeatureToggle,
   equipment,
@@ -37,8 +37,8 @@ export function DetailsFields({
   nameInput?: Ref<HTMLInputElement>;
   description: string;
   onDescriptionChange: (description: string) => void;
-  surface: string;
-  onSurfaceChange: (surface: string) => void;
+  surfaces: readonly SurfaceType[];
+  onSurfaceToggle: (key: SurfaceType) => void;
   features: Partial<Record<FeatureKey, boolean>>;
   onFeatureToggle: (key: FeatureKey) => void;
   equipment: readonly EquipmentKey[];
@@ -85,26 +85,15 @@ export function DetailsFields({
 
       <fieldset className="fieldset">
         <legend className="fieldset-legend text-sm">{t("step2.surface")}</legend>
-        <div role="radiogroup" className="flex flex-wrap gap-2">
+        {/* A playground often has more than one surface (rubber under the swings, grass around). */}
+        <div className="flex flex-wrap gap-2">
           {SURFACE_TYPES.map((s) => (
-            <label
+            <FeatureToggle
               key={s}
-              className={`btn has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-primary ${
-                surface === s ? "btn-primary" : "btn-outline border-base-content/30"
-              }`}
-            >
-              <input
-                type="radio"
-                name="surface"
-                value={s}
-                className="sr-only"
-                checked={surface === s}
-                onChange={() => onSurfaceChange(s)}
-                // Tapping the chosen surface again clears it (it's optional).
-                onClick={() => surface === s && onSurfaceChange("")}
-              />
-              {t(`step2.surfaceOptions.${s}`)}
-            </label>
+              label={t(`step2.surfaceOptions.${s}`)}
+              checked={surfaces.includes(s)}
+              onChange={() => onSurfaceToggle(s)}
+            />
           ))}
         </div>
       </fieldset>

@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { clampText, DESCRIPTION_MAX, NAME_MAX } from "@/lib/limits";
 import { getAdminActionContext } from "@/lib/admin";
 import { invalidateMapSnapshot } from "@/lib/playgrounds";
-import { statedFeatures, surfaceFrom } from "@/lib/playground-types";
+import { statedFeatures, surfacesIn } from "@/lib/playground-types";
 
 export type ExistingPoint = { id: string; name: string; lat: number; lng: number };
 
@@ -49,7 +49,7 @@ export async function bulkInsertPlaygroundsAction(
         name: clampText(r.name, NAME_MAX),
         description: clampText(r.description, DESCRIPTION_MAX) || null,
         location: `SRID=4326;POINT(${r.lng} ${r.lat})`,
-        surface_type: surfaceFrom(r.surface_type),
+        surfaces: surfacesIn([r.surface_type]),
         ...statedFeatures((k) => r.features[k] === true),
         user_id: ctx.user.id,
       };

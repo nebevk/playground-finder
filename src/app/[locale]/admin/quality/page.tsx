@@ -11,7 +11,7 @@ type Row = {
   lat: number;
   lng: number;
   description: string | null;
-  surface_type: string | null;
+  hasSurface: boolean;
   review_count: number;
   hasFeature: boolean;
   hasPhoto: boolean;
@@ -33,7 +33,7 @@ export default async function AdminQualityPage({
     supabase
       .from("playgrounds_geo")
       .select(
-        "id, name, lat, lng, description, surface_type, review_count, is_fenced, has_shade, has_water, has_toilets, has_parking, has_benches, has_toddler_area, is_accessible, has_lighting",
+        "id, name, lat, lng, description, surfaces, review_count, is_fenced, has_shade, has_water, has_toilets, has_parking, has_benches, has_toddler_area, is_accessible, has_lighting",
       ),
     supabase.from("photos").select("playground_id"),
   ]);
@@ -49,7 +49,7 @@ export default async function AdminQualityPage({
         lat: r.lat,
         lng: r.lng,
         description: r.description,
-        surface_type: r.surface_type,
+        hasSurface: Array.isArray(r.surfaces) && r.surfaces.length > 0,
         review_count: r.review_count ?? 0,
         hasFeature: PLAYGROUND_FEATURE_KEYS.some((k) => r[k]),
         hasPhoto: photoSet.has(r.id),
@@ -59,7 +59,7 @@ export default async function AdminQualityPage({
 
   const noPhotos = rows.filter((r) => !r.hasPhoto);
   const noDescription = rows.filter((r) => !r.description?.trim());
-  const noDetails = rows.filter((r) => !r.hasFeature && !r.surface_type);
+  const noDetails = rows.filter((r) => !r.hasFeature && !r.hasSurface);
   const noReviews = rows.filter((r) => r.review_count === 0);
 
   // Duplicate names (case-insensitive).

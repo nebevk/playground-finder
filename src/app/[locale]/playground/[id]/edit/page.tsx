@@ -45,7 +45,7 @@ export default async function EditPlaygroundPage({
           id: playground.id,
           name: playground.name,
           description: playground.description ?? "",
-          surface: playground.surface_type ?? "",
+          surfaces: playground.surfaces,
           lat: playground.lat,
           lng: playground.lng,
           features,

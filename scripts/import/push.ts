@@ -3,7 +3,7 @@ import { readdirSync, readFileSync, renameSync, mkdirSync, existsSync } from "no
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createClient } from "@supabase/supabase-js";
-import { isEquipmentKey, statedFeatures } from "../../src/lib/playground-types";
+import { isEquipmentKey, statedFeatures, surfacesIn } from "../../src/lib/playground-types";
 import type { StagedFile } from "./types";
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -54,7 +54,8 @@ async function main() {
         description: pg.description,
         location: `SRID=4326;POINT(${pg.longitude} ${pg.latitude})`,
         ...statedFeatures((k) => pg[k]),
-        surface_type: pg.surface_type,
+        // "tartan" maps to rubber tiles; unknowns drop (ops 0017).
+        surfaces: surfacesIn(pg.surface_type ? [pg.surface_type] : []),
         // The database accepts only the equipment the app knows (ops 0014).
         equipment: pg.equipment.filter(isEquipmentKey),
         user_id: null,

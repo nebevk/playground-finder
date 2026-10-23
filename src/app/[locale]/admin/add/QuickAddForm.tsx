@@ -7,7 +7,7 @@ import { Link } from "@/i18n/navigation";
 import { LocationPickerClient } from "@/components/Map/LocationPickerClient";
 import { useToast } from "@/components/Toast/ToastProvider";
 import { DESCRIPTION_MAX, NAME_MAX } from "@/lib/limits";
-import { EQUIPMENT_KEYS, PLAYGROUND_FEATURE_KEYS, SURFACE_TYPES, type EquipmentKey } from "@/lib/playground-types";
+import { EQUIPMENT_KEYS, PLAYGROUND_FEATURE_KEYS, SURFACE_TYPES, type EquipmentKey, type SurfaceType } from "@/lib/playground-types";
 import {
   geocodeAddressAction,
   nearbyPlaygroundsAction,
@@ -29,7 +29,7 @@ export function QuickAddForm({ locale }: { locale: string }) {
   const [location, setLocation] = useState<LatLng | null>(null);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [surface, setSurface] = useState("");
+  const [surfaces, setSurfaces] = useState<SurfaceType[]>([]);
   const [features, setFeatures] = useState<Record<string, boolean>>({});
   const [equipment, setEquipment] = useState<EquipmentKey[]>([]);
   const [nearby, setNearby] = useState<NearbyPlayground[]>([]);
@@ -69,7 +69,7 @@ export function QuickAddForm({ locale }: { locale: string }) {
           lng: location.lng,
           name,
           description,
-          surface_type: surface,
+          surfaces,
           features,
           equipment,
         },
@@ -83,7 +83,7 @@ export function QuickAddForm({ locale }: { locale: string }) {
       // Keep the pin (likely adding more nearby), clear the rest.
       setName("");
       setDescription("");
-      setSurface("");
+      setSurfaces([]);
       setFeatures({});
     });
   }
@@ -178,8 +178,8 @@ export function QuickAddForm({ locale }: { locale: string }) {
             <button
               key={s}
               type="button"
-              onClick={() => setSurface(s === surface ? "" : s)}
-              className={`btn btn-xs ${surface === s ? "btn-primary" : "btn-outline"}`}
+              onClick={() => setSurfaces((list) => (list.includes(s) ? list.filter((x) => x !== s) : [...list, s]))}
+              className={`btn btn-xs ${surfaces.includes(s) ? "btn-primary" : "btn-outline"}`}
             >
               {tFields(`surfaceOptions.${s}`)}
             </button>

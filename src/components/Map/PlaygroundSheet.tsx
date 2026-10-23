@@ -107,14 +107,14 @@ export function PlaygroundSheet({
             <p className="mt-2 line-clamp-2 text-sm text-base-content/70">{p.description}</p>
           )}
 
-          {(activeFeatures.length > 0 || p.surface_type) && (
+          {(activeFeatures.length > 0 || p.surfaces.length > 0) && (
             <ul className="mt-3 flex flex-wrap gap-1.5">
               {activeFeatures.map((key) => (
                 <FeatureBadge key={key} icon={FEATURE_ICONS[key]} label={tDetail(`feature.${key}`)} />
               ))}
-              {p.surface_type && (
-                <FeatureBadge icon={SURFACE_ICON} label={tDetail(`surfaceOption.${p.surface_type}`)} />
-              )}
+              {p.surfaces.map((s) => (
+                <FeatureBadge key={s} icon={SURFACE_ICON} label={tDetail(`surfaceOption.${s}`)} />
+              ))}
             </ul>
           )}
 

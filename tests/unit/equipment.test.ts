@@ -7,7 +7,7 @@ import {
   featuresFrom,
   PLAYGROUND_FEATURE_KEYS,
   statedFeatures,
-  surfaceFrom,
+  surfacesFrom,
   SURFACE_TYPES,
 } from "@/lib/playground-types";
 
@@ -44,17 +44,23 @@ describe("equipment", () => {
 });
 
 describe("surfaces", () => {
-  it("[FR-ADD-02] the database accepts exactly the surfaces the app offers", () => {
-    const sql = latestMigrationAdding("playgrounds_surface_type_known");
-    const list = sql.match(/check \(surface_type in \(([^)]*)\)\)/)?.[1];
-    expect(list).toBeDefined();
-    expect(list!.split(",").map((s) => s.trim().replace(/^'|'$/g, ""))).toEqual([...SURFACE_TYPES]);
+  it("[FR-MAP-06] the database accepts exactly the surfaces the app offers", () => {
+    const sql = latestMigrationAdding("playgrounds_surfaces_known");
+    const lists = [...sql.matchAll(/surfaces <@ '(\[[^']*\])'::jsonb/g)].map((m) => JSON.parse(m[1]));
+    expect(lists.length).toBeGreaterThan(0);
+    for (const list of lists) expect(list).toEqual([...SURFACE_TYPES]);
   });
 
-  it("[FR-ADD-02] a submitted surface is read as a known one or none", () => {
-    expect(surfaceFrom("woodchips")).toBe("woodchips");
-    expect(surfaceFrom("lava")).toBeNull();
-    expect(surfaceFrom(null)).toBeNull();
+  it("[FR-MAP-06] tartan is gone, folded into rubber tiles", () => {
+    expect(SURFACE_TYPES).not.toContain("tartan");
+    expect(SURFACE_TYPES).toContain("rubber_tiles");
+  });
+
+  it("[FR-ADD-02] submitted surfaces are read as known ones, deduped, in list order; tartan counts as rubber tiles", () => {
+    const fd = new FormData();
+    for (const value of ["grass", "lava", "tartan", "grass"]) fd.append("surfaces", value);
+    expect(surfacesFrom(fd)).toEqual(["rubber_tiles", "grass"]);
+    expect(surfacesFrom(new FormData())).toEqual([]);
   });
 });
 

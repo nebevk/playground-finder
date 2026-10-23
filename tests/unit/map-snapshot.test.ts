@@ -8,7 +8,7 @@ import {
   packPlayground,
   unpackPlayground,
 } from "@/lib/map-snapshot";
-import type { MapPlayground } from "@/lib/playground-types";
+import type { MapPlayground, SurfaceType } from "@/lib/playground-types";
 
 const SRC = join(__dirname, "..", "..", "src");
 const read = (...parts: string[]) => readFileSync(join(SRC, ...parts), "utf8");
@@ -35,7 +35,7 @@ function row(i: number, description: string | null = i % 2 === 0 ? LONG : null):
     has_toddler_area: i % 13 === 0,
     is_accessible: i % 4 === 0,
     has_lighting: false,
-    surface_type: (["tartan", "woodchips", "grass", "asphalt", null] as const)[i % 5],
+    surfaces: ([["rubber_tiles"], ["sand", "woodchips"], ["grass"], ["asphalt"], []] as SurfaceType[][])[i % 5],
     review_count: i % 4 === 0 ? 0 : i % 40,
     avg_rating: i % 4 === 0 ? null : 3.666666666666667,
     equipment: i % 3 === 0 ? ["swings", "baby_swings", "sandbox"] : i % 3 === 1 ? ["climbing_wall", "water_play"] : [],

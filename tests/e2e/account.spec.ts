@@ -457,7 +457,9 @@ test("[FR-ADD-07] [FR-ADD-02] equipment (baby swings too), features and surface 
   await page.getByText(sl.detail.equipmentOptions.baby_swings, { exact: true }).click();
   await page.getByText(sl.detail.equipmentOptions.sandbox, { exact: true }).click();
   await page.getByText(sl.filters.feature.has_benches, { exact: true }).click();
+  // A playground can have several surfaces.
   await page.getByText(sl.add.step2.surfaceOptions.woodchips, { exact: true }).click();
+  await page.getByText(sl.add.step2.surfaceOptions.sand, { exact: true }).click();
   await page.getByRole("button", { name: sl.add.next }).click();
   await page.getByRole("button", { name: sl.add.submit }).click();
 
@@ -474,6 +476,7 @@ test("[FR-ADD-07] [FR-ADD-02] equipment (baby swings too), features and surface 
   const features = page.locator("section", { has: page.getByRole("heading", { name: sl.detail.features }) });
   await expect(features.getByText(sl.detail.feature.has_benches, { exact: true })).toBeVisible();
   await expect(features.getByText(sl.detail.surfaceOption.woodchips, { exact: true })).toBeVisible();
+  await expect(features.getByText(sl.detail.surfaceOption.sand, { exact: true })).toBeVisible();
   // The form asked, so an unticked newer feature is a "no".
   await expect(features.getByText(sl.detail.featureAbsent.has_lighting, { exact: true })).toBeVisible();
 });

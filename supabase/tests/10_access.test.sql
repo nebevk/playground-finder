@@ -121,14 +121,14 @@ select throws_ok(
 );
 select lives_ok(
   $$ update public.playgrounds
-       set description = 'Edited', has_toilets = true, surface_type = 'sand',
+       set description = 'Edited', has_toilets = true, surfaces = '["sand", "grass"]',
            location = 'SRID=4326;POINT(14.61 46.11)'
      where name = 'Mine' $$,
   '[FR-ADD-08] the person who added a playground can edit its details and move its pin'
 );
 select is(
   (select count(*)::int from public.playgrounds
-    where name = 'Mine' and description = 'Edited' and has_toilets and surface_type = 'sand'),
+    where name = 'Mine' and description = 'Edited' and has_toilets and surfaces = '["sand", "grass"]'::jsonb),
   1,
   '[FR-ADD-08] the edit is saved'
 );
@@ -470,19 +470,25 @@ select throws_ok(
   '[FR-ADD-07] unknown equipment is rejected'
 );
 
--- More options (ops 0017): baby swings and the rest, more surfaces, features that start unknown.
+-- More options (ops 0017): baby swings and the rest, several surfaces, features that start unknown.
 select lives_ok(
-  format($$ insert into public.playgrounds (name, location, user_id, equipment, surface_type,
+  format($$ insert into public.playgrounds (name, location, user_id, equipment, surfaces,
                                             has_benches, has_toddler_area, is_accessible, has_lighting)
             values ('For babies', 'SRID=4326;POINT(14.5 46.05)', %L, '["baby_swings", "nest_swing", "water_play"]',
-                    'woodchips', true, true, false, false) $$, pg_temp.id('r2')),
-  '[FR-ADD-07] a user can add a playground with baby swings, a newer surface and the newer features'
+                    '["woodchips", "sand"]', true, true, false, false) $$, pg_temp.id('r2')),
+  '[FR-ADD-07] a user can add a playground with baby swings, several surfaces and the newer features'
 );
 select throws_ok(
-  format($$ insert into public.playgrounds (name, location, user_id, surface_type)
-            values ('On lava', 'SRID=4326;POINT(14.5 46.05)', %L, 'lava') $$, pg_temp.id('r2')),
+  format($$ insert into public.playgrounds (name, location, user_id, surfaces)
+            values ('On lava', 'SRID=4326;POINT(14.5 46.05)', %L, '["lava"]') $$, pg_temp.id('r2')),
   '23514', null,
-  '[FR-ADD-02] an unknown surface is rejected'
+  '[FR-MAP-06] an unknown surface is rejected'
+);
+select throws_ok(
+  format($$ insert into public.playgrounds (name, location, user_id, surfaces)
+            values ('No tartan', 'SRID=4326;POINT(14.5 46.05)', %L, '["tartan"]') $$, pg_temp.id('r2')),
+  '23514', null,
+  '[FR-MAP-06] tartan is no longer a surface (it folds into rubber tiles in the app)'
 );
 select is(
   (select has_benches from public.playgrounds where name = 'With swings'),

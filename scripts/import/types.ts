@@ -1,7 +1,8 @@
 import { z } from "zod";
 import { EQUIPMENT_KEYS, SURFACE_TYPES } from "../../src/lib/playground-types";
 
-export const SurfaceType = z.enum(SURFACE_TYPES);
+// "tartan" is still accepted from sources (it's the same as rubber tiles; push.ts maps it).
+export const SurfaceType = z.enum([...SURFACE_TYPES, "tartan"]);
 export type SurfaceType = z.infer<typeof SurfaceType>;
 
 export const PlaygroundRecord = z.object({
@@ -40,7 +41,7 @@ export const PlaygroundRecord = z.object({
   is_accessible: z.boolean().describe("True only if the source says it is reachable with a pram or wheelchair (no steps)."),
   has_lighting: z.boolean().describe("True only if the source mentions lighting in the evening."),
   surface_type: SurfaceType.nullable().describe(
-    "tartan = poured rubber, rubber_tiles, sand, grass, artificial_turf, woodchips (or bark), gravel, asphalt. null if not stated.",
+    "rubber_tiles (or tartan: poured rubber), sand, grass, artificial_turf, woodchips (or bark), gravel, asphalt. null if not stated.",
   ),
   equipment: z
     .array(z.string())

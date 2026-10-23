@@ -5,18 +5,18 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { LocationPickerClient } from "@/components/Map/LocationPickerClient";
 import { DetailsFields } from "@/components/Playground/DetailsFields";
-import { PLAYGROUND_FEATURE_KEYS, type EquipmentKey, type FeatureKey } from "@/lib/playground-types";
+import { PLAYGROUND_FEATURE_KEYS, type EquipmentKey, type FeatureKey, type SurfaceType } from "@/lib/playground-types";
 import { updateOwnPlaygroundAction, type EditState } from "../actions";
 
 export type EditablePlayground = {
   id: string;
   name: string;
   description: string;
-  surface: string;
+  surfaces: SurfaceType[];
   lat: number;
   lng: number;
   features: Record<FeatureKey, boolean>;
-    equipment: EquipmentKey[];
+  equipment: EquipmentKey[];
 };
 
 // The owner's edit form (FR-ADD-08): move the pin, fix the details. Same fields as the add flow.
@@ -27,7 +27,7 @@ export function EditPlaygroundForm({ playground, locale }: { playground: Editabl
   const [location, setLocation] = useState({ lat: playground.lat, lng: playground.lng });
   const [name, setName] = useState(playground.name);
   const [description, setDescription] = useState(playground.description);
-  const [surface, setSurface] = useState(playground.surface);
+  const [surfaces, setSurfaces] = useState(playground.surfaces);
   const [features, setFeatures] = useState(playground.features);
   const [equipment, setEquipment] = useState(playground.equipment);
   const [nameError, setNameError] = useState(false);
@@ -49,7 +49,7 @@ export function EditPlaygroundForm({ playground, locale }: { playground: Editabl
         fd.set("lng", String(location.lng));
         fd.set("name", name);
         fd.set("description", description);
-        if (surface) fd.set("surface_type", surface);
+        for (const s of surfaces) fd.append("surfaces", s);
         for (const k of PLAYGROUND_FEATURE_KEYS) if (features[k]) fd.set(k, "on");
         for (const k of equipment) fd.append("equipment", k);
         return action(fd);
@@ -76,8 +76,8 @@ export function EditPlaygroundForm({ playground, locale }: { playground: Editabl
           nameInput={nameInput}
           description={description}
           onDescriptionChange={setDescription}
-          surface={surface}
-          onSurfaceChange={setSurface}
+          surfaces={surfaces}
+          onSurfaceToggle={(key) => setSurfaces((list) => (list.includes(key) ? list.filter((k) => k !== key) : [...list, key]))}
           features={features}
           onFeatureToggle={(key) => setFeatures({ ...features, [key]: !features[key] })}
           equipment={equipment}

@@ -135,6 +135,7 @@ export type Database = {
           location: unknown
           name: string
           surface_type: string | null
+          surfaces: Json
           user_id: string | null
           view_count: number
         }
@@ -156,6 +157,7 @@ export type Database = {
           location: unknown
           name: string
           surface_type?: string | null
+          surfaces?: Json
           user_id?: string | null
           view_count?: number
         }
@@ -177,6 +179,7 @@ export type Database = {
           location?: unknown
           name?: string
           surface_type?: string | null
+          surfaces?: Json
           user_id?: string | null
           view_count?: number
         }
@@ -331,6 +334,7 @@ export type Database = {
           name: string | null
           review_count: number | null
           surface_type: string | null
+          surfaces: Json | null
           user_id: string | null
           view_count: number | null
         }

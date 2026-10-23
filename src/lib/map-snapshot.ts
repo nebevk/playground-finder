@@ -28,8 +28,8 @@ export type PackedPlayground = [
   lng: number,
   /** Bit i set: has PLAYGROUND_FEATURE_KEYS[i]. */
   features: number,
-  /** Index into SURFACE_TYPES; -1 when unknown. */
-  surface: number,
+  /** Bit i set: has SURFACE_TYPES[i]. */
+  surfaces: number,
   reviewCount: number,
   /** Average rating × 10, rounded (the app shows one decimal); 0 when there are none. */
   rating: number,
@@ -47,7 +47,7 @@ export function packPlayground(p: MapPlayground): PackedPlayground {
     Math.round(p.lat * 1e5) / 1e5,
     Math.round(p.lng * 1e5) / 1e5,
     features,
-    p.surface_type ? SURFACE_TYPES.indexOf(p.surface_type) : -1,
+    SURFACE_TYPES.reduce((bits, key, i) => (p.surfaces.includes(key) ? bits | (1 << i) : bits), 0),
     p.review_count,
     p.avg_rating == null || p.review_count === 0 ? 0 : Math.round(p.avg_rating * 10),
     EQUIPMENT_KEYS.reduce((bits, key, i) => (p.equipment.includes(key) ? bits | (1 << i) : bits), 0),
@@ -56,7 +56,7 @@ export function packPlayground(p: MapPlayground): PackedPlayground {
   return packed;
 }
 
-export function unpackPlayground([id, name, lat, lng, features, surface, reviewCount, rating, equipment, description]: PackedPlayground): MapPlayground {
+export function unpackPlayground([id, name, lat, lng, features, surfaces, reviewCount, rating, equipment, description]: PackedPlayground): MapPlayground {
   const has = Object.fromEntries(PLAYGROUND_FEATURE_KEYS.map((key, i) => [key, (features & (1 << i)) !== 0])) as Record<
     FeatureKey,
     boolean
@@ -68,7 +68,7 @@ export function unpackPlayground([id, name, lat, lng, features, surface, reviewC
     lat,
     lng,
     ...has,
-    surface_type: surface >= 0 ? SURFACE_TYPES[surface] : null,
+    surfaces: SURFACE_TYPES.filter((_, i) => (surfaces & (1 << i)) !== 0),
     review_count: reviewCount,
     avg_rating: rating > 0 ? rating / 10 : null,
     equipment: EQUIPMENT_KEYS.filter((_, i) => (equipment & (1 << i)) !== 0),

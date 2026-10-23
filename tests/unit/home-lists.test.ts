@@ -18,7 +18,7 @@ const point = (id: string, i: number): MapPlayground => ({
   has_toddler_area: false,
   is_accessible: false,
   has_lighting: false,
-  surface_type: null,
+  surfaces: [],
   review_count: 0,
   avg_rating: null,
   equipment: [],

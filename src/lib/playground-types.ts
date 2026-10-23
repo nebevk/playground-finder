@@ -1,8 +1,7 @@
 // The surfaces, features and equipment a playground can list. The database accepts only these
-// (constraints playgrounds_surface_type_known and playgrounds_equipment_known, ops 0017; unit tests
-// keep the lists equal): change both together. The order is the order everywhere they're shown.
+// (constraints playgrounds_surfaces_known and playgrounds_equipment_known, ops 0017; unit tests keep
+// the lists equal): change both together. The order is the order everywhere they're shown.
 export const SURFACE_TYPES = [
-  "tartan",
   "rubber_tiles",
   "sand",
   "grass",
@@ -13,8 +12,16 @@ export const SURFACE_TYPES = [
 ] as const;
 export type SurfaceType = (typeof SURFACE_TYPES)[number];
 
-export function surfaceFrom(value: unknown): SurfaceType | null {
-  return (SURFACE_TYPES as readonly unknown[]).includes(value) ? (value as SurfaceType) : null;
+// Known surfaces only, once each, in list order. "tartan" was an option of its own before ops 0017;
+// it's the same as rubber tiles, so older data and imports that say it still count.
+export function surfacesIn(values: Iterable<unknown>): SurfaceType[] {
+  const given = new Set(Array.from(values, (v) => (v === "tartan" ? "rubber_tiles" : v)));
+  return SURFACE_TYPES.filter((s) => given.has(s));
+}
+
+// The surfaces ticked in a form (checkboxes named "surfaces").
+export function surfacesFrom(formData: FormData): SurfaceType[] {
+  return surfacesIn(formData.getAll("surfaces"));
 }
 
 export const PLAYGROUND_FEATURE_KEYS = [
@@ -91,7 +98,7 @@ export type MapPlayground = Record<FeatureKey, boolean> & {
   description: string | null;
   lat: number;
   lng: number;
-  surface_type: SurfaceType | null;
+  surfaces: SurfaceType[];
   review_count: number;
   avg_rating: number | null;
   equipment: EquipmentKey[];

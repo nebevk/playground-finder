@@ -10,7 +10,7 @@ Output rules — read carefully:
 - A page may describe ONE playground or MANY. Return one entry per distinct playground.
 - Descriptions you write must be in Slovenian, written in your own words. Do NOT copy phrases verbatim from the source — paraphrase the facts.
 - Boolean fields default to false. Only set true when the source explicitly mentions the feature. Inferring "probably has a fence" from a photo description is not enough.
-- surface_type values: "tartan" (poured rubber), "rubber_tiles", "sand", "grass", "artificial_turf", "woodchips" (or bark), "gravel", "asphalt". null if unknown.
+- surface_type values: "rubber_tiles" (poured rubber or tartan), "sand", "grass", "artificial_turf", "woodchips" (or bark), "gravel", "asphalt". null if unknown.
 - equipment: only these tags: ${EQUIPMENT_KEYS.join(", ")} (others are dropped on import). "baby_swings" are enclosed swing seats for babies and toddlers. Empty array if no equipment mentioned.
 - latitude/longitude: only fill in if you find decimal coordinates IN the source text. Do not invent them.
 - address: a street, neighborhood, or town that could be geocoded. Fill it in even when you also have coordinates.

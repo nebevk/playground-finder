@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { MAX_PHOTOS } from "@/lib/photo-checks";
-import { equipmentFrom, featuresFrom, surfaceFrom } from "@/lib/playground-types";
+import { equipmentFrom, featuresFrom, surfacesFrom } from "@/lib/playground-types";
 import { invalidateMapSnapshot } from "@/lib/playgrounds";
 import { readSubmittedPhotos, storePhotos } from "@/lib/photo-upload";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -26,7 +26,6 @@ export async function createPlaygroundAction(
   const lng = Number(formData.get("lng"));
   const name = String(formData.get("name") ?? "").trim();
   const description = String(formData.get("description") ?? "").trim() || null;
-  const surface_type = surfaceFrom(formData.get("surface_type"));
   const locale = String(formData.get("locale") ?? "sl");
 
   if (!Number.isFinite(lat) || !Number.isFinite(lng)) return { error: "no_location" };
@@ -58,7 +57,7 @@ export async function createPlaygroundAction(
       description,
       // PostGIS WKT: longitude first, then latitude.
       location: `SRID=4326;POINT(${lng} ${lat})`,
-      surface_type,
+      surfaces: surfacesFrom(formData),
       ...featuresFrom(formData),
       equipment: equipmentFrom(formData),
       user_id: user.id,

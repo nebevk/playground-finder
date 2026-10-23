@@ -25,7 +25,7 @@ const pg = (id: string, name: string, lat = 46.05, lng = 14.5, description: stri
   has_toddler_area: false,
   is_accessible: false,
   has_lighting: false,
-  surface_type: null,
+  surfaces: [],
   review_count: 0,
   avg_rating: null,
   equipment: [],

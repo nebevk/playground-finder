@@ -17,7 +17,7 @@ type Playground = Record<FeatureKey, boolean> & {
   id: string;
   name: string;
   description: string | null;
-  surface_type: SurfaceType | null;
+  surfaces: SurfaceType[];
   equipment: EquipmentKey[];
 };
 
@@ -84,21 +84,23 @@ export function EditPlaygroundForm({
               />
             </label>
 
-            <label className="form-control">
-              <span className="label-text mb-1">{t("surface")}</span>
-              <select
-                name="surface_type"
-                defaultValue={playground.surface_type ?? ""}
-                className="select"
-              >
-                <option value="">-</option>
+            <fieldset>
+              <legend className="label-text mb-1">{t("surface")}</legend>
+              <div className="grid grid-cols-2 gap-2">
                 {SURFACE_TYPES.map((s) => (
-                  <option key={s} value={s}>
-                    {tSurf(s)}
-                  </option>
+                  <label key={s} className="flex cursor-pointer items-center gap-2">
+                    <input
+                      type="checkbox"
+                      name="surfaces"
+                      value={s}
+                      defaultChecked={playground.surfaces.includes(s)}
+                      className="checkbox checkbox-primary checkbox-sm"
+                    />
+                    <span>{tSurf(s)}</span>
+                  </label>
                 ))}
-              </select>
-            </label>
+              </div>
+            </fieldset>
 
             <fieldset>
               <legend className="label-text mb-1">{tFields("features")}</legend>

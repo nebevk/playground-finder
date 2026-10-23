@@ -10,7 +10,7 @@ import type { ExistingPlayground } from "@/components/Map/LocationPicker";
 import { Turnstile } from "@/components/Turnstile";
 import { formatDistance, haversineMeters } from "@/lib/geo";
 import { MAX_PHOTOS, MAX_TOTAL_PHOTO_BYTES } from "@/lib/photo-checks";
-import { PLAYGROUND_FEATURE_KEYS, type EquipmentKey } from "@/lib/playground-types";
+import { PLAYGROUND_FEATURE_KEYS, type EquipmentKey, type SurfaceType } from "@/lib/playground-types";
 import { createPlaygroundAction, type AddState } from "./actions";
 
 const MAX_TOTAL_MB = MAX_TOTAL_PHOTO_BYTES / 1024 / 1024;
@@ -35,7 +35,7 @@ export function AddFlow({
   const [location, setLocation] = useState<LatLng | null>(null);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [surface, setSurface] = useState<string>("");
+  const [surfaces, setSurfaces] = useState<SurfaceType[]>([]);
   const [features, setFeatures] = useState<Record<string, boolean>>({});
   const [equipment, setEquipment] = useState<EquipmentKey[]>([]);
   const [photos, setPhotos] = useState<File[]>([]);
@@ -119,8 +119,8 @@ export function AddFlow({
             nameInput={nameInput}
             description={description}
             onDescriptionChange={setDescription}
-            surface={surface}
-            onSurfaceChange={setSurface}
+            surfaces={surfaces}
+            onSurfaceToggle={(key) => setSurfaces((list) => (list.includes(key) ? list.filter((k) => k !== key) : [...list, key]))}
             features={features}
             onFeatureToggle={(key) => setFeatures({ ...features, [key]: !features[key] })}
             equipment={equipment}
@@ -151,7 +151,7 @@ export function AddFlow({
               }
               fd.set("name", name);
               fd.set("description", description);
-              if (surface) fd.set("surface_type", surface);
+              for (const s of surfaces) fd.append("surfaces", s);
               for (const k of PLAYGROUND_FEATURE_KEYS) if (features[k]) fd.set(k, "on");
               for (const k of equipment) fd.append("equipment", k);
               for (const f of photos) fd.append("photos", f);

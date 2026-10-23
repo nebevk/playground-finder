@@ -5,7 +5,7 @@ status: ready
 order: migrations-first
 destructive: false
 migrations: [20261023120000_more_playground_options.sql]
-checksums: [ffd6b3200b5437ab]
+checksums: [8b569879aa20d83f]
 depends_on: [0016]
 backlog: []
 requirements: [FR-ADD-07, FR-ADD-02, FR-MAP-05, FR-MAP-06, FR-MAP-07, FR-PG-01]
@@ -27,7 +27,8 @@ The owner asked for more choices in the add form's "Igrala" (*play equipment*), 
   - They start **unknown** (null) for every playground already listed: nobody was asked. A playground's page leaves an unknown feature out, rather than showing "Brez klopi" (*no benches*) everywhere.
   - The forms answer them: an unticked box means "no", as for the first five.
   - Imports (the admin CSV import and the CLI importer) set only what the source says a playground has, and leave the rest unknown.
-- **Surfaces:** Gumijaste plošče (*rubber tiles*), Umetna trava (*artificial grass*), Lesni sekanci (*wood chips*), Asfalt.
+- **Surfaces:** now **any number per playground** (rubber under the swings, grass around them — chosen like the equipment, not one radio button). New surfaces: Gumijaste plošče (*rubber tiles*), Umetna trava (*artificial grass*), Lesni sekanci (*wood chips*), Asfalt. **Tartan is gone** — it was the same as rubber tiles; the migration folds existing "tartan" rows into rubber tiles, and the app still accepts "tartan" from older data and imports.
+  - A new `surfaces` jsonb column (a list) alongside the old single `surface_type`. `surface_type` is left in place and untouched for the code already in production; a later contract ticket drops it.
 - **Everywhere the options appear:**
   - the add form;
   - the owner's edit form;
@@ -38,20 +39,18 @@ The owner asked for more choices in the add form's "Igrala" (*play equipment*), 
   - the CLI importer's extraction schema and prompt.
 - **Migration `20261023120000_more_playground_options.sql`:**
   - four nullable feature columns;
-  - surfaces limited by a new constraint `playgrounds_surface_type_known`, which replaces the table's original inline check `playgrounds_surface_type_check`;
-  - `playgrounds_equipment_known` redefined with the 14 keys;
-  - `playgrounds_geo` recreated with the four columns appended;
-  - insert and update grants for `authenticated` on the four columns.
-
-  Both lists are supersets of the old ones, so every existing row complies.
-- **Code tidy-up on the way:** the admin pages, the add action and the admin actions had their own copies of the feature and surface lists. They now use the shared ones (`featuresFrom`, `surfaceFrom`, `statedFeatures` in `src/lib/playground-types.ts`).
-- **Map snapshot:** its cache key is now `map-snapshot-v4-more-options`, because the order of the equipment and surface lists changed.
+  - a new `surfaces` jsonb column, backfilled from `surface_type` (tartan → rubber tiles), limited by a new constraint `playgrounds_surfaces_known` (the seven keys). The old inline `surface_type` check stays; `surface_type` is kept but no longer written;
+  - `playgrounds_equipment_known` redefined with the 14 keys (a superset of ops 0014's, so every row complies);
+  - `playgrounds_geo` recreated with the five new columns appended;
+  - insert and update grants for `authenticated` on the new columns, `surfaces` among them.
+- **Code tidy-up on the way:** the admin pages, the add action and the admin actions had their own copies of the feature and surface lists. They now use the shared helpers (`featuresFrom`, `surfacesFrom`, `surfacesIn`, `statedFeatures` in `src/lib/playground-types.ts`).
+- **Map snapshot:** its cache key is now `map-snapshot-v5-surfaces`, because the packed shape and list order changed (surfaces is now a bitmask, like equipment).
 - **i18n (sl + en):** labels for every new option, and "Brez …" for each new feature.
 - **Docs:** FR-MAP-05, FR-MAP-06, FR-MAP-07, FR-PG-01 and FR-ADD-07 list the new options.
 - **Tests:**
-  - unit: the migration's equipment and surface lists equal the app's (from the newest migration that defines each constraint); parsing of forms; imports leave unknown features null;
-  - pgTAP: baby swings, a new surface and the new features can be added; an unknown surface is refused; the new features start unknown; the owner can answer them;
-  - e2e: baby swings, benches and wood chips chosen in the add form show on the new playground's page, with "Brez razsvetljave" for the unticked lighting. A seeded playground shows neither "Klopi" nor "Brez klopi".
+  - unit: the migration's equipment and surface lists equal the app's (from the newest migration that defines each constraint); tartan is gone from the list; form parsing dedupes surfaces, keeps list order and folds tartan into rubber tiles; imports leave unknown features null;
+  - pgTAP: baby swings, several surfaces and the new features can be added; an unknown surface and bare "tartan" are refused; the new features start unknown; the owner can answer them and set several surfaces;
+  - e2e: baby swings, benches and two surfaces (wood chips + sand) chosen in the add form show on the new playground's page, with "Brez razsvetljave" for the unticked lighting. A seeded playground shows neither "Klopi" nor "Brez klopi".
 
 ## Local verification (Claude Code)
 
@@ -63,13 +62,9 @@ The owner asked for more choices in the add form's "Igrala" (*play equipment*), 
 ## Production steps (Cursor)
 
 1. Preflight. The working tree must be clean, and 0016 must be `done`: this push also carries its commit.
-2. **Pre-check (read-only).** Both queries are needed:
+2. **Pre-check (read-only).** Must return `0`: every existing playground's surface_type is one the backfill can map, and its equipment is within the new list.
 
    ```sql
-   select conname from pg_constraint
-   where conrelid = 'public.playgrounds'::regclass and contype = 'c'
-   order by 1;
-
    select count(*) from public.playgrounds
    where (surface_type is not null
           and surface_type not in ('tartan', 'rubber_tiles', 'sand', 'grass', 'artificial_turf', 'woodchips', 'gravel', 'asphalt'))
@@ -77,11 +72,8 @@ The owner asked for more choices in the add form's "Igrala" (*play equipment*), 
       or not equipment <@ '["swings", "baby_swings", "nest_swing", "seesaw", "spring_riders", "slides", "climbing_wall", "climbing_net", "zipline", "merry_go_round", "trampoline", "sandbox", "playhouse", "water_play"]'::jsonb;
    ```
 
-   - The first must list `playgrounds_surface_type_check` (the check the migration replaces) and `playgrounds_equipment_known`.
-   - The second must return `0`.
-
-   If either fails, record the output, set `blocked` and stop without applying. A surface check under another name would stay in place and refuse the new surfaces.
-3. `apply_migration` with name `more_playground_options` and the exact file contents. It is safe before the push: the code in production never sets the new columns, and every value it writes stays allowed.
+   If it isn't `0`, record `select id, name, surface_type, equipment from public.playgrounds where …` (same condition), set `blocked` and stop without applying. A surface_type outside the backfill's map would land in `surfaces` and fail the new constraint.
+3. `apply_migration` with name `more_playground_options` and the exact file contents. It is safe before the push: the code in production still writes `surface_type`, which is untouched, and never sets the new columns.
 4. Run *Verify in production* and confirm all three expectations. If one fails, set `failed` and stop. Don't push, and leave the schema: the code in production works with it either way.
 5. Commit and push, then watch the deploy until it is `READY`. Smoke-test the `smokePaths`.
 6. **Owner test on the phone** (record the result):
@@ -91,23 +83,31 @@ The owner asked for more choices in the add form's "Igrala" (*play equipment*), 
      - "Kaj ima igrišče?": "Klopi", "Del za malčke", "Dostop z vozičkom" and "Razsvetljava".
 
      Tick a few and save. The playground's page lists them, and shows "Brez …" for the unticked ones.
+     Under "Podlaga" you can tick more than one surface.
    - **Filter:** on the map, Filtri → "Igrala" → "Gugalnice za malčke". Only playgrounds that have them remain.
-   - **Older playgrounds:** open one nobody has edited since. It shows no "Brez klopi" or "Brez razsvetljave".
+   - **Older playgrounds:** open one nobody has edited since. Its surface still shows (what was "tartan" now reads "Gumijaste plošče"), and it shows no "Brez klopi" or "Brez razsvetljave".
 7. `get_advisors` (`security`): no new findings expected. Record the result and set `status: done`.
 
 ## Verify in production
 
 ```sql
--- The surface and equipment checks, both validated; the old inline surface check is gone.
+-- The new surfaces and equipment checks, both validated.
 select conname, convalidated from pg_constraint
 where conrelid = 'public.playgrounds'::regclass
-  and conname in ('playgrounds_surface_type_check', 'playgrounds_surface_type_known', 'playgrounds_equipment_known')
+  and conname in ('playgrounds_surfaces_known', 'playgrounds_equipment_known')
 order by 1;
 
--- The new features in the view.
+-- Every playground has a surfaces list, and no old "tartan" survived in it.
+select
+  count(*) filter (where jsonb_typeof(surfaces) <> 'array') as not_a_list,
+  count(*) filter (where surfaces @> '["tartan"]') as still_tartan,
+  count(*) filter (where surface_type = 'tartan' and not surfaces @> '["rubber_tiles"]') as unmapped_tartan
+from public.playgrounds;
+
+-- The new columns in the view (surfaces among them).
 select column_name from information_schema.columns
 where table_schema = 'public' and table_name = 'playgrounds_geo'
-  and column_name in ('has_benches', 'has_toddler_area', 'is_accessible', 'has_lighting')
+  and column_name in ('has_benches', 'has_toddler_area', 'is_accessible', 'has_lighting', 'surfaces')
 order by 1;
 
 -- What signed-in users may set on playgrounds.
@@ -119,17 +119,16 @@ group by 1 order by 1;
 ```
 
 Expect:
-- The first query returns exactly 2 rows: `playgrounds_equipment_known | t` and `playgrounds_surface_type_known | t`.
-- The second returns 4 rows: `has_benches`, `has_lighting`, `has_toddler_area`, `is_accessible`.
-- The third returns:
-  - `INSERT`: `description, equipment, has_benches, has_lighting, has_parking, has_shade, has_toddler_area, has_toilets, has_water, is_accessible, is_fenced, location, name, surface_type, user_id`
-  - `UPDATE`: `description, equipment, has_benches, has_lighting, has_parking, has_shade, has_toddler_area, has_toilets, has_water, is_accessible, is_fenced, location, name, surface_type`
+- The first query returns exactly 2 rows: `playgrounds_equipment_known | t` and `playgrounds_surfaces_known | t`.
+- The second returns one row, all three counts `0`.
+- The third returns 5 rows: `has_benches`, `has_lighting`, `has_toddler_area`, `is_accessible`, `surfaces`.
+- The fourth returns (note `surface_type` is still granted — it's untouched, kept for the code in production):
+  - `INSERT`: `description, equipment, has_benches, has_lighting, has_parking, has_shade, has_toddler_area, has_toilets, has_water, is_accessible, is_fenced, location, name, surface_type, surfaces, user_id`
+  - `UPDATE`: `description, equipment, has_benches, has_lighting, has_parking, has_shade, has_toddler_area, has_toilets, has_water, is_accessible, is_fenced, location, name, surface_type, surfaces`
 
 ## Rollback
 
-`git revert` the commit and push. **Leave the schema as it is**:
-- the earlier code works with it, because the change is expand-only;
-- narrowing the checks back would fail on any row that already uses a new value.
+`git revert` the commit and push. The earlier code reads and writes `surface_type`, which this migration left in place and backfilled from, so it keeps working. **Leave the schema as it is**: narrowing the checks back would fail on any row that already uses a new value, and the `surfaces` column is harmless to the old code.
 
 ## Result log (Cursor)
 

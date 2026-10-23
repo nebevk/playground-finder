@@ -1,5 +1,5 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { isEquipmentKey, PLAYGROUND_FEATURE_KEYS, surfaceFrom, type FeatureKey } from "@/lib/playground-types";
+import { isEquipmentKey, PLAYGROUND_FEATURE_KEYS, surfacesIn, type FeatureKey } from "@/lib/playground-types";
 import { ArrowLeft, Plus } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { requireAdmin } from "@/lib/admin";
@@ -24,7 +24,7 @@ export default async function AdminPlaygroundsPage({
   const { data } = await supabase
     .from("playgrounds_geo")
     .select(
-      "id, name, description, surface_type, is_fenced, has_shade, has_water, has_toilets, has_parking, has_benches, has_toddler_area, is_accessible, has_lighting, equipment, flagged, review_count, created_at",
+      "id, name, description, surfaces, is_fenced, has_shade, has_water, has_toilets, has_parking, has_benches, has_toddler_area, is_accessible, has_lighting, equipment, flagged, review_count, created_at",
     )
     .order("created_at", { ascending: false });
 
@@ -35,7 +35,7 @@ export default async function AdminPlaygroundsPage({
         id: r.id,
         name: r.name,
         description: r.description,
-        surface_type: surfaceFrom(r.surface_type),
+        surfaces: Array.isArray(r.surfaces) ? surfacesIn(r.surfaces) : [],
         ...(Object.fromEntries(PLAYGROUND_FEATURE_KEYS.map((k) => [k, r[k] ?? false])) as Record<FeatureKey, boolean>),
         equipment: Array.isArray(r.equipment) ? r.equipment.filter(isEquipmentKey) : [],
         flagged: r.flagged ?? false,

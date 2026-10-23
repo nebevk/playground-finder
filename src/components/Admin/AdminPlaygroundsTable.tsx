@@ -18,7 +18,7 @@ export type AdminPlaygroundRow = Record<FeatureKey, boolean> & {
   id: string;
   name: string;
   description: string | null;
-  surface_type: SurfaceType | null;
+  surfaces: SurfaceType[];
   equipment: EquipmentKey[];
   flagged: boolean;
   review_count: number;
@@ -243,7 +243,7 @@ export function AdminPlaygroundsTable({
                       </Link>
                     </td>
                     <td className="text-sm">
-                      {pg.surface_type ? tSurface(pg.surface_type) : "-"}
+                      {pg.surfaces.length > 0 ? pg.surfaces.map((s) => tSurface(s)).join(", ") : "-"}
                     </td>
                     <td className="text-sm tabular-nums">{pg.review_count}</td>
                     <td className="text-sm whitespace-nowrap">

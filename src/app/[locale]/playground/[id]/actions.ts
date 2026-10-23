@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { REVIEW_COMMENT_MAX } from "@/lib/limits";
 import { MAX_PHOTOS } from "@/lib/photo-checks";
 import { readSubmittedPhotos, storePhotos, type PhotoReadError, type PhotoStoreError } from "@/lib/photo-upload";
-import { equipmentFrom, featuresFrom, surfaceFrom } from "@/lib/playground-types";
+import { equipmentFrom, featuresFrom, surfacesFrom } from "@/lib/playground-types";
 import { invalidateMapSnapshot } from "@/lib/playgrounds";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
@@ -80,7 +80,6 @@ export async function updateOwnPlaygroundAction(_prev: EditState, formData: Form
   const locale = String(formData.get("locale") ?? "sl");
   const name = String(formData.get("name") ?? "").trim();
   const description = String(formData.get("description") ?? "").trim() || null;
-  const surface_type = surfaceFrom(formData.get("surface_type"));
   const lat = Number(formData.get("lat"));
   const lng = Number(formData.get("lng"));
 
@@ -93,9 +92,9 @@ export async function updateOwnPlaygroundAction(_prev: EditState, formData: Form
     .update({
       name,
       description,
-      surface_type,
       // PostGIS WKT: longitude first, then latitude.
       location: `SRID=4326;POINT(${lng} ${lat})`,
+      surfaces: surfacesFrom(formData),
       ...featuresFrom(formData),
       equipment: equipmentFrom(formData),
     })

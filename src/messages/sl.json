@@ -285,7 +285,6 @@
       "has_lighting": "Razsvetljava"
     },
     "surfaceOption": {
-      "tartan": "Tartan",
       "rubber_tiles": "Gumijaste plošče",
       "sand": "Pesek",
       "grass": "Trava",
@@ -353,7 +352,6 @@
       "has_lighting": "Razsvetljava"
     },
     "surfaceOption": {
-      "tartan": "Tartan",
       "rubber_tiles": "Gumijaste plošče",
       "sand": "Pesek",
       "grass": "Trava",
@@ -448,7 +446,6 @@
       "descriptionPlaceholder": "Npr. senca popoldne, peskovnik, klopi",
       "surface": "Podlaga",
       "surfaceOptions": {
-        "tartan": "Tartan",
         "rubber_tiles": "Gumijaste plošče",
         "sand": "Pesek",
         "grass": "Trava",

@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { clampText, DESCRIPTION_MAX, NAME_MAX } from "@/lib/limits";
 import { getAdminActionContext } from "@/lib/admin";
 import { invalidateMapSnapshot } from "@/lib/playgrounds";
-import { equipmentFrom, featuresFrom, surfaceFrom } from "@/lib/playground-types";
+import { equipmentFrom, featuresFrom, surfacesFrom } from "@/lib/playground-types";
 import { photoPathsFor, removePhotoFiles } from "@/lib/photo-storage";
 
 const TARGETS = ["playground", "review", "photo"] as const;
@@ -114,14 +114,13 @@ export async function updatePlaygroundAction(formData: FormData) {
   const id = String(formData.get("id") ?? "");
   const name = clampText(String(formData.get("name") ?? ""), NAME_MAX);
   const description = clampText(String(formData.get("description") ?? ""), DESCRIPTION_MAX) || null;
-  const surface_type = surfaceFrom(formData.get("surface_type"));
   const locale = String(formData.get("locale") ?? "sl");
 
   if (!id || !name) return;
 
   const { error } = await ctx.admin
     .from("playgrounds")
-    .update({ name, description, surface_type, ...featuresFrom(formData), equipment: equipmentFrom(formData) })
+    .update({ name, description, surfaces: surfacesFrom(formData), ...featuresFrom(formData), equipment: equipmentFrom(formData) })
     .eq("id", id);
   if (error) {
     console.error("updatePlaygroundAction failed", error);
