@@ -1,7 +1,7 @@
 ---
 id: 0015
 title: Turnstile works on every form (camera uploads failed), gold rating stars
-status: blocked
+status: done
 order: any
 destructive: false
 migrations: []
@@ -70,4 +70,5 @@ Expect `≥ 1`: the page loads Turnstile in explicit mode.
 - **2026-10-22T08:55Z** started (status → in-progress). Preflight: 0014 → done; no migrations; continuing per owner (camera fix).
 - **2026-10-22T08:58Z** pushed `b5514f5` (MCP deploy `dpl_5EwYqigY3pWCGGD8LEtueC6z5sD2` → `READY`). Smoke 200. `/sl/signup` has `render=explicit` ≥ 1.
 - **Blocked** on owner phone: camera upload immediate + after ~5 min in camera; gold stars. If anti-spam fails again, pull Vercel logs for `verifyTurnstile:` (`no token in the form` vs `token rejected` + Cloudflare codes). Say **process ops** when done (or report the log lines).
+- **2026-10-23T13:05Z** owner said process ops (camera upload + linger + gold stars accepted). **status → done**.
 
