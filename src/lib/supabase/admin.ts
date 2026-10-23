@@ -1,7 +1,9 @@
+import "server-only";
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "./types";
 
 // Server-only. Uses the service role key — never expose this in a client component.
+// `server-only` makes importing this from a client bundle a build error, so the key can't leak.
 // Use for privileged operations like deleting auth.users or bypassing RLS for exports.
 export function createAdminClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;

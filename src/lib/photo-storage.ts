@@ -1,3 +1,4 @@
+import "server-only";
 import { createAdminClient } from "./supabase/admin";
 
 type AdminClient = ReturnType<typeof createAdminClient>;
