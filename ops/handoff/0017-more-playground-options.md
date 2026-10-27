@@ -1,7 +1,7 @@
 ---
 id: 0017
 title: More options when describing a playground (baby swings among them)
-status: blocked
+status: done
 order: migrations-first
 destructive: false
 migrations: [20261023120000_more_playground_options.sql]
@@ -136,4 +136,5 @@ Expect:
 - **2026-10-23T14:54Z** applied `more_playground_options` (prod version `20261023145425`). Verify: equipment_known+surfaces_known validated; not_a_list/still_tartan/unmapped_tartan all 0; geo has 5 new columns; INSERT/UPDATE grants match ticket. Pushing remaining commits (0017 + server-only fence).
 - **2026-10-23T14:56Z** deploy `dpl_FUExG634Hhf5uS4RWbKNNHuCeSJf` READY on `1a72d0d`. Smoke paths 200; add form HTML includes "Gugalnice za malčke" and "Lesni sekanci". Advisors: same as 0015 (`private.rate_limit_hits` RLS INFO; `increment_playground_views` WARN; leaked-password protection WARN) — no new findings.
 - **Blocked** on owner phone: add/edit new options (multi surface); map filter baby swings; older playground shows surface without "Brez klopi"/lighting. Say **process ops** when done.
+- **2026-10-27T14:20Z** owner accepted 0017 phone checks. "Brez pitnika" / "Brez stranišča" on old playgrounds are the original five (default false) — follow-up **0018** makes those unknown until answered. **status → done**.
 

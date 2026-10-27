@@ -124,14 +124,14 @@ export type Database = {
           flagged: boolean
           has_benches: boolean | null
           has_lighting: boolean | null
-          has_parking: boolean
-          has_shade: boolean
+          has_parking: boolean | null
+          has_shade: boolean | null
           has_toddler_area: boolean | null
-          has_toilets: boolean
-          has_water: boolean
+          has_toilets: boolean | null
+          has_water: boolean | null
           id: string
           is_accessible: boolean | null
-          is_fenced: boolean
+          is_fenced: boolean | null
           location: unknown
           name: string
           surface_type: string | null
@@ -146,14 +146,14 @@ export type Database = {
           flagged?: boolean
           has_benches?: boolean | null
           has_lighting?: boolean | null
-          has_parking?: boolean
-          has_shade?: boolean
+          has_parking?: boolean | null
+          has_shade?: boolean | null
           has_toddler_area?: boolean | null
-          has_toilets?: boolean
-          has_water?: boolean
+          has_toilets?: boolean | null
+          has_water?: boolean | null
           id?: string
           is_accessible?: boolean | null
-          is_fenced?: boolean
+          is_fenced?: boolean | null
           location: unknown
           name: string
           surface_type?: string | null
@@ -168,14 +168,14 @@ export type Database = {
           flagged?: boolean
           has_benches?: boolean | null
           has_lighting?: boolean | null
-          has_parking?: boolean
-          has_shade?: boolean
+          has_parking?: boolean | null
+          has_shade?: boolean | null
           has_toddler_area?: boolean | null
-          has_toilets?: boolean
-          has_water?: boolean
+          has_toilets?: boolean | null
+          has_water?: boolean | null
           id?: string
           is_accessible?: boolean | null
-          is_fenced?: boolean
+          is_fenced?: boolean | null
           location?: unknown
           name?: string
           surface_type?: string | null

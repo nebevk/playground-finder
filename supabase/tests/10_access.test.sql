@@ -495,6 +495,11 @@ select is(
   null::boolean,
   '[FR-PG-01] the newer features start out unknown'
 );
+select is(
+  (select has_water from public.playgrounds where name = 'With swings'),
+  null::boolean,
+  '[FR-PG-01] the original features also start out unknown when nobody answered'
+);
 update public.playgrounds set has_lighting = true where name = 'For babies';
 select is(
   (select has_lighting from public.playgrounds where name = 'For babies'),

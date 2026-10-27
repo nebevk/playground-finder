@@ -21,7 +21,7 @@ Conventions and the ID scheme are in [README.md](README.md). Status last reviewe
 
 | ID | Requirement | Pri | Status | Verify |
 |---|---|---|---|---|
-| FR-PG-01 | The detail page shows photos, features, surface, equipment, rating summary and reviews. Photos open in a full-screen viewer (swipe or arrows, zoom, report). Features the playground doesn't have say so ("Brez stranišča", *no toilets*). Features nobody has answered yet are left out (those added in ops 0017, on playgrounds listed before), and an unset surface shows as unknown. | Must | Done | e2e |
+| FR-PG-01 | The detail page shows photos, features, surface, equipment, rating summary and reviews. Photos open in a full-screen viewer (swipe or arrows, zoom, report). Features the playground doesn't have say so ("Brez stranišča", *no toilets*) when someone answered via a form. Features nobody has answered yet are left out (null in the database — including on playgrounds listed before anyone ticked the boxes), and an unset surface shows as unknown. | Must | Done | e2e |
 | FR-PG-02 | "Directions" opens the device's maps app with the playground as the destination. | Must | Done | unit |
 | FR-PG-03 | Opening a detail page counts one view per session. Views drive "most viewed" on Home. | Could | Done — counter is gameable, see backlog | db |
 | FR-PG-04 | Signed-in users can save favourites (a heart on the map sheet and the playground's page) and see them on their profile. | Should | Done (ops 0014) | db, e2e |

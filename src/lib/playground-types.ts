@@ -30,7 +30,6 @@ export const PLAYGROUND_FEATURE_KEYS = [
   "has_water",
   "has_toilets",
   "has_parking",
-  // Since ops 0017: null (unknown) for playgrounds nobody has answered them for.
   "has_benches",
   "has_toddler_area",
   "is_accessible",
@@ -39,7 +38,8 @@ export const PLAYGROUND_FEATURE_KEYS = [
 
 export type FeatureKey = (typeof PLAYGROUND_FEATURE_KEYS)[number];
 
-// The features ticked in a form (checkboxes named after the key). Unticked means "doesn't have it".
+// The features ticked in a form (checkboxes named after the key). Unticked means "doesn't have it"
+// (shown as "Brez …"). Forms always answer every feature.
 export function featuresFrom(formData: FormData): Record<FeatureKey, boolean> {
   return Object.fromEntries(PLAYGROUND_FEATURE_KEYS.map((k) => [k, formData.get(k) === "on"])) as Record<
     FeatureKey,
@@ -47,19 +47,13 @@ export function featuresFrom(formData: FormData): Record<FeatureKey, boolean> {
   >;
 }
 
-// The features that can be unknown (null): those added in ops 0017. The first five never are.
-const NULLABLE_FEATURE_KEYS = ["has_benches", "has_toddler_area", "is_accessible", "has_lighting"] as const satisfies readonly FeatureKey[];
-type NullableFeatureKey = (typeof NULLABLE_FEATURE_KEYS)[number];
-
 // Features from a source that only says what a playground has, such as an import: one it doesn't
-// mention stays unknown where it can, rather than becoming "Brez …".
-export function statedFeatures(
-  has: (key: FeatureKey) => boolean,
-): Record<Exclude<FeatureKey, NullableFeatureKey>, boolean> & Record<NullableFeatureKey, boolean | null> {
-  const nullable: readonly FeatureKey[] = NULLABLE_FEATURE_KEYS;
-  return Object.fromEntries(
-    PLAYGROUND_FEATURE_KEYS.map((k) => [k, has(k) ? true : nullable.includes(k) ? null : false]),
-  ) as Record<Exclude<FeatureKey, NullableFeatureKey>, boolean> & Record<NullableFeatureKey, boolean | null>;
+// mention stays unknown (null), rather than becoming "Brez …".
+export function statedFeatures(has: (key: FeatureKey) => boolean): Record<FeatureKey, boolean | null> {
+  return Object.fromEntries(PLAYGROUND_FEATURE_KEYS.map((k) => [k, has(k) ? true : null])) as Record<
+    FeatureKey,
+    boolean | null
+  >;
 }
 
 // detail.equipmentOptions has the labels.

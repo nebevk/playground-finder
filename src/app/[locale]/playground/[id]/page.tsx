@@ -156,9 +156,8 @@ export default async function PlaygroundDetailPage({
             </a>
           </section>
 
-          {/* Every feature: what it has, and what it doesn't ("Brez stranišča": the add form's
-              unticked box means "doesn't have it"). Features nobody has answered yet (added in
-              ops 0017) are left out, and the optional surface says when it's unknown. */}
+          {/* Features someone answered: has / "Brez …". Unknown (null) are left out. Surface
+              unset shows as "ni podatka". */}
           <section>
             <h2 className="mb-2 text-lg font-semibold">{t("features")}</h2>
             <ul className="flex flex-wrap gap-2">

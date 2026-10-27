@@ -77,12 +77,12 @@ describe("features", () => {
     expect(features.has_toilets).toBe(false);
   });
 
-  it("[FR-PG-01] an import leaves the newer features it doesn't mention unknown, not 'Brez …'", () => {
+  it("[FR-PG-01] an import leaves features it doesn't mention unknown, not 'Brez …'", () => {
     const features = statedFeatures((k) => k === "has_shade" || k === "has_toddler_area");
     expect(features.has_shade).toBe(true);
     expect(features.has_toddler_area).toBe(true);
-    // The first five can't be unknown in the database.
-    expect(features.has_toilets).toBe(false);
+    expect(features.has_toilets).toBeNull();
+    expect(features.has_water).toBeNull();
     expect(features.has_benches).toBeNull();
     expect(features.is_accessible).toBeNull();
     expect(features.has_lighting).toBeNull();
