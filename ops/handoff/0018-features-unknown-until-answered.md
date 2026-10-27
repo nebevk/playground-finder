@@ -1,7 +1,7 @@
 ---
 id: 0018
 title: Old playgrounds stop inventing "Brez pitnika" until someone answers
-status: ready
+status: in-progress
 order: migrations-first
 destructive: false
 migrations: [20261027120000_features_unknown_until_answered.sql]
@@ -85,4 +85,7 @@ update public.playgrounds set has_parking = false where has_parking is null;
 ```
 
 ## Result log (Cursor)
+
+- **2026-10-27T14:25Z** started. Preflight OK. Pre-check: fenced_false=2, water_false=6, toilets_false=7 (total 12). Applying `features_unknown_until_answered`.
+- **2026-10-27T14:26Z** applied (prod version `20261027142338`). Verify: five columns nullable YES; all `*_false` = 0; water_null=6 + water_true=6 = 12. Pushing code.
 
