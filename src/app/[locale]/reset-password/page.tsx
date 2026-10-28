@@ -1,7 +1,15 @@
+import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { ResetPasswordForm } from "./ResetPasswordForm";
+import { NOT_LISTED } from "@/lib/seo";
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "auth" });
+  return { title: t("resetTitle"), robots: NOT_LISTED };
+}
 
 // Landing page for the password-recovery email link: /reset-password?token_hash=…&type=recovery
 // (supabase/templates/recovery.html). The token is NOT verified here: a GET can come from an

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Shield } from "lucide-react";
 import { Link } from "@/i18n/navigation";
@@ -10,6 +11,13 @@ import { MyContributions } from "@/components/Profile/MyContributions";
 import { MyFavorites } from "@/components/Profile/MyFavorites";
 import { ResendVerificationButton } from "@/components/Profile/ResendVerificationButton";
 import { LocaleSwitcher } from "@/components/LocaleSwitcher";
+import { NOT_LISTED } from "@/lib/seo";
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "profile" });
+  return { title: t("title"), robots: NOT_LISTED };
+}
 
 export default async function ProfilePage({
   params,

@@ -1,4 +1,6 @@
+import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { localeAlternates } from "@/lib/seo";
 import { getPrivacyEmail } from "@/lib/site";
 
 const SECTIONS = ["content", "conduct", "moderation", "liability", "changes"] as const;
@@ -7,10 +9,10 @@ export async function generateMetadata({
   params,
 }: {
   params: Promise<{ locale: string }>;
-}) {
+}): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "terms" });
-  return { title: t("title") };
+  return { title: t("title"), description: t("intro"), alternates: localeAlternates(locale, "/terms") };
 }
 
 export default async function TermsPage({

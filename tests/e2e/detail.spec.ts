@@ -46,5 +46,5 @@ test("[FR-PG-01] features nobody answered stay out; answered ones don't say 'no 
   await expect(page.getByText(sl.detail.noData)).toHaveCount(0);
 });
 
-// Known gap (backlog BL-22). The photo viewer is tested in account.spec.ts (it needs uploads).
-test.fixme("[NFR-SEO-02] every public page links its sl/en alternates with hreflang", async () => {});
+// The photo viewer is tested in account.spec.ts (it needs uploads); hreflang and canonical links
+// on every public page in public.spec.ts.

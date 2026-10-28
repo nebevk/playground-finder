@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { ArrowLeft, ImagePlus, Navigation, Pencil } from "lucide-react";
@@ -16,25 +17,31 @@ import { FlashToast } from "@/components/Toast/FlashToast";
 import { FavoriteButton, FavoritesProvider } from "@/components/Favorites";
 import { getFavoriteIds } from "@/lib/favorites";
 import { PendingIcon } from "@/components/LinkPending";
+import { localeAlternates } from "@/lib/seo";
 
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ locale: string; id: string }>;
-}) {
-  const { id } = await params;
+}): Promise<Metadata> {
+  const { locale, id } = await params;
   const playground = await getPlaygroundById(id);
   if (!playground) return {};
+
+  // Its own description, or one made from its name when nobody has written one (NFR-SEO-02).
+  const tMeta = await getTranslations({ locale, namespace: "meta" });
+  const description = playground.description ?? tMeta("playground", { name: playground.name });
 
   // The preview image is the playground's card (opengraph-image.tsx in this folder). Never user
   // photos: link previews copy them onto other platforms' servers, beyond moderation and deletion
   // (GDPR-16).
   return {
     title: playground.name,
-    description: playground.description ?? undefined,
+    description,
+    alternates: localeAlternates(locale, `/playground/${id}`),
     openGraph: {
       title: playground.name,
-      description: playground.description ?? undefined,
+      description,
     },
   };
 }

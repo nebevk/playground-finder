@@ -1,7 +1,16 @@
+import type { Metadata } from "next";
 import { preconnect } from "react-dom";
-import { setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { HomeLanding } from "@/components/Home/HomeLanding";
 import { getLatestPlaygroundIds, getMapSnapshot, getMostViewedPlaygroundIds } from "@/lib/playgrounds";
+import { localeAlternates } from "@/lib/seo";
+
+// The title stays the layout's default: the app's name.
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "meta" });
+  return { description: t("home"), alternates: localeAlternates(locale, "") };
+}
 
 export default async function HomePage({
   params,

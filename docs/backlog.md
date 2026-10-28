@@ -18,7 +18,6 @@ Work that's done in the repo but still has to reach production is tracked by its
 |---|---|---|---|
 | BL-10 | Notify admins when content is auto-flagged, and consider a minimum account age before reports count. Verified-only counting shipped in ops 0002. | NFR-SEC-06 | S |
 | BL-20 | Stop deriving usernames from the email local part (random or user-chosen handle); decide what to do with existing usernames. | GDPR-04 | S |
-| BL-22 | Per-page metadata and `hreflang` alternates. | NFR-SEO-02 | S |
 | BL-43 | Decide the logout scope. `signOut()` defaults to `global`, so "Odjava" on one device signs the user out everywhere. Keep it, or use `scope: "local"`. Found by e2e. | FR-ACC-03 | S |
 | BL-69 | Saving a review can leave its form pending: the save is stored and the response arrives, but the page never re-renders. Seen only when the e2e journey runs 24 times in parallel locally (about 1 in 6); never in two full-suite runs. `refresh()` and a client `router.refresh()` made it worse; removing `loading.tsx` or server `children` didn't help. Each hang comes with bursts of cancelled link prefetches over HTTP/1.1 (`next start`), so suspect a Next 16.2 router race. Check on Vercel (HTTP/2), retest after a Next upgrade, and consider `prefetch={false}` on the detail page's secondary links. | FR-COM-01, FR-COM-02 | M |
 
@@ -52,6 +51,6 @@ Moved here from the "Known gaps" list in [deploy.md](deploy.md).
 | BL-31 | Custom domain on Vercel. Update Supabase auth Site URL and redirect URLs. | — | S |
 | BL-33 | Supabase + Vercel plan review before launch: backup/PITR retention, storage quota for photos, inactivity pausing, image optimization quota. | — | S |
 | BL-35 | Use `auth.getClaims()` (local JWT verification) in `src/proxy.ts` and read-only pages instead of `getUser()` on every request; keep `getUser()` for uploads, admin and account deletion. Needs asymmetric signing keys on the project. | — | S |
-| BL-40 | Add `import "server-only"` to `src/lib/supabase/admin.ts` and `server.ts`. | — | S |
+| BL-40 | Add `import "server-only"` to `src/lib/supabase/server.ts` (`admin.ts`, `rate-limit.ts` and `photo-storage.ts` have it since `ce1bf2f`). | — | S |
 | BL-45 | Enable leaked-password protection (Supabase → Auth → Password security; may need the Pro plan). Security advisor WARN from ops 0001. | — | S |
 | BL-41 | Import-script hygiene: move `@anthropic-ai/sdk`, `cheerio`, `dotenv` to devDependencies; give the scraper a User-Agent with this project's URL and contact; re-evaluate the pinned `claude-opus-4-7` against the current Claude 5 family. | — | S |

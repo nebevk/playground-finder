@@ -1,8 +1,19 @@
+import type { Metadata } from "next";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { MapClient } from "@/components/Map/MapClient";
 import { getFavoriteIds } from "@/lib/favorites";
 import { getMapSnapshot } from "@/lib/playgrounds";
+import { localeAlternates } from "@/lib/seo";
 import { getCurrentUser } from "@/lib/supabase/server";
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const [tMap, tMeta] = await Promise.all([
+    getTranslations({ locale, namespace: "map" }),
+    getTranslations({ locale, namespace: "meta" }),
+  ]);
+  return { title: tMap("title"), description: tMeta("map"), alternates: localeAlternates(locale, "/map") };
+}
 
 export default async function MapPage({
   params,

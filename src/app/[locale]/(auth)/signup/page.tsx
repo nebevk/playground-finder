@@ -1,7 +1,15 @@
+import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { BrandStack } from "@/components/Brand";
 import { safeNextPath } from "@/lib/site";
 import { SignupForm } from "./SignupForm";
+import { NOT_LISTED } from "@/lib/seo";
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "auth" });
+  return { title: t("signupTitle"), robots: NOT_LISTED };
+}
 
 export default async function SignupPage({
   params,

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Coffee, ExternalLink } from "lucide-react";
 import { KOFI_URL, PERSONAL_URL } from "@/lib/links";
+import { localeAlternates } from "@/lib/seo";
 
 export async function generateMetadata({
   params,
@@ -9,8 +10,11 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "about" });
-  return { title: t("title") };
+  const [t, tMeta] = await Promise.all([
+    getTranslations({ locale, namespace: "about" }),
+    getTranslations({ locale, namespace: "meta" }),
+  ]);
+  return { title: t("title"), description: tMeta("about"), alternates: localeAlternates(locale, "/about") };
 }
 
 export default async function AboutPage({

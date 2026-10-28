@@ -44,8 +44,8 @@ Conventions and the ID scheme are in [README.md](README.md). Status last reviewe
 |---|---|---|---|---|
 | NFR-PWA-01 | Installable: the web manifest has a name, icons (including a maskable one) and `display: standalone`. | Should | Done | e2e |
 | NFR-PWA-02 | Previously loaded map data still works offline. | Could | Not started | e2e |
-| NFR-SEO-01 | `sitemap.xml` lists public pages and playgrounds; `robots.txt` blocks `/admin`; missing pages answer with HTTP 404. | Should | Done — real 404s since ops 0013 | e2e |
-| NFR-SEO-02 | Every public page has its own title and description, plus `hreflang` alternates for `sl` and `en`. | Should | Partial — only detail, about and terms pages set metadata; no `hreflang` | e2e |
+| NFR-SEO-01 | `sitemap.xml` lists public pages and playgrounds; `robots.txt` blocks `/admin`; missing pages answer with HTTP 404. | Should | Done — real 404s since ops 0013; since ops 0019 the sitemap is rebuilt hourly (it had kept a year-old playground list) | unit, e2e |
+| NFR-SEO-02 | Every public page has its own title and description, plus `hreflang` alternates for `sl` and `en`. | Should | Done — ops 0019: Home, the map, about, privacy, terms and each playground name themselves canonical and link both languages (also in the sitemap); sign-in, profile, adding and search are kept out of search results | unit, e2e |
 | NFR-SEO-03 | Shared links show a preview image (Open Graph, 1200×630) in the page's language: the brand card for the site, and on a playground's pages its own card with its name, rating and features. Never user photos (GDPR-16). | Should | Done — ops 0016 | e2e |
 | NFR-OPS-01 | All migrations apply cleanly to an empty database (`pnpm db:reset`), and DB tests pass in CI. | Must | Done | db |
 | NFR-OPS-02 | Local development, CI and Vercel use the same supported Node.js LTS version. | Should | Partial — Node 24 LTS pinned for Vercel (`engines`), CI and `.nvmrc` (ops 0007); the local machine still runs Node 20 | manual |

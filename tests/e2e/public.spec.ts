@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { PUBLIC_PATHS } from "../../src/lib/seo";
 import { en, expectTouchTargets, playgroundPath, sl } from "./fixtures";
 
 test.describe("default locale", () => {
@@ -382,5 +383,47 @@ test.describe("platform", () => {
     expect(sitemap).toContain("/sl/playground/");
     const robots = await (await request.get("/robots.txt")).text();
     expect(robots).toMatch(/Disallow: .*admin/);
+  });
+
+  test("[NFR-SEO-02] public pages have their own title and description, and link their sl and en versions", async ({ page }) => {
+    const playground = (await playgroundPath()).replace(/^\/sl/, "");
+    // Exactly one of each (getAttribute is strict), as an absolute URL; compared by path.
+    const linked = async (selector: string) => new URL((await page.locator(selector).getAttribute("href"))!).pathname;
+    for (const locale of ["sl", "en"] as const) {
+      const titles = new Set<string>();
+      const descriptions = new Set<string>();
+      for (const path of [...PUBLIC_PATHS, playground]) {
+        const here = `/${locale}${path}`;
+        await page.goto(here);
+        expect(await linked('link[rel="canonical"]'), here).toBe(here);
+        expect(await linked('link[rel="alternate"][hreflang="sl"]'), here).toBe(`/sl${path}`);
+        expect(await linked('link[rel="alternate"][hreflang="en"]'), here).toBe(`/en${path}`);
+        expect(await linked('link[rel="alternate"][hreflang="x-default"]'), here).toBe(`/sl${path}`);
+        titles.add(await page.title());
+        descriptions.add((await page.locator('meta[name="description"]').getAttribute("content")) ?? "");
+      }
+      // Each page's own: no two share a title or a description, and none is empty.
+      expect(titles.size, locale).toBe(PUBLIC_PATHS.length + 1);
+      expect(descriptions.size, locale).toBe(PUBLIC_PATHS.length + 1);
+      expect(descriptions.has(""), locale).toBe(false);
+    }
+  });
+
+  test("[NFR-SEO-02] sign-in and tool pages stay out of search results and name no canonical", async ({ page }) => {
+    for (const path of ["/sl/login", "/sl/signup", "/sl/forgot-password", "/en/search"]) {
+      await page.goto(path);
+      // Inherited from the layout, a canonical would call these pages copies of Home.
+      await expect(page.locator('link[rel="canonical"]'), path).toHaveCount(0);
+      await expect(page.locator('meta[name="robots"]'), path).toHaveAttribute("content", /noindex/);
+    }
+    await page.goto("/sl/login");
+    await expect(page).toHaveTitle(new RegExp(`^${sl.auth.loginTitle} · `));
+  });
+
+  test("[NFR-SEO-02] the sitemap names each page's other language versions", async ({ request }) => {
+    const sitemap = await (await request.get("/sitemap.xml")).text();
+    expect(sitemap).toMatch(/hreflang="en" href="[^"]*\/en\/map"/);
+    expect(sitemap).toMatch(/hreflang="x-default" href="[^"]*\/sl\/map"/);
+    expect(sitemap).toMatch(/hreflang="en" href="[^"]*\/en\/playground\/[0-9a-f-]{36}"/);
   });
 });

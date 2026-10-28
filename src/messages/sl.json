@@ -4,6 +4,12 @@
     "shortName": "Igrala",
     "slogan": "Odkrij otroška igrišča po Sloveniji"
   },
+  "meta": {
+    "home": "Poišči otroško igrišče v bližini: zemljevid igrišč po Sloveniji z ocenami staršev, fotografijami, igrali ter podatki o senci, ograji in stranišču.",
+    "map": "Zemljevid otroških igrišč po Sloveniji. Filtriraj po igralih, podlagi, senci in ograji ter poišči igrišče, ki ustreza tvojemu otroku.",
+    "about": "Kdo stoji za aplikacijo, zakaj je nastala in kako lahko pomagaš, da zemljevid igrišč po Sloveniji ostane popoln in ažuren.",
+    "playground": "{name}: ocene staršev, fotografije, igrala in podatki o igrišču."
+  },
   "nav": {
     "home": "Domov",
     "map": "Zemljevid",

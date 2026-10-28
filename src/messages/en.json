@@ -4,6 +4,12 @@
     "shortName": "Igrala",
     "slogan": "Discover playgrounds across Slovenia"
   },
+  "meta": {
+    "home": "Find a playground near you: a map of playgrounds across Slovenia with parents' ratings, photos, play equipment and details like shade, fencing and toilets.",
+    "map": "Map of playgrounds across Slovenia. Filter by play equipment, surface, shade and fencing to find the right playground for your child.",
+    "about": "Who's behind the app, why it exists, and how you can help keep the map of Slovenia's playgrounds complete and up to date.",
+    "playground": "{name}: parents' ratings, photos, play equipment and details about the playground."
+  },
   "nav": {
     "home": "Home",
     "map": "Map",

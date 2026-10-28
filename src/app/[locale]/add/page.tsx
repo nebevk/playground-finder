@@ -1,8 +1,16 @@
+import type { Metadata } from "next";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { getMapSnapshot } from "@/lib/playgrounds";
 import { createClient } from "@/lib/supabase/server";
 import { AddFlow } from "./AddFlow";
+import { NOT_LISTED } from "@/lib/seo";
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "add" });
+  return { title: t("title"), robots: NOT_LISTED };
+}
 
 export default async function AddPage({
   params,
