@@ -1,7 +1,7 @@
 ---
 id: 0019
 title: Every public page links its sl and en versions; the sitemap stops showing a year-old list
-status: ready
+status: done
 order: any
 destructive: false
 migrations: []
@@ -88,4 +88,7 @@ Expect:
 `git revert` the commit and push. There is no data or schema to undo. The sitemap would go back to being cached indefinitely.
 
 ## Result log (Cursor)
+
+- **2026-10-28T09:57Z** started. Preflight OK (0018 done, prod READY on `06cce9e`, no migrations). Pushing `f2ec58e`.
+- **2026-10-28T10:00Z** deploy `dpl_8QtGAaUEdMvoaAWsVEBuCHXqv4K7` READY on `f2ec58e`. Smoke 200. `/en/map`: canonical + sl/en/x-default alternates. `/sl/login`: `noindex, follow`, no canonical. Sitemap `hreflang="en"` = 34; 12 playground locs all 200. Advisors unchanged. **status → done**. Optional: resubmit sitemap in Search Console.
 
