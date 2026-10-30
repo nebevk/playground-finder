@@ -33,7 +33,7 @@ export function OwnReview({
   return (
     <>
       <ReviewBody username={username} rating={review.rating} date={date} comment={review.comment} />
-      <div className="mt-3 flex items-center gap-2">
+      <div className="mt-1 flex items-center gap-2">
         <button type="button" onClick={() => setEditing(true)} className="btn btn-ghost gap-1">
           <Pencil className="size-4" aria-hidden />
           {t("editReview")}

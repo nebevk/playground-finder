@@ -15,7 +15,7 @@ import {
 
 // A playground's details, shared by the add flow (step 2) and the owner's edit page: the name
 // (required), a description, its surfaces (any number, optional), what the playground has (an
-// unticked feature means "doesn't have it", shown as "Brez …") and its play equipment.
+// unticked feature stays unknown, not "Brez …", ops 0021) and its play equipment.
 export function DetailsFields({
   name,
   onNameChange,
@@ -86,7 +86,7 @@ export function DetailsFields({
       <fieldset className="fieldset">
         <legend className="fieldset-legend text-sm">{t("step2.surface")}</legend>
         {/* A playground often has more than one surface (rubber under the swings, grass around). */}
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-1.5">
           {SURFACE_TYPES.map((s) => (
             <FeatureToggle
               key={s}
@@ -100,7 +100,7 @@ export function DetailsFields({
 
       <fieldset className="fieldset">
         <legend className="fieldset-legend text-sm">{t("step2.features")}</legend>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-1.5">
           {PLAYGROUND_FEATURE_KEYS.map((key) => (
             <FeatureToggle
               key={key}
@@ -115,7 +115,7 @@ export function DetailsFields({
 
       <fieldset className="fieldset">
         <legend className="fieldset-legend text-sm">{t("step2.equipment")}</legend>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-1.5">
           {EQUIPMENT_KEYS.map((key) => (
             <FeatureToggle
               key={key}

@@ -46,7 +46,10 @@ export function FeatureBadge({
   );
 }
 
-/** 44 px toggle chip wrapping a real checkbox, for filters and the add form. */
+/**
+ * 44 px toggle chip wrapping a real checkbox, for filters and the add form. Tall enough to tap
+ * (NFR-UX-02), narrow enough that three short ones share a row on a phone.
+ */
 export function FeatureToggle({
   icon: Icon,
   label,
@@ -62,7 +65,7 @@ export function FeatureToggle({
 }) {
   return (
     <label
-      className={`btn gap-2 has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-primary ${
+      className={`btn gap-1.5 px-3 has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-primary ${
         checked ? "btn-primary" : "btn-outline border-base-content/30"
       }`}
     >

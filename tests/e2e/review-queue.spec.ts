@@ -121,7 +121,6 @@ test("[FR-ADM-07] [FR-PG-01] editing in the queue keeps the features nobody answ
   await page.goto("/sl/admin/pending");
   await page.getByRole("article", { name: discovery.name, exact: true }).getByRole("button", { name: q.edit }).click();
   const dialog = page.locator("dialog[open]");
-  await expect(dialog.getByText(sl.admin.playgrounds.untickedUnknown)).toBeVisible();
   const renamed = `${discovery.name} renamed`;
   await dialog.locator('input[name="name"]').fill(renamed);
   await dialog.getByRole("button", { name: sl.admin.playgrounds.save }).click();

@@ -35,8 +35,8 @@ test("[FR-PG-01] [NFR-I18N-03] equipment is shown with translated labels", async
 });
 
 test("[FR-PG-01] features nobody answered stay out; answered ones don't say 'no data'", async ({ page }) => {
-  // Seeded Park Zvezda: only shade is known. Unticked boxes in the add form still mean "Brez …"
-  // (covered in account.spec.ts); unanswered features are left out, not "ni podatka".
+  // Seeded Park Zvezda: only shade is known. Unanswered features are left out, not "ni podatka";
+  // since ops 0021 a form's unticked boxes leave features unanswered too (account.spec.ts).
   await page.goto(await playgroundPath("Park Zvezda"));
   await expect(page.getByText(sl.detail.feature.has_shade, { exact: true })).toBeVisible();
   await expect(page.getByText(sl.detail.featureAbsent.has_toilets, { exact: true })).toHaveCount(0);

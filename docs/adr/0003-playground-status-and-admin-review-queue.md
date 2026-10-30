@@ -180,7 +180,7 @@ Discovery automation inserts **`pending`** with `source = 'osm'`.
   - **People's additions aren't reviewed**, as today.
   - **Home's "Novo" list sorts by `created_at`.** A discovery approved days after it was found sorts that many days back. Add `published_at` if it matters.
   - **Duplicates of waiting discoveries.** Someone can add a playground that is already waiting in the queue: the add flow's duplicate warning (FR-ADD-02) only sees published ones. The queue lists nearby playgrounds, so the reviewer rejects the discovery as the duplicate.
-  - **Edits made in the queue can only add features, not deny them.** An unticked box stays unknown there. The `/admin/playgrounds` editor still saves an unticked box as "no" (backlog BL-71).
+  - **Edits made in the queue can only add features, not deny them.** An unticked box stays unknown. Since ops 0021 every form works this way, the `/admin/playgrounds` editor included (BL-71 closed).
 - **Follow-up (not this ADR):** a Grok Bot weekday/daily routine:
   - queries Overpass for `leisure=playground` in Slovenia;
   - skips playgrounds already in the database;
@@ -277,7 +277,7 @@ No index on `status`. It has three values, almost every row is `published`, and 
      - an edit in the queue keeps unanswered features unknown.
 6. [x] **Docs and ops:**
    - FR-ADM-07 (the queue) and FR-ADM-08 (status and who sees it); FR-ADM-03 lists published playgrounds.
-   - Backlog BL-70 (the discovery routine and its constraints) and BL-71 (the admin editor's "unticked = no").
+   - Backlog BL-70 (the discovery routine and its constraints) and BL-71 (the admin editor's "unticked = no", closed in ops 0021).
    - `pnpm db:types`.
    - Ops ticket 0020 (migrations-first).
 7. [ ] Leave the OSM routine to Huston (BL-70; see the follow-up constraints under *Consequences*).
@@ -302,6 +302,6 @@ The direction (Option B) held. What the review found, and how each point was set
 6. **Approving would publish photos too.** Pending rows can't have photos in v1. Rejecting must delete them if a future source brings any (GDPR-15).
 7. **Reusing `flagged`** (Option D) is the obvious cheaper alternative. It was missing; it's now listed, with the reasons against it.
 8. **FR-ADD-05** ("lands on the map focused on the new playground") would have conflicted with reviewing user submissions. The owner's decision keeps it as it is.
-9. **The queue's edit dialog would have invented "Brez …"** for every feature a discovery doesn't state. The admin editor saves an unticked box as "no". In the queue, an unticked box now stays unknown.
+9. **The queue's edit dialog would have invented "Brez …"** for every feature a discovery doesn't state. The admin editor saved an unticked box as "no". In the queue, an unticked box stays unknown; since ops 0021, so does it in every form.
 10. **`source` isn't backfilled.** Rows without an author can be imports, or playgrounds whose author deleted their account. The plain index on `status` is dropped.
 11. **Constraints for the follow-up routine:** no service-role key; dedupe against every status; OSM's ODbL licence.

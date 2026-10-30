@@ -252,7 +252,9 @@ test("[FR-ADD-08] the person who added a playground can edit it; nobody else can
   await expect(page.getByRole("heading", { level: 1, name: renamed })).toBeVisible();
   await expect(page.getByText(sl.detail.updated)).toBeVisible();
   await expect(page.getByText(sl.detail.feature.has_toilets, { exact: true })).toBeVisible();
-  await expect(page.getByText(sl.detail.featureAbsent.has_shade, { exact: true })).toBeVisible();
+  // Shade was never ticked: unknown, so neither "Senca" nor "Brez sence" (ops 0021).
+  await expect(page.getByText(sl.detail.featureAbsent.has_shade, { exact: true })).toHaveCount(0);
+  await expect(page.getByText(sl.detail.feature.has_shade, { exact: true })).toHaveCount(0);
 
   // A visitor sees no edit link, and the edit page asks them to sign in.
   const anon = await browser.newContext();
@@ -477,8 +479,9 @@ test("[FR-ADD-07] [FR-ADD-02] equipment (baby swings too), features and surface 
   await expect(features.getByText(sl.detail.feature.has_benches, { exact: true })).toBeVisible();
   await expect(features.getByText(sl.detail.surfaceOption.woodchips, { exact: true })).toBeVisible();
   await expect(features.getByText(sl.detail.surfaceOption.sand, { exact: true })).toBeVisible();
-  // The form asked, so an unticked newer feature is a "no".
-  await expect(features.getByText(sl.detail.featureAbsent.has_lighting, { exact: true })).toBeVisible();
+  // An unticked feature stays unknown: no invented "Brez razsvetljave" (ops 0021).
+  await expect(features.getByText(sl.detail.featureAbsent.has_lighting, { exact: true })).toHaveCount(0);
+  await expect(features.getByText(sl.detail.feature.has_lighting, { exact: true })).toHaveCount(0);
 });
 
 // A star's name in the review form.

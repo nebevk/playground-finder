@@ -5,7 +5,7 @@ import { clampText, DESCRIPTION_MAX, NAME_MAX } from "@/lib/limits";
 import { getAdminActionContext } from "@/lib/admin";
 import { geocodeInSlovenia } from "@/lib/geocode";
 import { invalidateMapSnapshot } from "@/lib/playgrounds";
-import { isEquipmentKey, PLAYGROUND_FEATURE_KEYS, surfacesIn } from "@/lib/playground-types";
+import { isEquipmentKey, statedFeatures, surfacesIn } from "@/lib/playground-types";
 
 export type GeoResult = { lat: number; lng: number; label: string };
 export type NearbyPlayground = { id: string; name: string; distance_m: number };
@@ -72,9 +72,8 @@ export async function quickAddPlaygroundAction(
     return { ok: false };
   }
 
-  const features = Object.fromEntries(
-    PLAYGROUND_FEATURE_KEYS.map((k) => [k, payload.features[k] === true]),
-  );
+  // An unticked feature stays unknown, as in every form (ops 0021).
+  const features = statedFeatures((k) => payload.features[k] === true);
 
   const { data, error } = await ctx.admin
     .from("playgrounds")

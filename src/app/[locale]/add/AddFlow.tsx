@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useRef, useState } from "react";
+import { ArrowLeft, ArrowRight, Check } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { LocationPickerClient } from "@/components/Map/LocationPickerClient";
@@ -185,7 +186,8 @@ export function AddFlow({
       {/* Sticky action bar: always above the bottom nav, never scrolled out of reach. */}
       <div className="sticky bottom-[calc(4rem+env(safe-area-inset-bottom))] z-40 -mx-4 flex items-center justify-between gap-3 border-t border-base-300 bg-base-100 px-4 py-3 md:bottom-0">
         {step > 1 ? (
-          <button type="button" onClick={() => setStep((s) => (s === 3 ? 2 : 1))} className="btn btn-ghost">
+          <button type="button" onClick={() => setStep((s) => (s === 3 ? 2 : 1))} className="btn btn-ghost gap-1">
+            <ArrowLeft className="size-4" aria-hidden />
             {t("back")}
           </button>
         ) : (
@@ -194,11 +196,17 @@ export function AddFlow({
         {/* Distinct keys: if React reused one <button> and flipped its type to "submit" inside
             the click that moves to step 3, the browser would submit the form on that click. */}
         {step < 3 ? (
-          <button key="next" type="button" onClick={goNext} className="btn btn-primary min-w-32">
+          <button key="next" type="button" onClick={goNext} className="btn btn-primary min-w-32 gap-1">
             {t("next")}
+            <ArrowRight className="size-4" aria-hidden />
           </button>
         ) : (
-          <button key="submit" type="submit" form={FORM_ID} disabled={pending || preparingPhotos} className="btn btn-primary min-w-32">
+          <button key="submit" type="submit" form={FORM_ID} disabled={pending || preparingPhotos} className="btn btn-primary min-w-32 gap-1">
+            {pending ? (
+              <span className="loading loading-spinner loading-xs" aria-hidden />
+            ) : (
+              <Check className="size-4" aria-hidden />
+            )}
             {pending ? t("submitting") : t("submit")}
           </button>
         )}

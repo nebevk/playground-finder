@@ -113,39 +113,39 @@ export default async function PlaygroundDetailPage({
             </Link>
           )}
 
-          <header className="flex items-start justify-between gap-3">
-            <div>
-              <h1 className="text-2xl font-bold leading-tight">{playground.name}</h1>
-              {playground.review_count > 0 && (
-                <div className="mt-1.5">
-                  <RatingSummary avg={playground.avg_rating} count={playground.review_count} size="lg" />
-                </div>
-              )}
-              {playground.description && <p className="mt-2 text-base-content/80">{playground.description}</p>}
+          {/* The buttons share the title's first line (pt-1.75 centres its 30 px line on the 44 px
+              buttons); the rating and the description get the full width below. */}
+          <header className="flex flex-col gap-2">
+            <div className="flex items-start justify-between gap-2">
+              <h1 className="pt-1.75 text-2xl font-bold leading-tight">{playground.name}</h1>
+              <div className="-me-3 flex shrink-0 items-center">
+                <FavoritesProvider signedIn={!!user} initial={isFavorite ? [playground.id] : []}>
+                  <FavoriteButton playgroundId={playground.id} />
+                </FavoritesProvider>
+                {isOwner ? (
+                  <Link href={`/playground/${playground.id}/edit`} className="btn btn-ghost shrink-0 gap-1">
+                    <PendingIcon className="size-4">
+                      <Pencil className="size-4" aria-hidden />
+                    </PendingIcon>
+                    {t("edit")}
+                  </Link>
+                ) : (
+                  user && (
+                    <ReportButton
+                      targetType="playground"
+                      targetId={playground.id}
+                      playgroundId={playground.id}
+                      locale={locale}
+                      label={t("reportPlayground")}
+                    />
+                  )
+                )}
+              </div>
             </div>
-            <div className="flex shrink-0 items-center">
-              <FavoritesProvider signedIn={!!user} initial={isFavorite ? [playground.id] : []}>
-                <FavoriteButton playgroundId={playground.id} />
-              </FavoritesProvider>
-              {isOwner ? (
-                <Link href={`/playground/${playground.id}/edit`} className="btn btn-ghost shrink-0 gap-1">
-                  <PendingIcon className="size-4">
-                    <Pencil className="size-4" aria-hidden />
-                  </PendingIcon>
-                  {t("edit")}
-                </Link>
-              ) : (
-                user && (
-                  <ReportButton
-                    targetType="playground"
-                    targetId={playground.id}
-                    playgroundId={playground.id}
-                    locale={locale}
-                    label={t("reportPlayground")}
-                  />
-                )
-              )}
-            </div>
+            {playground.review_count > 0 && (
+              <RatingSummary avg={playground.avg_rating} count={playground.review_count} size="lg" />
+            )}
+            {playground.description && <p className="text-base-content/80">{playground.description}</p>}
           </header>
 
           <section className="flex flex-col gap-3">
@@ -163,8 +163,9 @@ export default async function PlaygroundDetailPage({
             </a>
           </section>
 
-          {/* Features someone answered: has / "Brez …". Unknown (null) are left out. Surface
-              unset shows as "ni podatka". */}
+          {/* Features someone ticked. Unknown (null) ones are left out; forms leave unticked boxes
+              unknown (ops 0021), so "Brez …" shows only for an explicit "no". Surface unset shows
+              as "ni podatka". */}
           <section>
             <h2 className="mb-2 text-lg font-semibold">{t("features")}</h2>
             <ul className="flex flex-wrap gap-2">

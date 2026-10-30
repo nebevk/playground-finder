@@ -37,13 +37,13 @@ export async function ReviewsSection({
   return (
     // `id`: the profile's "my reviews" link straight here.
     <section id="reviews" className="scroll-mt-4">
-      <div className="mb-3 flex items-center justify-between gap-3">
+      <div className="mb-2 flex items-center justify-between gap-3">
         <h2 className="text-lg font-semibold">{t("reviews")}</h2>
         {reviews.length > 0 && <RatingSummary avg={avgRating} count={reviews.length} />}
       </div>
 
       {/* One state, one action (design critique, BL-56). Signing in returns here (BL-55). */}
-      {reviews.length === 0 && <p className="mb-3 text-sm text-base-content/70">{t("noReviews")}</p>}
+      {reviews.length === 0 && <p className="mb-2 text-sm text-base-content/70">{t("noReviews")}</p>}
       {!user ? (
         <Link href={loginHref} className={reviews.length === 0 ? "btn btn-primary" : "btn btn-outline"}>
           {reviews.length === 0 ? t("loginToWriteFirst") : t("loginToReview")}
@@ -55,9 +55,9 @@ export async function ReviewsSection({
       )}
 
       {reviews.length > 0 && (
-        <ul className="mt-4 flex flex-col gap-3">
+        <ul className="mt-3 flex flex-col gap-2">
           {reviews.map((r) => (
-            <li key={r.id} className="rounded-box border border-base-300 bg-base-200/50 p-4">
+            <li key={r.id} className="rounded-box border border-base-300 bg-base-200/50 p-3">
               {r.is_mine ? (
                 <OwnReview
                   review={{ id: r.id, rating: r.rating, comment: r.comment }}
@@ -74,7 +74,7 @@ export async function ReviewsSection({
                     date={dateFmt.format(new Date(r.created_at))}
                     comment={r.comment}
                   />
-                  <div className="mt-3 flex items-center gap-2">
+                  <div className="mt-1 flex items-center gap-2">
                     <HelpfulButton
                       reviewId={r.id}
                       playgroundId={playgroundId}

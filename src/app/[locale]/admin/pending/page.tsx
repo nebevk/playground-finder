@@ -233,7 +233,6 @@ export default async function PendingPlaygroundsPage({
                           >),
                         }}
                         locale={locale}
-                        untickedUnknown
                         triggerClassName="btn btn-outline gap-1"
                         trigger={
                           <>

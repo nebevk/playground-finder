@@ -46,7 +46,7 @@ export function FiltersDrawer({ visibleCount }: { visibleCount: number }) {
           open ? "visible translate-x-0" : "invisible translate-x-full"
         }`}
       >
-        <header className="flex items-center justify-between border-b border-base-300 px-5 py-3">
+        <header className="flex items-center justify-between border-b border-base-300 px-4 py-2">
           <h2 id={titleId} className="text-lg font-bold">
             {t("title")}
           </h2>
@@ -60,10 +60,11 @@ export function FiltersDrawer({ visibleCount }: { visibleCount: number }) {
           </button>
         </header>
 
-        <div className="flex-1 overflow-y-auto px-5 py-4">
+        {/* Compact, so most filters fit without scrolling; the chips stay 44 px tall. */}
+        <div className="flex-1 overflow-y-auto px-4 py-3">
           <fieldset>
-            <legend className="mb-3 text-sm font-semibold">{t("features")}</legend>
-            <div className="flex flex-wrap gap-2">
+            <legend className="mb-2 text-sm font-semibold">{t("features")}</legend>
+            <div className="flex flex-wrap gap-1.5">
               {PLAYGROUND_FEATURE_KEYS.map((key) => (
                 <FeatureToggle
                   key={key}
@@ -76,9 +77,9 @@ export function FiltersDrawer({ visibleCount }: { visibleCount: number }) {
             </div>
           </fieldset>
 
-          <fieldset className="mt-6">
-            <legend className="mb-3 text-sm font-semibold">{t("surface")}</legend>
-            <div className="flex flex-wrap gap-2">
+          <fieldset className="mt-4">
+            <legend className="mb-2 text-sm font-semibold">{t("surface")}</legend>
+            <div className="flex flex-wrap gap-1.5">
               {SURFACE_TYPES.map((s) => (
                 <FeatureToggle
                   key={s}
@@ -90,9 +91,9 @@ export function FiltersDrawer({ visibleCount }: { visibleCount: number }) {
             </div>
           </fieldset>
 
-          <fieldset className="mt-6">
-            <legend className="mb-3 text-sm font-semibold">{t("equipment")}</legend>
-            <div className="flex flex-wrap gap-2">
+          <fieldset className="mt-4">
+            <legend className="mb-2 text-sm font-semibold">{t("equipment")}</legend>
+            <div className="flex flex-wrap gap-1.5">
               {EQUIPMENT_KEYS.map((key) => (
                 <FeatureToggle
                   key={key}
@@ -105,7 +106,7 @@ export function FiltersDrawer({ visibleCount }: { visibleCount: number }) {
           </fieldset>
         </div>
 
-        <footer className="flex items-center justify-between gap-3 border-t border-base-300 px-5 py-4 pb-[calc(1rem+env(safe-area-inset-bottom))]">
+        <footer className="flex items-center justify-between gap-3 border-t border-base-300 px-4 py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
           <button type="button" onClick={clearAll} disabled={activeCount === 0} className="btn btn-ghost">
             {t("clear")}
           </button>

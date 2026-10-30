@@ -39,18 +39,20 @@ export function ReviewForm({
 
   return (
     // Editing happens inside the review's own card, so only a new review gets a card of its own.
+    // Kept compact: the legends lose DaisyUI's top padding, the stars sit flush with their legend.
     <form
       action={action}
-      className={`flex flex-col gap-3 ${review ? "" : "rounded-box border border-base-300 bg-base-200/50 p-4"}`}
+      className={`flex flex-col gap-2 ${review ? "" : "rounded-box border border-base-300 bg-base-200/50 p-3"}`}
     >
       <input type="hidden" name="playground_id" value={playgroundId} />
       <input type="hidden" name="locale" value={locale} />
       <input type="hidden" name="rating" value={rating} />
       {review && <input type="hidden" name="review_id" value={review.id} />}
 
-      <fieldset className="fieldset">
-        <legend className="fieldset-legend text-sm">{t("rating")}</legend>
-        <div className="flex items-center gap-1">
+      <fieldset className="fieldset py-0">
+        <legend className="fieldset-legend pt-0 text-sm">{t("rating")}</legend>
+        {/* -ms-2.5: the first 24 px star lines up with the legend inside its 44 px button. */}
+        <div className="-ms-2.5 flex items-center">
           {[1, 2, 3, 4, 5].map((n) => {
             const filled = (hover || rating) >= n;
             return (
@@ -74,17 +76,17 @@ export function ReviewForm({
         </div>
       </fieldset>
 
-      <fieldset className="fieldset">
-        <legend id={commentLabel} className="fieldset-legend text-sm">
+      <fieldset className="fieldset py-0">
+        <legend id={commentLabel} className="fieldset-legend pt-0 text-sm">
           {t("comment")}
         </legend>
         <textarea
           aria-labelledby={commentLabel}
           name="comment"
-          rows={3}
+          rows={2}
           maxLength={REVIEW_COMMENT_MAX}
           defaultValue={review?.comment ?? ""}
-          className="textarea w-full"
+          className="textarea min-h-16 w-full"
           placeholder={t("commentPlaceholder")}
         />
       </fieldset>

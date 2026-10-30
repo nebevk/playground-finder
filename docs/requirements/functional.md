@@ -21,7 +21,7 @@ Conventions and the ID scheme are in [README.md](README.md). Status last reviewe
 
 | ID | Requirement | Pri | Status | Verify |
 |---|---|---|---|---|
-| FR-PG-01 | The detail page shows photos, features, surface, equipment, rating summary and reviews. Photos open in a full-screen viewer (swipe or arrows, zoom, report). Features the playground doesn't have say so ("Brez stranišča", *no toilets*) when someone answered via a form. Features nobody has answered yet are left out (null in the database — including on playgrounds listed before anyone ticked the boxes), and an unset surface shows as unknown. | Must | Done | e2e |
+| FR-PG-01 | The detail page shows photos, features, surface, equipment, rating summary and reviews. Photos open in a full-screen viewer (swipe or arrows, zoom, report). Only features someone ticked are listed; the rest are left out as unknown (null in the database). A form's unticked box means unknown too, not "no" (owner's call, ops 0021), so "Brez stranišča" (*no toilets*) shows only for an explicit no. An unset surface shows as unknown. | Must | Done | unit, e2e |
 | FR-PG-02 | "Directions" opens the device's maps app with the playground as the destination. | Must | Done | unit |
 | FR-PG-03 | Opening a detail page counts one view per session. Views drive "most viewed" on Home. | Could | Done — counter is gameable, see backlog | db |
 | FR-PG-04 | Signed-in users can save favourites (a heart on the map sheet and the playground's page) and see them on their profile. | Should | Done (ops 0014) | db, e2e |
@@ -67,7 +67,7 @@ Conventions and the ID scheme are in [README.md](README.md). Status last reviewe
 |---|---|---|---|---|
 | FR-ADM-01 | Admin role (`profiles.is_admin`). Every `/admin` page shows the not-found page (no admin content, `noindex`) to non-admins, and users cannot grant themselves the role. The HTTP status is 404. | Must | Done | db, e2e |
 | FR-ADM-02 | Moderation queue for flagged content: approve (clears flag and reports), dismiss, delete. Flagged and reported photos are shown as previews, since the bucket is private. | Must | Done — previews in ops 0007 | e2e, manual |
-| FR-ADM-03 | Playgrounds table: edit, bulk delete, bulk flag. It lists published playgrounds; waiting and rejected ones are in the review queue (FR-ADM-07). Its editor answers every feature, so an unticked box saves as "Brez …" (BL-71). | Should | Done | unit, manual |
+| FR-ADM-03 | Playgrounds table: edit, bulk delete, bulk flag. It lists published playgrounds; waiting and rejected ones are in the review queue (FR-ADM-07). Its editor, like every form, leaves unticked features unknown (ops 0021). | Should | Done | unit, manual |
 | FR-ADM-04 | CSV bulk import with a review step before anything is inserted. | Should | Done | unit |
 | FR-ADM-05 | Quick-add with geocoding and a warning about nearby possible duplicates. | Should | Done | db |
 | FR-ADM-06 | Data-quality dashboard (missing fields, no photos, no reviews). | Could | Done | manual |

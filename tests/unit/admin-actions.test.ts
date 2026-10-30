@@ -104,17 +104,9 @@ describe("the review queue", () => {
     expect(update).not.toHaveBeenCalled();
   });
 
-  it("[FR-ADM-07] [FR-PG-01] an edit in the queue leaves unticked features unknown", async () => {
-    await updatePlaygroundAction(
-      form({ id: "pg1", name: "Rožna dolina", locale: "sl", has_shade: "on", unticked_features: "unknown" }),
-    );
+  it("[FR-ADM-07] [FR-ADM-03] [FR-PG-01] an admin edit (queue or table) leaves unticked features unknown", async () => {
+    await updatePlaygroundAction(form({ id: "pg1", name: "Rožna dolina", locale: "sl", has_shade: "on" }));
     const [, values] = update.mock.lastCall!;
     expect(values).toMatchObject({ name: "Rožna dolina", has_shade: true, has_water: null, has_toilets: null });
-  });
-
-  it("[FR-ADM-03] the playgrounds table's editor still answers every feature", async () => {
-    await updatePlaygroundAction(form({ id: "pg1", name: "Tivoli", locale: "sl", has_shade: "on" }));
-    const [, values] = update.mock.lastCall!;
-    expect(values).toMatchObject({ has_shade: true, has_water: false, has_toilets: false });
   });
 });

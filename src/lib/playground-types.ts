@@ -38,17 +38,15 @@ export const PLAYGROUND_FEATURE_KEYS = [
 
 export type FeatureKey = (typeof PLAYGROUND_FEATURE_KEYS)[number];
 
-// The features ticked in a form (checkboxes named after the key). Unticked means "doesn't have it"
-// (shown as "Brez …"). Forms always answer every feature.
-export function featuresFrom(formData: FormData): Record<FeatureKey, boolean> {
-  return Object.fromEntries(PLAYGROUND_FEATURE_KEYS.map((k) => [k, formData.get(k) === "on"])) as Record<
-    FeatureKey,
-    boolean
-  >;
+// The features ticked in a form (checkboxes named after the key). An unticked box stays unknown
+// (null), like a feature an import doesn't mention: nobody said "no", so the page doesn't show
+// "Brez …" (owner's call, ops 0021). Every form reads features this way.
+export function featuresFrom(formData: FormData): Record<FeatureKey, boolean | null> {
+  return statedFeatures((k) => formData.get(k) === "on");
 }
 
-// Features from a source that only says what a playground has, such as an import: one it doesn't
-// mention stays unknown (null), rather than becoming "Brez …".
+// Features from a source that only says what a playground has, such as an import or a form: one it
+// doesn't mention stays unknown (null), rather than becoming "Brez …".
 export function statedFeatures(has: (key: FeatureKey) => boolean): Record<FeatureKey, boolean | null> {
   return Object.fromEntries(PLAYGROUND_FEATURE_KEYS.map((k) => [k, has(k) ? true : null])) as Record<
     FeatureKey,

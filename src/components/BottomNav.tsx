@@ -65,7 +65,9 @@ export function BottomNav() {
               <X className="size-5" aria-hidden />
             </button>
           </div>
-          <ul className="menu menu-lg w-full p-0">
+          {/* -mx-4 undoes menu-lg's 1rem item padding, so the icons line up with "Več" and "Jezik"
+              while the highlight still spans the sheet. */}
+          <ul className="menu menu-lg -mx-4 w-auto p-0">
             {MORE_PAGES.map(({ href, icon: Icon, key }) => (
               <li key={key}>
                 <Link

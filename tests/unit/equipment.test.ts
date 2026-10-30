@@ -67,7 +67,7 @@ describe("surfaces", () => {
 });
 
 describe("features", () => {
-  it("[FR-ADD-02] a form's unticked features mean the playground doesn't have them", () => {
+  it("[FR-ADD-02] [FR-PG-01] a form's unticked features stay unknown, not 'Brez …'", () => {
     const fd = new FormData();
     fd.set("has_benches", "on");
     fd.set("is_fenced", "on");
@@ -75,8 +75,8 @@ describe("features", () => {
     expect(Object.keys(features)).toEqual([...PLAYGROUND_FEATURE_KEYS]);
     expect(features.has_benches).toBe(true);
     expect(features.is_fenced).toBe(true);
-    expect(features.has_lighting).toBe(false);
-    expect(features.has_toilets).toBe(false);
+    expect(features.has_lighting).toBeNull();
+    expect(features.has_toilets).toBeNull();
   });
 
   it("[FR-PG-01] an import leaves features it doesn't mention unknown, not 'Brez …'", () => {
