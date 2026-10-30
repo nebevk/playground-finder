@@ -36,6 +36,7 @@ The owner's list of mobile fixes (2026-10-30, with phone screenshots):
 - **Chips** (`FeatureToggle`, used by the filters and the forms): still 44 px tall (NFR-UX-02), with less side padding and 6 px gaps, so three short chips share a row on a phone. The filters drawer's header, sections and footer are tighter too.
 - **Add flow:** "← Nazaj" and "Naprej →". The last step's button has a check mark, or a spinner while saving.
 - **"Več" sheet:** the list's `-mx-4` cancels `menu-lg`'s item padding, so the icons line up with "Več" and "Jezik".
+- **`getPlaygroundById` logs a failed query.** Before, a failure looked like a missing playground: a 404, with nothing in the logs.
 - **Docs:** FR-PG-01 and FR-ADM-03 describe the new rule. BL-71 is removed, and ADR-0003's notes are updated.
 - **Tests:**
   - unit: forms and admin edits leave unticked features unknown;

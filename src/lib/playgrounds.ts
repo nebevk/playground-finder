@@ -153,6 +153,8 @@ export const getPlaygroundById = cache(async (id: string): Promise<PlaygroundDet
     .eq("status", "published")
     .maybeSingle();
 
+  // A failed query would otherwise look like a missing playground (404) and leave no trace.
+  if (error) console.error("getPlaygroundById failed", error);
   const row = data as GeoRow | null;
   const base = row ? toMapPlayground(row) : null;
   if (error || !data || !row || !base) return null;
