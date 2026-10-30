@@ -1,7 +1,7 @@
 ---
 id: 0020
 title: Discovered playgrounds can wait in a review queue until an admin publishes them
-status: blocked
+status: done
 order: migrations-first
 destructive: false
 migrations: [20261030120000_playground_status.sql]
@@ -172,3 +172,4 @@ Expect:
 - **2026-10-30T14:30Z** applied (prod version `20261030143032`). Verify: columns/defaults match; published|15|0; policy flagged+status; 4 constraints; unique index; geo 4 cols; no authenticated grants. Pushing `4ae4f80`..`9168f64`.
 - **2026-10-30T14:32Z** deploy `dpl_4ng5G6k6b8SVjtjGENZnRrnsoUbQ` READY on `de201b1`. Smoke 200. `/sl/admin/pending` → 404 for visitors. Advisors unchanged vs 0019.
 - **Blocked** on owner phone: `/sl/admin` shows "Čaka na pregled: 0" + queue link; queue empty message; add flow still lands on the map pin. Say **process ops** when done.
+- **2026-10-30T14:53Z** owner confirmed queue: "Čaka na pregled: 0", empty state, no rejected. **status → done**.
