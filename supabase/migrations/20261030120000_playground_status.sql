@@ -38,8 +38,10 @@ alter table public.playgrounds
   add constraint playgrounds_source_notes_length check (char_length(source_notes) <= 1000);
 
 -- One row per feature of a source, whatever its status: a rejected discovery isn't proposed again.
+-- Not partial: rows without an external_id never clash (nulls are distinct), and only a plain index
+-- can settle an upsert (on conflict (source, external_id)), which lets discovery add idempotently.
 create unique index if not exists playgrounds_source_external_id_uidx
-  on public.playgrounds (source, external_id) where external_id is not null;
+  on public.playgrounds (source, external_id);
 
 -- ── Who sees what ───────────────────────────────────────────────────────────
 -- Visitors and signed-in users: published and unflagged. Authors (playgrounds_select_own) and admins

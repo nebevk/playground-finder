@@ -5,7 +5,7 @@ status: ready
 order: migrations-first
 destructive: false
 migrations: [20261030120000_playground_status.sql]
-checksums: [8651b111a684e721]
+checksums: [b5454320df4a2816]
 depends_on: [0019]
 backlog: []
 requirements: [FR-ADM-07, FR-ADM-08, FR-ADM-03, NFR-SEC-05]
@@ -25,6 +25,7 @@ requirements: [FR-ADM-07, FR-ADM-08, FR-ADM-03, NFR-SEC-05]
   - **Provenance: `source`, `external_id`, `source_notes`.**
     - `source` is `user`, `import`, `osm` or `other`. Existing rows stay null; new rows default to `user`.
     - An `external_id` needs a `source`. One row per `(source, external_id)`, whatever its status, so a rejected discovery can't come back.
+    - It's a plain unique index, not a partial one. Rows without an id never clash, because nulls are distinct. Only a plain index can settle an upsert, so discovery can add rows idempotently. Found while setting up a local demo.
   - **`playgrounds_select_public`** becomes `flagged = false and status = 'published'`. The author and admin policies are unchanged.
   - **`playgrounds_geo`** gets the four columns appended.
   - **No insert or update grants on the new columns for `authenticated`.** Only the admin actions (service role) change them.
@@ -58,7 +59,7 @@ requirements: [FR-ADM-07, FR-ADM-08, FR-ADM-03, NFR-SEC-05]
 
 - **2026-10-30, all checks:**
   - `pnpm db:reset` applies cleanly.
-  - `pnpm test:db`: 109 pass, including 19 new checks in `30_publication.test.sql`. The GDPR-04 TODO is unchanged.
+  - `pnpm test:db`: 112 pass, including 22 new checks in `30_publication.test.sql`. The GDPR-04 TODO is unchanged. (Re-run after the index change.)
   - `pnpm test`: 111 pass (was 99).
   - `pnpm typecheck`, `pnpm lint` and `pnpm test:req` pass.
 - **`pnpm test:e2e`: 78 passed, none skipped.** The 5 new tests are in `review-queue.spec.ts`. The first run failed 3 tests, all fixed:
@@ -148,7 +149,7 @@ Expect:
   - `playgrounds_source_known`;
   - `playgrounds_source_notes_length`;
   - `playgrounds_status_known`.
-- **Index:** `CREATE UNIQUE INDEX playgrounds_source_external_id_uidx ON public.playgrounds USING btree (source, external_id) WHERE (external_id IS NOT NULL)`.
+- **Index:** `CREATE UNIQUE INDEX playgrounds_source_external_id_uidx ON public.playgrounds USING btree (source, external_id)`.
 - **View:** 4 column names.
 - **Grants:** no rows.
 

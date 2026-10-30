@@ -87,7 +87,7 @@ Today:
    - `source`: `user` | `import` | `osm` | `other`. New rows default to `user`; both imports set `import`. Rows that existed before this are left null, because their origin can't be told reliably: rows without an author can be imports, or playgrounds whose author deleted their account.
    - `external_id`: for example `node/123`. It requires a `source`.
    - `source_notes`: a short note for the reviewer. Once the row is published, **anyone can read it through the API**, so it must hold only public facts.
-   - A unique index on `(source, external_id)` where `external_id` is set.
+   - A unique index on `(source, external_id)`. Rows without an id never clash, and discovery can upsert on it, so sending the same feature twice adds it once.
 7. **`status` and `flagged` stay separate.**
    - `status` answers "has an admin let it in?". `flagged` answers "was it taken down after reports?".
    - A published playground can still be flagged. A pending one can't be reported, because only admins can see it.
@@ -215,8 +215,9 @@ alter table public.playgrounds
 alter table public.playgrounds alter column source set default 'user';
 -- plus checks: the known sources; an external_id needs a source (≤ 100 characters);
 -- source_notes ≤ 1000 characters
+-- Not partial: only a plain index can settle an upsert (on conflict (source, external_id)).
 create unique index if not exists playgrounds_source_external_id_uidx
-  on public.playgrounds (source, external_id) where external_id is not null;
+  on public.playgrounds (source, external_id);
 
 -- Visitors: published and unflagged. Authors (playgrounds_select_own) and admins
 -- (playgrounds_select_admin_flagged) keep their policies.

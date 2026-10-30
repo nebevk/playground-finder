@@ -73,6 +73,22 @@ select throws_ok(
   '23505', null,
   '[FR-ADM-07] a rejected discovery can''t be added again'
 );
+select lives_ok(
+  $$ insert into public.playgrounds (name, location, source, external_id)
+     values ('Again', 'SRID=4326;POINT(14.5 46.0)', 'osm', 'way/2')
+     on conflict (source, external_id) do nothing $$,
+  '[FR-ADM-07] discovery can add idempotently: a feature it already sent is skipped, not an error'
+);
+select is(
+  (select count(*)::int from public.playgrounds where source = 'osm' and external_id = 'way/2'),
+  1,
+  '[FR-ADM-07] and stays a single row'
+);
+select lives_ok(
+  $$ insert into public.playgrounds (name, location) values ('No id 1', 'SRID=4326;POINT(14.5 46.0)'),
+                                                           ('No id 2', 'SRID=4326;POINT(14.5 46.0)') $$,
+  '[FR-ADM-08] playgrounds without an external id never clash'
+);
 
 -- A photo on the waiting discovery, as if a later source brought one. Files are written as postgres.
 insert into storage.objects (bucket_id, name, owner_id) values
