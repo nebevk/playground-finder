@@ -86,6 +86,7 @@
     "backToSite": "Back to site",
     "dashboardIntro": "Review and moderate content.",
     "links": {
+      "pending": "New playgrounds to review",
       "moderation": "Flagged content",
       "playgrounds": "All playgrounds",
       "quickAdd": "Quick add",
@@ -93,6 +94,7 @@
       "import": "Import from CSV"
     },
     "counts": {
+      "pendingPlaygrounds": "Waiting for review",
       "flaggedPlaygrounds": "Flagged playgrounds",
       "flaggedReviews": "Flagged reviews",
       "flaggedPhotos": "Flagged photos",
@@ -127,6 +129,39 @@
       "photoMissing": "The photo file is no longer in storage.",
       "approveHelp": "“Approve” clears the flag and its reports; the content becomes visible again."
     },
+    "pending": {
+      "title": "New playgrounds to review",
+      "intro": "Discovered playgrounds stay hidden until you publish them. Check the name and the location, edit if needed, then publish or reject.",
+      "waitingHeading": "Waiting for review: {count}",
+      "empty": "No playground is waiting for review.",
+      "shownOf": "Showing {shown} of {total}.",
+      "addedBy": "Added by {name}",
+      "source": {
+        "user": "Added by a user",
+        "import": "Import",
+        "osm": "Found on OpenStreetMap",
+        "other": "Other source"
+      },
+      "showPin": "See the location on OpenStreetMap",
+      "openFeature": "Open the source on OpenStreetMap",
+      "detailsLabel": "Playground details",
+      "noDetails": "The source lists no features or equipment.",
+      "notes": "Source notes",
+      "nearbyHeading": "Nearby (within {distance} m)",
+      "nearbyNone": "No other playgrounds nearby.",
+      "distance": "{distance} m",
+      "nearbyStatus": {
+        "pending": "waiting for review",
+        "rejected": "rejected"
+      },
+      "publish": "Publish",
+      "publishNamed": "Publish {name}",
+      "edit": "Edit",
+      "reject": "Reject",
+      "rejectedHeading": "Recently rejected",
+      "rejectedHelp": "Rejected playgrounds stay hidden, and discovery won't propose them again. If one was rejected by mistake, you can still publish it.",
+      "rejectedEmpty": "No rejected playgrounds."
+    },
     "playgrounds": {
       "title": "All playgrounds",
       "new": "Add playground",
@@ -140,6 +175,7 @@
       "editTitle": "Edit playground",
       "save": "Save",
       "saved": "Saved.",
+      "untickedUnknown": "Unticked features stay unknown (not “No …”).",
       "deleteConfirm": "Delete this playground?",
       "search": "Search by name…",
       "reviews": "Reviews",

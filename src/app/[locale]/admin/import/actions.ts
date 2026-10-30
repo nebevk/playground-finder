@@ -52,6 +52,8 @@ export async function bulkInsertPlaygroundsAction(
         surfaces: surfacesIn([r.surface_type]),
         ...statedFeatures((k) => r.features[k] === true),
         user_id: ctx.user.id,
+        // Published at once (the default): the admin reviewed the rows before importing.
+        source: "import",
       };
     });
 

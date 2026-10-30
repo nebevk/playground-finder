@@ -36,6 +36,7 @@ export async function addPhotosAction(_prev: AddPhotosState, formData: FormData)
     .select("id")
     .eq("id", playgroundId)
     .eq("flagged", false)
+    .eq("status", "published")
     .maybeSingle();
   if (!playground) return { error: "not_found" };
   if (!(await verifyTurnstile(formData))) return { error: "turnstile_failed" };

@@ -85,6 +85,21 @@ export function equipmentFrom(formData: FormData): EquipmentKey[] {
   return EQUIPMENT_KEYS.filter((key) => ticked.has(key));
 }
 
+// Whether a playground is public (ADR-0003). Only "published" ones show anywhere outside admin;
+// discovery adds "pending" ones, and an admin publishes or rejects them. The database accepts only
+// these (constraint playgrounds_status_known, ops 0020; a unit test keeps the lists equal).
+export const PLAYGROUND_STATUSES = ["pending", "published", "rejected"] as const;
+export type PlaygroundStatus = (typeof PLAYGROUND_STATUSES)[number];
+
+// Where a playground came from (constraint playgrounds_source_known). Rows added before ops 0020
+// have none.
+export const PLAYGROUND_SOURCES = ["user", "import", "osm", "other"] as const;
+export type PlaygroundSource = (typeof PLAYGROUND_SOURCES)[number];
+
+export function isPlaygroundSource(value: unknown): value is PlaygroundSource {
+  return (PLAYGROUND_SOURCES as readonly unknown[]).includes(value);
+}
+
 // Features as booleans: an unknown one (null in the database) counts as not having it.
 export type MapPlayground = Record<FeatureKey, boolean> & {
   id: string;

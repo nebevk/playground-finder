@@ -27,8 +27,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   );
 
   // Sitemaps render outside a request scope (no cookies), so use a plain
-  // anon client instead of the cookie-bound server client. RLS hides
-  // flagged playgrounds from the anon role.
+  // anon client instead of the cookie-bound server client. RLS shows the anon
+  // role only published, unflagged playgrounds; the filters say the same.
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
@@ -36,6 +36,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const { data } = await supabase
     .from("playgrounds_geo")
     .select("id, created_at")
+    .eq("flagged", false)
+    .eq("status", "published")
     .limit(5000);
 
   for (const row of data ?? []) {

@@ -95,6 +95,7 @@ describe("map snapshot (ADR-0001)", () => {
         "flagTargetAction",
         "deleteFlaggedAction",
         "updatePlaygroundAction",
+        "setPlaygroundStatusAction",
         "deletePlaygroundAction",
         "bulkDeletePlaygroundsAction",
         "bulkSetFlaggedPlaygroundsAction",

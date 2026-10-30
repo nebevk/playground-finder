@@ -25,10 +25,16 @@ export function EditPlaygroundForm({
   playground,
   locale,
   trigger,
+  triggerClassName,
+  untickedUnknown = false,
 }: {
   playground: Playground;
   locale: string;
+  /** The opening button's content; `triggerClassName` styles the button itself. */
   trigger: ReactNode;
+  triggerClassName: string;
+  /** The review queue: an unticked feature stays unknown instead of becoming "Brez …" (ADR-0003). */
+  untickedUnknown?: boolean;
 }) {
   const t = useTranslations("admin.playgrounds");
   const tFields = useTranslations("add.step2");
@@ -41,12 +47,14 @@ export function EditPlaygroundForm({
 
   return (
     <>
+      {/* A real button, not display: contents around a styled span: that has no box, so it can't
+          be clicked by tests and isn't reliably focusable or announced. */}
       <button
         type="button"
         onClick={() => ref.current?.showModal()}
         aria-haspopup="dialog"
         aria-controls={id}
-        className="contents"
+        className={triggerClassName}
       >
         {trigger}
       </button>
@@ -62,6 +70,7 @@ export function EditPlaygroundForm({
             }}
             className="mt-4 flex flex-col gap-3"
           >
+            {untickedUnknown && <input type="hidden" name="unticked_features" value="unknown" />}
             <label className="form-control">
               <span className="label-text mb-1">{t("name")}</span>
               <input
@@ -104,6 +113,7 @@ export function EditPlaygroundForm({
 
             <fieldset>
               <legend className="label-text mb-1">{tFields("features")}</legend>
+              {untickedUnknown && <p className="mb-2 text-sm text-base-content/70">{t("untickedUnknown")}</p>}
               <div className="grid grid-cols-2 gap-2">
                 {PLAYGROUND_FEATURE_KEYS.map((key) => (
                   <label key={key} className="flex cursor-pointer items-center gap-2">

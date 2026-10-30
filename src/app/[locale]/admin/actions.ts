@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { clampText, DESCRIPTION_MAX, NAME_MAX } from "@/lib/limits";
 import { getAdminActionContext } from "@/lib/admin";
 import { invalidateMapSnapshot } from "@/lib/playgrounds";
-import { equipmentFrom, featuresFrom, surfacesFrom } from "@/lib/playground-types";
+import { equipmentFrom, featuresFrom, statedFeatures, surfacesFrom } from "@/lib/playground-types";
 import { photoPathsFor, removePhotoFiles } from "@/lib/photo-storage";
 
 const TARGETS = ["playground", "review", "photo"] as const;
@@ -118,9 +118,16 @@ export async function updatePlaygroundAction(formData: FormData) {
 
   if (!id || !name) return;
 
+  // In the review queue an unticked feature stays unknown: a reviewer at a desk can't say a
+  // playground has no toilets (ADR-0003). The playgrounds table's editor answers every one (BL-71).
+  const features =
+    formData.get("unticked_features") === "unknown"
+      ? statedFeatures((k) => formData.get(k) === "on")
+      : featuresFrom(formData);
+
   const { error } = await ctx.admin
     .from("playgrounds")
-    .update({ name, description, surfaces: surfacesFrom(formData), ...featuresFrom(formData), equipment: equipmentFrom(formData) })
+    .update({ name, description, surfaces: surfacesFrom(formData), ...features, equipment: equipmentFrom(formData) })
     .eq("id", id);
   if (error) {
     console.error("updatePlaygroundAction failed", error);
@@ -128,9 +135,33 @@ export async function updatePlaygroundAction(formData: FormData) {
   }
 
   invalidateMapSnapshot();
+  revalidatePath(`/${locale}/admin/pending`);
   revalidatePath(`/${locale}/admin/playgrounds`);
   revalidatePath(`/${locale}/playground/${id}`);
   revalidatePath(`/${locale}`);
+}
+
+// The review queue (ADR-0003): publish a waiting playground, or one rejected by mistake, or reject
+// it. A rejected one stays in the table, so discovery doesn't propose it again.
+export async function setPlaygroundStatusAction(formData: FormData) {
+  const ctx = await getAdminActionContext();
+  if (!ctx) return;
+
+  const id = String(formData.get("id") ?? "");
+  const status = formData.get("status");
+  const locale = String(formData.get("locale") ?? "sl");
+  if (!id || (status !== "published" && status !== "rejected")) return;
+
+  const { error } = await ctx.admin.from("playgrounds").update({ status }).eq("id", id);
+  if (error) {
+    console.error("setPlaygroundStatusAction failed", error);
+    return;
+  }
+
+  // Publishing puts it on the map (and on Home, in search and in the sitemap within the hour).
+  invalidateMapSnapshot();
+  revalidatePath(`/${locale}/admin/pending`);
+  revalidatePath(`/${locale}/admin`);
 }
 
 export async function deletePlaygroundAction(formData: FormData) {

@@ -20,12 +20,14 @@ export default async function AdminPlaygroundsPage({
   const t = await getTranslations("admin");
 
   // Admins see all rows (incl. flagged) via the admin RLS policy; the view carries
-  // review_count so the table can sort/filter on engagement.
+  // review_count so the table can sort/filter on engagement. Published ones only: waiting and
+  // rejected ones are in the review queue (ADR-0003).
   const { data } = await supabase
     .from("playgrounds_geo")
     .select(
       "id, name, description, surfaces, is_fenced, has_shade, has_water, has_toilets, has_parking, has_benches, has_toddler_area, is_accessible, has_lighting, equipment, flagged, review_count, created_at",
     )
+    .eq("status", "published")
     .order("created_at", { ascending: false });
 
   const rows: AdminPlaygroundRow[] = (data ?? []).flatMap((r) => {

@@ -42,3 +42,12 @@ values
     ST_SetSRID(ST_MakePoint(14.5410, 46.0570), 4326)::geography,
     true, null, null, null, true, '["rubber_tiles"]',
     '["swings","slides","climbing_wall"]');
+
+-- A discovery waiting for review (ADR-0003), so /admin/pending has something to show. Only admins
+-- see it; the e2e tests check it stays off public pages and the sitemap.
+insert into public.playgrounds
+  (name, location, has_shade, surfaces, equipment, status, source, external_id, source_notes)
+values
+  ('Igrišče Rožna dolina', ST_SetSRID(ST_MakePoint(14.4855, 46.0490), 4326)::geography,
+    true, '["sand"]', '["swings","sandbox"]',
+    'pending', 'osm', 'node/9900000001', 'OSM: leisure=playground, surface=sand');

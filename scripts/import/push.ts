@@ -59,6 +59,8 @@ async function main() {
         // The database accepts only the equipment the app knows (ops 0014).
         equipment: pg.equipment.filter(isEquipmentKey),
         user_id: null,
+        // Published at once (the default): files in approved/ were checked by a person (ADR-0003).
+        source: "import",
       });
 
       if (error) {

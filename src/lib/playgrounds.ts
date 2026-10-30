@@ -47,12 +47,16 @@ function toMapPlayground(row: GeoRow): MapPlayground | null {
 
 // The map's data (ADR-0001): every public playground, packed, built once and shared by all
 // visitors instead of a full query per page view. Read with the cookie-less client, so everyone
-// (admins too) gets the public, unflagged set. Expires when a Server Action changes the map
-// (invalidateMapSnapshot) and after an hour at the latest, which covers changes made outside the
-// app (SQL, imports, the auto-flag trigger). Bump the key's version when the shape changes.
+// (admins too) gets the public set: published (ADR-0003) and unflagged. Expires when a Server Action
+// changes the map (invalidateMapSnapshot) and after an hour at the latest, which covers changes made
+// outside the app (SQL, imports, the auto-flag trigger). Bump the key's version when the shape changes.
 export const getMapSnapshot = unstable_cache(
   async (): Promise<PackedPlayground[]> => {
-    const { data, error } = await createAnonClient().from("playgrounds_geo").select(MAP_SELECT).eq("flagged", false);
+    const { data, error } = await createAnonClient()
+      .from("playgrounds_geo")
+      .select(MAP_SELECT)
+      .eq("flagged", false)
+      .eq("status", "published");
     if (error) throw error;
     const rows = (data ?? []).flatMap((r) => {
       const m = toMapPlayground(r as GeoRow);
@@ -79,6 +83,7 @@ const latestPlaygroundIds = unstable_cache(
       .from("playgrounds_geo")
       .select("id")
       .eq("flagged", false)
+      .eq("status", "published")
       .order("created_at", { ascending: false })
       .limit(limit);
     if (error) throw error;
@@ -96,6 +101,7 @@ const mostViewedPlaygroundIds = unstable_cache(
       .from("playgrounds_geo")
       .select("id")
       .eq("flagged", false)
+      .eq("status", "published")
       .gt("view_count", 0)
       .order("view_count", { ascending: false })
       .limit(limit);
@@ -134,7 +140,8 @@ export async function signedPhotoUrls(
   );
 }
 
-// cache() dedupes the fetch between generateMetadata and the page render.
+// cache() dedupes the fetch between generateMetadata and the page render. Public playgrounds only,
+// for everyone: admins review waiting ones in /admin/pending, not here (ADR-0003).
 export const getPlaygroundById = cache(async (id: string): Promise<PlaygroundDetail | null> => {
   const supabase = await createClient();
 
@@ -143,6 +150,7 @@ export const getPlaygroundById = cache(async (id: string): Promise<PlaygroundDet
     .select(`${MAP_SELECT}, user_id`)
     .eq("id", id)
     .eq("flagged", false)
+    .eq("status", "published")
     .maybeSingle();
 
   const row = data as GeoRow | null;

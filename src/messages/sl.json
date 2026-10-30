@@ -86,6 +86,7 @@
     "backToSite": "Nazaj na stran",
     "dashboardIntro": "Pregled in moderiranje vsebine.",
     "links": {
+      "pending": "Nova igrišča za pregled",
       "moderation": "Prijavljena vsebina",
       "playgrounds": "Vsa igrišča",
       "quickAdd": "Hitro dodajanje",
@@ -93,6 +94,7 @@
       "import": "Uvoz iz CSV"
     },
     "counts": {
+      "pendingPlaygrounds": "Čaka na pregled",
       "flaggedPlaygrounds": "Prijavljena igrišča",
       "flaggedReviews": "Prijavljena mnenja",
       "flaggedPhotos": "Prijavljene fotografije",
@@ -127,6 +129,39 @@
       "photoMissing": "Datoteke fotografije ni več v shrambi.",
       "approveHelp": "»Odobri« počisti oznako in prijave; vsebina je spet vidna vsem."
     },
+    "pending": {
+      "title": "Nova igrišča za pregled",
+      "intro": "Najdena igrišča so skrita, dokler jih ne objaviš. Preveri ime in lego, po potrebi uredi, nato objavi ali zavrni.",
+      "waitingHeading": "Čaka na pregled: {count}",
+      "empty": "Nobeno igrišče ne čaka na pregled.",
+      "shownOf": "Prikazano: {shown} od {total}.",
+      "addedBy": "Dodal: {name}",
+      "source": {
+        "user": "Dodal uporabnik",
+        "import": "Uvoz",
+        "osm": "Najdeno v OpenStreetMap",
+        "other": "Drug vir"
+      },
+      "showPin": "Poglej lego na OpenStreetMap",
+      "openFeature": "Odpri vir v OpenStreetMap",
+      "detailsLabel": "Podatki o igrišču",
+      "noDetails": "Vir ne navaja lastnosti ne igral.",
+      "notes": "Opombe vira",
+      "nearbyHeading": "V bližini (do {distance} m)",
+      "nearbyNone": "V bližini ni drugih igrišč.",
+      "distance": "{distance} m",
+      "nearbyStatus": {
+        "pending": "čaka na pregled",
+        "rejected": "zavrnjeno"
+      },
+      "publish": "Objavi",
+      "publishNamed": "Objavi {name}",
+      "edit": "Uredi",
+      "reject": "Zavrni",
+      "rejectedHeading": "Nedavno zavrnjena",
+      "rejectedHelp": "Zavrnjena ostanejo skrita in jih odkrivanje ne predlaga znova. Po pomoti zavrnjeno lahko še vedno objaviš.",
+      "rejectedEmpty": "Ni zavrnjenih igrišč."
+    },
     "playgrounds": {
       "title": "Vsa igrišča",
       "new": "Dodaj igrišče",
@@ -140,6 +175,7 @@
       "editTitle": "Uredi igrišče",
       "save": "Shrani",
       "saved": "Shranjeno.",
+      "untickedUnknown": "Neoznačene lastnosti ostanejo neznane (ne »Brez …«).",
       "deleteConfirm": "Res izbrišem to igrišče?",
       "search": "Iskanje po imenu…",
       "reviews": "Mnenja",

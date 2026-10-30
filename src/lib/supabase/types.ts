@@ -121,6 +121,7 @@ export type Database = {
           created_at: string
           description: string | null
           equipment: Json
+          external_id: string | null
           flagged: boolean
           has_benches: boolean | null
           has_lighting: boolean | null
@@ -134,6 +135,9 @@ export type Database = {
           is_fenced: boolean | null
           location: unknown
           name: string
+          source: string | null
+          source_notes: string | null
+          status: string
           surface_type: string | null
           surfaces: Json
           user_id: string | null
@@ -143,6 +147,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           equipment?: Json
+          external_id?: string | null
           flagged?: boolean
           has_benches?: boolean | null
           has_lighting?: boolean | null
@@ -156,6 +161,9 @@ export type Database = {
           is_fenced?: boolean | null
           location: unknown
           name: string
+          source?: string | null
+          source_notes?: string | null
+          status?: string
           surface_type?: string | null
           surfaces?: Json
           user_id?: string | null
@@ -165,6 +173,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           equipment?: Json
+          external_id?: string | null
           flagged?: boolean
           has_benches?: boolean | null
           has_lighting?: boolean | null
@@ -178,6 +187,9 @@ export type Database = {
           is_fenced?: boolean | null
           location?: unknown
           name?: string
+          source?: string | null
+          source_notes?: string | null
+          status?: string
           surface_type?: string | null
           surfaces?: Json
           user_id?: string | null
@@ -318,6 +330,7 @@ export type Database = {
           created_at: string | null
           description: string | null
           equipment: Json | null
+          external_id: string | null
           flagged: boolean | null
           has_benches: boolean | null
           has_lighting: boolean | null
@@ -333,6 +346,9 @@ export type Database = {
           lng: number | null
           name: string | null
           review_count: number | null
+          source: string | null
+          source_notes: string | null
+          status: string | null
           surface_type: string | null
           surfaces: Json | null
           user_id: string | null

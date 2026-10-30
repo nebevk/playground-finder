@@ -29,12 +29,14 @@ export default async function AdminQualityPage({
   const { supabase } = await requireAdmin();
   const t = await getTranslations("admin.quality");
 
+  // Published playgrounds: waiting ones are checked in the review queue (ADR-0003).
   const [{ data: pgData }, { data: photoData }] = await Promise.all([
     supabase
       .from("playgrounds_geo")
       .select(
         "id, name, lat, lng, description, surfaces, review_count, is_fenced, has_shade, has_water, has_toilets, has_parking, has_benches, has_toddler_area, is_accessible, has_lighting",
-      ),
+      )
+      .eq("status", "published"),
     supabase.from("photos").select("playground_id"),
   ]);
 

@@ -262,11 +262,12 @@ export function AdminPlaygroundsTable({
                         <EditPlaygroundForm
                           playground={pg}
                           locale={locale}
+                          triggerClassName="btn btn-ghost btn-xs gap-1"
                           trigger={
-                            <span className="btn btn-ghost btn-xs gap-1">
+                            <>
                               <Pencil className="size-3" aria-hidden />
                               {t("edit")}
-                            </span>
+                            </>
                           }
                         />
                         <DeletePlaygroundButton id={pg.id} locale={locale} />

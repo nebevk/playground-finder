@@ -6,6 +6,7 @@ One file per significant technical decision: what we chose, what else we conside
 |---|---|---|
 | [0001](0001-map-data-loading.md) | Map data loading — cached shared snapshot | Accepted (ops 0013) |
 | [0002](0002-photo-pipeline.md) | Photo pipeline — server-validated uploads, private bucket, signed URLs | Accepted |
+| [0003](0003-playground-status-and-admin-review-queue.md) | Playground publication status and admin review queue | Accepted (ops 0020) |
 
 ## Writing a new ADR
 

@@ -1,5 +1,5 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { ArrowLeft, MapPinned, ShieldAlert, Plus, ClipboardCheck, Upload } from "lucide-react";
+import { ArrowLeft, MapPinned, ShieldAlert, Plus, ClipboardCheck, Upload, Inbox } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { requireAdmin } from "@/lib/admin";
 
@@ -13,7 +13,8 @@ export default async function AdminDashboardPage({
   const { supabase } = await requireAdmin();
   const t = await getTranslations("admin");
 
-  const [flaggedPlaygrounds, flaggedReviews, flaggedPhotos, openReports] = await Promise.all([
+  const [pendingPlaygrounds, flaggedPlaygrounds, flaggedReviews, flaggedPhotos, openReports] = await Promise.all([
+    supabase.from("playgrounds").select("id", { count: "exact", head: true }).eq("status", "pending"),
     supabase.from("playgrounds").select("id", { count: "exact", head: true }).eq("flagged", true),
     supabase.from("reviews").select("id", { count: "exact", head: true }).eq("flagged", true),
     supabase.from("photos").select("id", { count: "exact", head: true }).eq("flagged", true),
@@ -21,10 +22,11 @@ export default async function AdminDashboardPage({
   ]);
 
   const stats = [
-    { key: "flaggedPlaygrounds", value: flaggedPlaygrounds.count ?? 0 },
-    { key: "flaggedReviews", value: flaggedReviews.count ?? 0 },
-    { key: "flaggedPhotos", value: flaggedPhotos.count ?? 0 },
-    { key: "openReports", value: openReports.count ?? 0 },
+    { key: "pendingPlaygrounds", value: pendingPlaygrounds.count ?? 0, href: "/admin/pending" },
+    { key: "flaggedPlaygrounds", value: flaggedPlaygrounds.count ?? 0, href: "/admin/moderation" },
+    { key: "flaggedReviews", value: flaggedReviews.count ?? 0, href: "/admin/moderation" },
+    { key: "flaggedPhotos", value: flaggedPhotos.count ?? 0, href: "/admin/moderation" },
+    { key: "openReports", value: openReports.count ?? 0, href: "/admin/moderation" },
   ] as const;
 
   return (
@@ -40,12 +42,13 @@ export default async function AdminDashboardPage({
       </header>
 
       {/* Each count links to the queue that resolves it; a non-zero count stands out by its
-          colour, not by a coloured border (BL-67). */}
-      <ul className="grid grid-cols-2 gap-3 md:grid-cols-4">
+          colour, not by a coloured border (BL-67). New playgrounds to review come first, the full
+          width on a phone. */}
+      <ul className="grid grid-cols-2 gap-3 md:grid-cols-5">
         {stats.map((s) => (
-          <li key={s.key}>
+          <li key={s.key} className={s.key === "pendingPlaygrounds" ? "col-span-2 md:col-span-1" : undefined}>
             <Link
-              href="/admin/moderation"
+              href={s.href}
               className="flex h-full flex-col gap-1 rounded-box border border-base-300 p-4 transition-colors hover:bg-base-200"
             >
               <span className="text-sm text-base-content/70">{t(`counts.${s.key}`)}</span>
@@ -56,6 +59,10 @@ export default async function AdminDashboardPage({
       </ul>
 
       <nav className="grid gap-3 md:grid-cols-2">
+        <Link href="/admin/pending" className="btn btn-outline gap-2 justify-start">
+          <Inbox className="size-5" aria-hidden />
+          {t("links.pending")}
+        </Link>
         <Link href="/admin/playgrounds" className="btn btn-outline gap-2 justify-start">
           <MapPinned className="size-5" aria-hidden />
           {t("links.playgrounds")}

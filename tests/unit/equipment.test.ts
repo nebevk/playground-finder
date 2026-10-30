@@ -6,6 +6,8 @@ import {
   equipmentFrom,
   featuresFrom,
   PLAYGROUND_FEATURE_KEYS,
+  PLAYGROUND_SOURCES,
+  PLAYGROUND_STATUSES,
   statedFeatures,
   surfacesFrom,
   SURFACE_TYPES,
@@ -86,5 +88,22 @@ describe("features", () => {
     expect(features.has_benches).toBeNull();
     expect(features.is_accessible).toBeNull();
     expect(features.has_lighting).toBeNull();
+  });
+});
+
+describe("publication status and source (ADR-0003)", () => {
+  // The quoted values of `check (<column> in ('a', 'b'))`.
+  function allowed(constraint: string, column: string): string[] {
+    const check = new RegExp(`check \\(${column} in \\(([^)]*)\\)\\)`).exec(latestMigrationAdding(constraint));
+    expect(check, constraint).not.toBeNull();
+    return [...check![1].matchAll(/'([^']+)'/g)].map((v) => v[1]);
+  }
+
+  it("[FR-ADM-08] the database accepts exactly the statuses the app knows", () => {
+    expect(allowed("playgrounds_status_known", "status")).toEqual([...PLAYGROUND_STATUSES]);
+  });
+
+  it("[FR-ADM-08] the database accepts exactly the sources the app knows", () => {
+    expect(allowed("playgrounds_source_known", "source")).toEqual([...PLAYGROUND_SOURCES]);
   });
 });
