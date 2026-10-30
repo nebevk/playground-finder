@@ -140,9 +140,14 @@ export async function signedPhotoUrls(
   );
 }
 
+// Playground ids are UUIDs. Anything else (a typo, a bot probing URLs) is simply not found: the
+// database would only answer "invalid uuid", which isn't worth a round trip or an error in the logs.
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 // cache() dedupes the fetch between generateMetadata and the page render. Public playgrounds only,
 // for everyone: admins review waiting ones in /admin/pending, not here (ADR-0003).
 export const getPlaygroundById = cache(async (id: string): Promise<PlaygroundDetail | null> => {
+  if (!UUID.test(id)) return null;
   const supabase = await createClient();
 
   const { data, error } = await supabase

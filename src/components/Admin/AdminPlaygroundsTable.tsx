@@ -12,13 +12,14 @@ import {
   bulkDeletePlaygroundsAction,
   bulkSetFlaggedPlaygroundsAction,
 } from "@/app/[locale]/admin/actions";
-import type { EquipmentKey, FeatureKey, SurfaceType } from "@/lib/playground-types";
+import type { EquipmentKey, FeatureAnswers, SurfaceType } from "@/lib/playground-types";
 
-export type AdminPlaygroundRow = Record<FeatureKey, boolean> & {
+export type AdminPlaygroundRow = {
   id: string;
   name: string;
   description: string | null;
   surfaces: SurfaceType[];
+  features: FeatureAnswers;
   equipment: EquipmentKey[];
   flagged: boolean;
   review_count: number;

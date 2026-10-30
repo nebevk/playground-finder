@@ -1,5 +1,5 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { isEquipmentKey, PLAYGROUND_FEATURE_KEYS, surfacesIn, type FeatureKey } from "@/lib/playground-types";
+import { answersOf, isEquipmentKey, surfacesIn } from "@/lib/playground-types";
 import { ArrowLeft, Plus } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { requireAdmin } from "@/lib/admin";
@@ -38,7 +38,7 @@ export default async function AdminPlaygroundsPage({
         name: r.name,
         description: r.description,
         surfaces: Array.isArray(r.surfaces) ? surfacesIn(r.surfaces) : [],
-        ...(Object.fromEntries(PLAYGROUND_FEATURE_KEYS.map((k) => [k, r[k] ?? false])) as Record<FeatureKey, boolean>),
+        features: answersOf(r),
         equipment: Array.isArray(r.equipment) ? r.equipment.filter(isEquipmentKey) : [],
         flagged: r.flagged ?? false,
         review_count: r.review_count ?? 0,

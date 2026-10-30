@@ -26,6 +26,8 @@ function builder(table: string, result: (calls: Call[]) => unknown) {
 }
 
 const ROW = { id: "pg1", name: "Tivoli", lat: 46, lng: 14.5, review_count: 0, view_count: 0, equipment: [] };
+// What the detail page looks up: playground ids are UUIDs.
+const PLAYGROUND_ID = "0b3a1c5e-8f2d-4e7a-9c1b-2d3e4f5a6b7c";
 const single = (calls: Call[]) => calls.some(([m]) => m === "maybeSingle");
 const supabase = {
   from: (table: string) =>
@@ -68,9 +70,14 @@ describe("public queries hide flagged rows explicitly", () => {
   });
 
   it("[FR-COM-06] the detail page: playground and its photos", async () => {
-    await getPlaygroundById("pg1");
+    await getPlaygroundById(PLAYGROUND_ID);
     expect(queries.map((q) => q.table)).toEqual(["playgrounds_geo", "photos"]);
     for (const q of queries) expect(filtersFlagged(q), `${q.table} query`).toBe(true);
+  });
+
+  it("[NFR-SEO-01] an id that isn't a UUID is simply not found, without asking the database", async () => {
+    expect(await getPlaygroundById("not-a-playground")).toBeNull();
+    expect(queries).toHaveLength(0);
   });
 
   it("[FR-COM-06] reviews on the detail page", async () => {
@@ -89,7 +96,7 @@ describe("public queries show published playgrounds only (ADR-0003)", () => {
   });
 
   it("[FR-ADM-08] the detail page, for everyone (admins review in the queue)", async () => {
-    await getPlaygroundById("pg1");
+    await getPlaygroundById(PLAYGROUND_ID);
     expect(queries[0].table).toBe("playgrounds_geo");
     expect(filtersPublished(queries[0])).toBe(true);
   });

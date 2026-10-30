@@ -114,7 +114,7 @@ test("[FR-ADM-07] a rejected discovery leaves the queue and stays hidden; publis
   expect((await request.get(`/sl/playground/${rejected.id}`)).status()).toBe(200);
 });
 
-test("[FR-ADM-07] [FR-PG-01] editing in the queue keeps the features nobody answered unknown", async ({ page }) => {
+test("[FR-ADM-07] [FR-PG-01] editing in the queue saves only the features answered; the rest stay unknown", async ({ page }) => {
   const discovery = await addDiscovery("edit", { has_shade: true });
 
   await login(page, E2E_ADMIN_USER);
@@ -123,6 +123,9 @@ test("[FR-ADM-07] [FR-PG-01] editing in the queue keeps the features nobody answ
   const dialog = page.locator("dialog[open]");
   const renamed = `${discovery.name} renamed`;
   await dialog.locator('input[name="name"]').fill(renamed);
+  // Tapped twice: no drinking water (ops 0022).
+  await dialog.getByText(sl.filters.feature.has_water, { exact: true }).click();
+  await dialog.getByText(sl.filters.feature.has_water, { exact: true }).click();
   await dialog.getByRole("button", { name: sl.admin.playgrounds.save }).click();
 
   await expect(page.getByRole("article", { name: renamed, exact: true })).toBeVisible();
@@ -131,6 +134,6 @@ test("[FR-ADM-07] [FR-PG-01] editing in the queue keeps the features nobody answ
     .select("status, has_shade, has_water, has_toilets")
     .eq("id", discovery.id)
     .single();
-  // Still waiting, shade still known, and no invented "Brez pitnika" or "Brez stranišča".
-  expect(data).toEqual({ status: "pending", has_shade: true, has_water: null, has_toilets: null });
+  // Still waiting, shade still known, the deliberate "no", and no invented "Brez stranišča".
+  expect(data).toEqual({ status: "pending", has_shade: true, has_water: false, has_toilets: null });
 });

@@ -38,11 +38,56 @@ export const PLAYGROUND_FEATURE_KEYS = [
 
 export type FeatureKey = (typeof PLAYGROUND_FEATURE_KEYS)[number];
 
-// The features ticked in a form (checkboxes named after the key). An unticked box stays unknown
-// (null), like a feature an import doesn't mention: nobody said "no", so the page doesn't show
-// "Brez …" (owner's call, ops 0021). Every form reads features this way.
+// A form's answers about features: true = has it, false = doesn't have it (its page says "Brez …"),
+// missing = don't know. Every feature starts at "don't know", so skipping one never invents a "no"
+// (ops 0021); a "no" takes a deliberate second tap (ops 0022).
+export type FeatureAnswers = Partial<Record<FeatureKey, boolean>>;
+
+// A tap moves a feature's answer on: don't know → has it → doesn't have it → don't know.
+export function nextAnswer(answer: boolean | undefined): boolean | undefined {
+  if (answer === undefined) return true;
+  return answer ? false : undefined;
+}
+
+// Puts a form's answers in its submission: "yes" or "no" for each answered feature, nothing else.
+export function setFeatureAnswers(formData: FormData, answers: FeatureAnswers) {
+  for (const k of PLAYGROUND_FEATURE_KEYS) {
+    const answer = answers[k];
+    if (answer !== undefined) formData.set(k, answer ? "yes" : "no");
+  }
+}
+
+// The features a form answered: "yes" (or a ticked checkbox's "on") = has it, "no" = doesn't have
+// it, nothing = unknown (null).
 export function featuresFrom(formData: FormData): Record<FeatureKey, boolean | null> {
-  return statedFeatures((k) => formData.get(k) === "on");
+  return featuresFromAnswers(
+    Object.fromEntries(
+      PLAYGROUND_FEATURE_KEYS.map((k) => {
+        const value = formData.get(k);
+        return [k, value === "yes" || value === "on" ? true : value === "no" ? false : undefined];
+      }),
+    ),
+  );
+}
+
+// Answers sent as JSON (the admin quick add): true, false, or anything else = unknown (null).
+export function featuresFromAnswers(answers: Partial<Record<string, unknown>>): Record<FeatureKey, boolean | null> {
+  return Object.fromEntries(
+    PLAYGROUND_FEATURE_KEYS.map((k) => {
+      const answer = answers[k];
+      return [k, typeof answer === "boolean" ? answer : null];
+    }),
+  ) as Record<FeatureKey, boolean | null>;
+}
+
+// A playground's answers so far, to start an edit from: known features keep theirs.
+export function answersOf(features: Partial<Record<FeatureKey, boolean | null>>): FeatureAnswers {
+  return Object.fromEntries(
+    PLAYGROUND_FEATURE_KEYS.flatMap((k) => {
+      const answer = features[k];
+      return typeof answer === "boolean" ? [[k, answer]] : [];
+    }),
+  ) as FeatureAnswers;
 }
 
 // Features from a source that only says what a playground has, such as an import or a form: one it

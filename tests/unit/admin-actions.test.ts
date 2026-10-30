@@ -104,9 +104,11 @@ describe("the review queue", () => {
     expect(update).not.toHaveBeenCalled();
   });
 
-  it("[FR-ADM-07] [FR-ADM-03] [FR-PG-01] an admin edit (queue or table) leaves unticked features unknown", async () => {
-    await updatePlaygroundAction(form({ id: "pg1", name: "Rožna dolina", locale: "sl", has_shade: "on" }));
+  it("[FR-ADM-07] [FR-ADM-03] [FR-PG-01] an admin edit (queue or table) saves only the answered features", async () => {
+    await updatePlaygroundAction(
+      form({ id: "pg1", name: "Rožna dolina", locale: "sl", has_shade: "yes", has_toilets: "no" }),
+    );
     const [, values] = update.mock.lastCall!;
-    expect(values).toMatchObject({ name: "Rožna dolina", has_shade: true, has_water: null, has_toilets: null });
+    expect(values).toMatchObject({ name: "Rožna dolina", has_shade: true, has_toilets: false, has_water: null });
   });
 });

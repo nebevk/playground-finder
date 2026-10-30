@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { LocationPickerClient } from "@/components/Map/LocationPickerClient";
 import { DetailsFields } from "@/components/Playground/DetailsFields";
-import { PLAYGROUND_FEATURE_KEYS, type EquipmentKey, type FeatureKey, type SurfaceType } from "@/lib/playground-types";
+import { setFeatureAnswers, type EquipmentKey, type FeatureAnswers, type SurfaceType } from "@/lib/playground-types";
 import { updateOwnPlaygroundAction, type EditState } from "../actions";
 
 export type EditablePlayground = {
@@ -15,7 +15,7 @@ export type EditablePlayground = {
   surfaces: SurfaceType[];
   lat: number;
   lng: number;
-  features: Record<FeatureKey, boolean>;
+  features: FeatureAnswers;
   equipment: EquipmentKey[];
 };
 
@@ -50,7 +50,7 @@ export function EditPlaygroundForm({ playground, locale }: { playground: Editabl
         fd.set("name", name);
         fd.set("description", description);
         for (const s of surfaces) fd.append("surfaces", s);
-        for (const k of PLAYGROUND_FEATURE_KEYS) if (features[k]) fd.set(k, "on");
+        setFeatureAnswers(fd, features);
         for (const k of equipment) fd.append("equipment", k);
         return action(fd);
       }}
@@ -79,7 +79,7 @@ export function EditPlaygroundForm({ playground, locale }: { playground: Editabl
           surfaces={surfaces}
           onSurfaceToggle={(key) => setSurfaces((list) => (list.includes(key) ? list.filter((k) => k !== key) : [...list, key]))}
           features={features}
-          onFeatureToggle={(key) => setFeatures({ ...features, [key]: !features[key] })}
+          onFeaturesChange={setFeatures}
           equipment={equipment}
           onEquipmentToggle={(key) => setEquipment((list) => (list.includes(key) ? list.filter((k) => k !== key) : [...list, key]))}
         />

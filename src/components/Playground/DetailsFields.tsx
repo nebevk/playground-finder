@@ -2,20 +2,20 @@
 
 import type { Ref } from "react";
 import { useTranslations } from "next-intl";
-import { FEATURE_ICONS, FeatureToggle } from "@/components/FeatureChip";
+import { FeatureToggle } from "@/components/FeatureChip";
+import { FeatureAnswerChips } from "@/components/Playground/FeatureAnswers";
 import { DESCRIPTION_MAX, NAME_MAX } from "@/lib/limits";
 import {
   EQUIPMENT_KEYS,
-  PLAYGROUND_FEATURE_KEYS,
   SURFACE_TYPES,
   type EquipmentKey,
-  type FeatureKey,
+  type FeatureAnswers,
   type SurfaceType,
 } from "@/lib/playground-types";
 
 // A playground's details, shared by the add flow (step 2) and the owner's edit page: the name
-// (required), a description, its surfaces (any number, optional), what the playground has (an
-// unticked feature stays unknown, not "Brez …", ops 0021) and its play equipment.
+// (required), a description, its surfaces (any number, optional), what the playground has (each
+// feature answered has / doesn't have / don't know, ops 0022) and its play equipment.
 export function DetailsFields({
   name,
   onNameChange,
@@ -26,7 +26,7 @@ export function DetailsFields({
   surfaces,
   onSurfaceToggle,
   features,
-  onFeatureToggle,
+  onFeaturesChange,
   equipment,
   onEquipmentToggle,
 }: {
@@ -39,13 +39,12 @@ export function DetailsFields({
   onDescriptionChange: (description: string) => void;
   surfaces: readonly SurfaceType[];
   onSurfaceToggle: (key: SurfaceType) => void;
-  features: Partial<Record<FeatureKey, boolean>>;
-  onFeatureToggle: (key: FeatureKey) => void;
+  features: FeatureAnswers;
+  onFeaturesChange: (features: FeatureAnswers) => void;
   equipment: readonly EquipmentKey[];
   onEquipmentToggle: (key: EquipmentKey) => void;
 }) {
   const t = useTranslations("add");
-  const tFilters = useTranslations("filters");
   const tDetail = useTranslations("detail");
 
   return (
@@ -100,17 +99,7 @@ export function DetailsFields({
 
       <fieldset className="fieldset">
         <legend className="fieldset-legend text-sm">{t("step2.features")}</legend>
-        <div className="flex flex-wrap gap-1.5">
-          {PLAYGROUND_FEATURE_KEYS.map((key) => (
-            <FeatureToggle
-              key={key}
-              icon={FEATURE_ICONS[key]}
-              label={tFilters(`feature.${key}`)}
-              checked={!!features[key]}
-              onChange={() => onFeatureToggle(key)}
-            />
-          ))}
-        </div>
+        <FeatureAnswerChips answers={features} onChange={onFeaturesChange} />
       </fieldset>
 
       <fieldset className="fieldset">

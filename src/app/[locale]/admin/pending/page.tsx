@@ -5,6 +5,7 @@ import { requireAdmin } from "@/lib/admin";
 import { osmFeatureUrl, osmPinUrl } from "@/lib/osm";
 import { usernamesById } from "@/lib/profiles";
 import {
+  answersOf,
   EQUIPMENT_KEYS,
   isEquipmentKey,
   isPlaygroundSource,
@@ -226,11 +227,8 @@ export default async function PendingPlaygroundsPage({
                           name: r.name,
                           description: r.description,
                           surfaces: r.surfaces,
+                          features: answersOf(r.known),
                           equipment: r.equipment,
-                          ...(Object.fromEntries(PLAYGROUND_FEATURE_KEYS.map((k) => [k, r.known[k] === true])) as Record<
-                            FeatureKey,
-                            boolean
-                          >),
                         }}
                         locale={locale}
                         triggerClassName="btn btn-outline gap-1"

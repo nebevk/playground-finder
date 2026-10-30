@@ -6,8 +6,9 @@ import { Search, AlertTriangle } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { LocationPickerClient } from "@/components/Map/LocationPickerClient";
 import { useToast } from "@/components/Toast/ToastProvider";
+import { FeatureAnswerChips } from "@/components/Playground/FeatureAnswers";
 import { DESCRIPTION_MAX, NAME_MAX } from "@/lib/limits";
-import { EQUIPMENT_KEYS, PLAYGROUND_FEATURE_KEYS, SURFACE_TYPES, type EquipmentKey, type SurfaceType } from "@/lib/playground-types";
+import { EQUIPMENT_KEYS, SURFACE_TYPES, type EquipmentKey, type FeatureAnswers, type SurfaceType } from "@/lib/playground-types";
 import {
   geocodeAddressAction,
   nearbyPlaygroundsAction,
@@ -30,7 +31,7 @@ export function QuickAddForm({ locale }: { locale: string }) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [surfaces, setSurfaces] = useState<SurfaceType[]>([]);
-  const [features, setFeatures] = useState<Record<string, boolean>>({});
+  const [features, setFeatures] = useState<FeatureAnswers>({});
   const [equipment, setEquipment] = useState<EquipmentKey[]>([]);
   const [nearby, setNearby] = useState<NearbyPlayground[]>([]);
 
@@ -187,21 +188,9 @@ export function QuickAddForm({ locale }: { locale: string }) {
         </div>
       </fieldset>
 
-      <fieldset>
+      <fieldset className="flex flex-col gap-1">
         <legend className="label-text mb-2">{tFields("features")}</legend>
-        <div className="flex flex-wrap gap-x-4 gap-y-2">
-          {PLAYGROUND_FEATURE_KEYS.map((key) => (
-            <label key={key} className="flex cursor-pointer items-center gap-2">
-              <input
-                type="checkbox"
-                checked={!!features[key]}
-                onChange={(e) => setFeatures({ ...features, [key]: e.target.checked })}
-                className="checkbox checkbox-primary checkbox-sm"
-              />
-              <span className="text-sm">{tFields(`featureOptions.${key}`)}</span>
-            </label>
-          ))}
-        </div>
+        <FeatureAnswerChips answers={features} onChange={setFeatures} />
       </fieldset>
 
       <fieldset>

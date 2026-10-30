@@ -2,10 +2,14 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
+  answersOf,
   EQUIPMENT_KEYS,
   equipmentFrom,
   featuresFrom,
+  featuresFromAnswers,
+  nextAnswer,
   PLAYGROUND_FEATURE_KEYS,
+  setFeatureAnswers,
   PLAYGROUND_SOURCES,
   PLAYGROUND_STATUSES,
   statedFeatures,
@@ -67,16 +71,41 @@ describe("surfaces", () => {
 });
 
 describe("features", () => {
-  it("[FR-ADD-02] [FR-PG-01] a form's unticked features stay unknown, not 'Brez …'", () => {
+  it("[FR-ADD-02] [FR-PG-01] a form's answers: yes = has it, no = doesn't ('Brez …'), nothing = unknown", () => {
     const fd = new FormData();
-    fd.set("has_benches", "on");
-    fd.set("is_fenced", "on");
+    fd.set("has_benches", "yes");
+    fd.set("is_fenced", "on"); // a ticked checkbox, from a page loaded before ops 0022
+    fd.set("has_toilets", "no");
     const features = featuresFrom(fd);
     expect(Object.keys(features)).toEqual([...PLAYGROUND_FEATURE_KEYS]);
     expect(features.has_benches).toBe(true);
     expect(features.is_fenced).toBe(true);
+    expect(features.has_toilets).toBe(false);
     expect(features.has_lighting).toBeNull();
+  });
+
+  it("[FR-ADD-02] a tap moves a feature's answer on: don't know, has it, doesn't have it, don't know", () => {
+    expect(nextAnswer(undefined)).toBe(true);
+    expect(nextAnswer(true)).toBe(false);
+    expect(nextAnswer(false)).toBeUndefined();
+  });
+
+  it("[FR-ADD-02] a form sends only the answered features, and the server reads the same answers back", () => {
+    const fd = new FormData();
+    setFeatureAnswers(fd, { has_shade: true, has_water: false });
+    expect([...fd.entries()]).toEqual([
+      ["has_shade", "yes"],
+      ["has_water", "no"],
+    ]);
+    expect(answersOf(featuresFrom(fd))).toEqual({ has_shade: true, has_water: false });
+  });
+
+  it("[FR-ADD-02] answers sent as JSON (admin quick add) keep only true and false", () => {
+    const features = featuresFromAnswers({ has_shade: true, has_water: false, has_toilets: "yes" });
+    expect(features.has_shade).toBe(true);
+    expect(features.has_water).toBe(false);
     expect(features.has_toilets).toBeNull();
+    expect(features.has_parking).toBeNull();
   });
 
   it("[FR-PG-01] an import leaves features it doesn't mention unknown, not 'Brez …'", () => {

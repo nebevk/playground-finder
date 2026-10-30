@@ -1,23 +1,25 @@
 "use client";
 
-import { useId, useRef, type ReactNode } from "react";
+import { useId, useRef, useState, type ReactNode } from "react";
 import {
   EQUIPMENT_KEYS,
-  PLAYGROUND_FEATURE_KEYS,
   SURFACE_TYPES,
   type EquipmentKey,
-  type FeatureKey,
+  type FeatureAnswers,
   type SurfaceType,
 } from "@/lib/playground-types";
 import { useTranslations } from "next-intl";
 import { updatePlaygroundAction } from "@/app/[locale]/admin/actions";
+import { FeatureAnswerChips } from "@/components/Playground/FeatureAnswers";
 import { DESCRIPTION_MAX, NAME_MAX } from "@/lib/limits";
 
-type Playground = Record<FeatureKey, boolean> & {
+type Playground = {
   id: string;
   name: string;
   description: string | null;
   surfaces: SurfaceType[];
+  /** The answers so far (answersOf): has it, doesn't have it, or missing = don't know. */
+  features: FeatureAnswers;
   equipment: EquipmentKey[];
 };
 
@@ -35,12 +37,12 @@ export function EditPlaygroundForm({
 }) {
   const t = useTranslations("admin.playgrounds");
   const tFields = useTranslations("add.step2");
-  const tFeat = useTranslations("add.step2.featureOptions");
   const tDetail = useTranslations("detail");
   const tSurf = useTranslations("add.step2.surfaceOptions");
   const tCommon = useTranslations("common");
   const id = useId();
   const ref = useRef<HTMLDialogElement | null>(null);
+  const [features, setFeatures] = useState(playground.features);
 
   return (
     <>
@@ -107,21 +109,9 @@ export function EditPlaygroundForm({
               </div>
             </fieldset>
 
-            <fieldset>
+            <fieldset className="flex flex-col gap-1">
               <legend className="label-text mb-1">{tFields("features")}</legend>
-              <div className="grid grid-cols-2 gap-2">
-                {PLAYGROUND_FEATURE_KEYS.map((key) => (
-                  <label key={key} className="flex cursor-pointer items-center gap-2">
-                    <input
-                      type="checkbox"
-                      name={key}
-                      defaultChecked={playground[key]}
-                      className="checkbox checkbox-primary checkbox-sm"
-                    />
-                    <span>{tFeat(key)}</span>
-                  </label>
-                ))}
-              </div>
+              <FeatureAnswerChips answers={features} onChange={setFeatures} hiddenInputs />
             </fieldset>
 
             <fieldset>

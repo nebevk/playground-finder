@@ -11,7 +11,7 @@ import type { ExistingPlayground } from "@/components/Map/LocationPicker";
 import { Turnstile } from "@/components/Turnstile";
 import { formatDistance, haversineMeters } from "@/lib/geo";
 import { MAX_PHOTOS, MAX_TOTAL_PHOTO_BYTES } from "@/lib/photo-checks";
-import { PLAYGROUND_FEATURE_KEYS, type EquipmentKey, type SurfaceType } from "@/lib/playground-types";
+import { setFeatureAnswers, type EquipmentKey, type FeatureAnswers, type SurfaceType } from "@/lib/playground-types";
 import { createPlaygroundAction, type AddState } from "./actions";
 
 const MAX_TOTAL_MB = MAX_TOTAL_PHOTO_BYTES / 1024 / 1024;
@@ -37,7 +37,7 @@ export function AddFlow({
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [surfaces, setSurfaces] = useState<SurfaceType[]>([]);
-  const [features, setFeatures] = useState<Record<string, boolean>>({});
+  const [features, setFeatures] = useState<FeatureAnswers>({});
   const [equipment, setEquipment] = useState<EquipmentKey[]>([]);
   const [photos, setPhotos] = useState<File[]>([]);
   const [preparingPhotos, setPreparingPhotos] = useState(false);
@@ -123,7 +123,7 @@ export function AddFlow({
             surfaces={surfaces}
             onSurfaceToggle={(key) => setSurfaces((list) => (list.includes(key) ? list.filter((k) => k !== key) : [...list, key]))}
             features={features}
-            onFeatureToggle={(key) => setFeatures({ ...features, [key]: !features[key] })}
+            onFeaturesChange={setFeatures}
             equipment={equipment}
             onEquipmentToggle={(key) => setEquipment((list) => (list.includes(key) ? list.filter((k) => k !== key) : [...list, key]))}
           />
@@ -153,7 +153,7 @@ export function AddFlow({
               fd.set("name", name);
               fd.set("description", description);
               for (const s of surfaces) fd.append("surfaces", s);
-              for (const k of PLAYGROUND_FEATURE_KEYS) if (features[k]) fd.set(k, "on");
+              setFeatureAnswers(fd, features);
               for (const k of equipment) fd.append("equipment", k);
               for (const f of photos) fd.append("photos", f);
               fd.set("locale", locale);

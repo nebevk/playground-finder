@@ -496,16 +496,11 @@
         "asphalt": "Asfalt"
       },
       "features": "Kaj ima igrišče?",
-      "featureOptions": {
-        "is_fenced": "Ograjeno",
-        "has_shade": "Senca",
-        "has_water": "Pitnik",
-        "has_toilets": "Stranišče",
-        "has_parking": "Parkirišče",
-        "has_benches": "Klopi",
-        "has_toddler_area": "Del za malčke",
-        "is_accessible": "Dostop z vozičkom",
-        "has_lighting": "Razsvetljava"
+      "featuresHint": "Tapni enkrat: ima. Še enkrat: nima. Tretjič: ne vem.",
+      "featureState": {
+        "yes": "ima",
+        "no": "nima",
+        "unknown": "ne vem"
       },
       "equipment": "Igrala"
     },

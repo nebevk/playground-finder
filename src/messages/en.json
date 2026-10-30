@@ -496,16 +496,11 @@
         "asphalt": "Asphalt"
       },
       "features": "What does it have?",
-      "featureOptions": {
-        "is_fenced": "Fenced",
-        "has_shade": "Shade",
-        "has_water": "Drinking water",
-        "has_toilets": "Toilets",
-        "has_parking": "Parking",
-        "has_benches": "Benches",
-        "has_toddler_area": "Toddler area",
-        "is_accessible": "Pram & wheelchair access",
-        "has_lighting": "Lighting"
+      "featuresHint": "Tap once: has it. Again: doesn't. A third time: don't know.",
+      "featureState": {
+        "yes": "has it",
+        "no": "doesn't have it",
+        "unknown": "don't know"
       },
       "equipment": "Play equipment"
     },

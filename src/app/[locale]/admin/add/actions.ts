@@ -5,7 +5,7 @@ import { clampText, DESCRIPTION_MAX, NAME_MAX } from "@/lib/limits";
 import { getAdminActionContext } from "@/lib/admin";
 import { geocodeInSlovenia } from "@/lib/geocode";
 import { invalidateMapSnapshot } from "@/lib/playgrounds";
-import { isEquipmentKey, statedFeatures, surfacesIn } from "@/lib/playground-types";
+import { featuresFromAnswers, isEquipmentKey, surfacesIn } from "@/lib/playground-types";
 
 export type GeoResult = { lat: number; lng: number; label: string };
 export type NearbyPlayground = { id: string; name: string; distance_m: number };
@@ -56,7 +56,8 @@ export type QuickAddPayload = {
   name: string;
   description: string;
   surfaces: string[];
-  features: Record<string, boolean>;
+  /** Answered features: true = has it, false = doesn't have it; missing = don't know. */
+  features: Partial<Record<string, boolean>>;
   equipment?: string[];
 };
 
@@ -72,8 +73,8 @@ export async function quickAddPlaygroundAction(
     return { ok: false };
   }
 
-  // An unticked feature stays unknown, as in every form (ops 0021).
-  const features = statedFeatures((k) => payload.features[k] === true);
+  // Answered features only: an unanswered one stays unknown, as in every form (ops 0021, 0022).
+  const features = featuresFromAnswers(payload.features);
 
   const { data, error } = await ctx.admin
     .from("playgrounds")

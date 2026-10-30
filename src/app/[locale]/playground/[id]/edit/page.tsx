@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getPlaygroundById } from "@/lib/playgrounds";
-import { PLAYGROUND_FEATURE_KEYS, type FeatureKey } from "@/lib/playground-types";
+import { answersOf, PLAYGROUND_FEATURE_KEYS } from "@/lib/playground-types";
 import { createClient } from "@/lib/supabase/server";
 import { EditPlaygroundForm } from "./EditPlaygroundForm";
 
@@ -28,10 +28,10 @@ export default async function EditPlaygroundPage({
   if (!playground || playground.user_id !== user.id) notFound();
 
   const t = await getTranslations("edit");
-  const features = Object.fromEntries(PLAYGROUND_FEATURE_KEYS.map((k) => [k, playground[k]])) as Record<
-    FeatureKey,
-    boolean
-  >;
+  // Start from what's known: a "no" stays a no, an unanswered feature stays unanswered.
+  const features = answersOf(
+    Object.fromEntries(PLAYGROUND_FEATURE_KEYS.map((k) => [k, playground.unknownFeatures.includes(k) ? null : playground[k]])),
+  );
 
   return (
     <section className="mx-auto flex w-full max-w-xl flex-col gap-4 p-4 pt-6">
