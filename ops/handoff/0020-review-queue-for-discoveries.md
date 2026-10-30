@@ -1,7 +1,7 @@
 ---
 id: 0020
 title: Discovered playgrounds can wait in a review queue until an admin publishes them
-status: ready
+status: in-progress
 order: migrations-first
 destructive: false
 migrations: [20261030120000_playground_status.sql]
@@ -168,4 +168,5 @@ Expect:
 
 ## Result log (Cursor)
 
-- 
+- **2026-10-30T14:29Z** started. Preflight OK (0019 done, prod READY, migration not in prod). Pre-check: playgrounds=15, flagged=0. Applying `playground_status`.
+- **2026-10-30T14:30Z** applied (prod version `20261030143032`). Verify: columns/defaults match; published|15|0; policy flagged+status; 4 constraints; unique index; geo 4 cols; no authenticated grants. Pushing `4ae4f80`..`9168f64`.
