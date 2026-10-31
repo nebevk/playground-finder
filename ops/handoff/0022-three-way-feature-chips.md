@@ -1,7 +1,7 @@
 ---
 id: 0022
 title: Each feature is answered has / doesn't have / don't know, with one chip
-status: in-progress
+status: blocked
 order: any
 destructive: false
 migrations: []
@@ -85,3 +85,5 @@ Expect `has_shade = true`, `has_water = false` and `has_toilets = null`. (After 
 ## Result log (Cursor)
 
 - **2026-10-31T15:38Z** started. 0021 → done (owner phone accepted). Preflight OK, no migrations. Pushing `f3c87cc`.
+- **2026-10-31T15:41Z** deploy `dpl_C7TURytTwq1yiUccwA1HC2WBV835` READY on `85ec501` (includes `f3c87cc`). Smoke 200. Advisors unchanged.
+- **Blocked** on owner phone: add with Senca once (purple) + Pitnik twice (red); page shows Senca + Brez pitnika only; edit keeps answers; third tap clears Brez. Then say **process ops** (Cursor will run the SQL verify).
