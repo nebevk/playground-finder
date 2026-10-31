@@ -35,7 +35,7 @@ Its data is OpenStreetMap's, under the ODbL, so playgrounds from OSM credit it.
 - **Slovenia's border:** `src/lib/slovenia-border.json` is OSM relation 218657, simplified to about 40 m (© OpenStreetMap contributors, ODbL). Natural Earth's 1:10m border was tried first: it put Piran outside and Gorizia inside.
 - **OSM credit** (FR-PG-06):
   - an OSM playground's page shows "Podatki © sodelavci OpenStreetMap" (linking openstreetmap.org/copyright), with a ↗ link to its feature, named "Poglej v OpenStreetMap", on the same row;
-  - the About page gets a "Podatki" section.
+  - the About page gets a "Podatki" section. It says OSM-derived playgrounds are available under the ODbL, with the contact address for a copy. That is the share-alike choice the owner made on 2026-10-31: option A.
 - **The 150 m radius** is now one constant, `SAME_PLAYGROUND_M`, shared by quick add, the review queue and discovery.
 - **Docs:**
   - FR-ADM-09 and FR-PG-06;

@@ -201,7 +201,7 @@ Discovery automation inserts **`pending`** with `source = 'osm'`.
     - It dedupes against every status, by `external_id` and within 150 m.
     - The "inside Slovenia" check uses OSM's own border. Natural Earth's put Piran outside and Gorizia inside.
     - OSM is credited on its playgrounds' pages and on About (FR-PG-06).
-    - **Still open:** the share-alike choice (BL-70), which is the owner's.
+    - **Share-alike, owner's decision (2026-10-31): option A.** OSM-derived playgrounds are offered under the ODbL on request; the About page says so, with the contact address. The alternative, using OSM only as a lead and re-entering what gets published, was declined.
 - **Revisit when:** volume needs bulk approve; drafts need multi-step enrichment before publish; or people's additions need review after all.
 
 ## Schema (as built: `20261030120000_playground_status.sql`)

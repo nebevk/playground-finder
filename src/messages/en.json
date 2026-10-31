@@ -34,6 +34,7 @@
     "authorLink": "My personal page",
     "dataTitle": "Data",
     "dataBody": "The map and some playgrounds come from OpenStreetMap. Data © OpenStreetMap contributors, available under the Open Database License (ODbL).",
+    "dataShare": "Playgrounds from OpenStreetMap are available under the same licence (ODbL). For a copy, write to {email}.",
     "dataLink": "OpenStreetMap copyright and licence",
     "supportTitle": "Support the project",
     "supportBody": "The app is free and ad-free. If you like it, you can buy me a coffee. Thank you!",

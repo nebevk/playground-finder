@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Coffee, ExternalLink } from "lucide-react";
 import { KOFI_URL, PERSONAL_URL } from "@/lib/links";
 import { localeAlternates } from "@/lib/seo";
+import { getPrivacyEmail } from "@/lib/site";
 
 export async function generateMetadata({
   params,
@@ -53,6 +54,8 @@ export default async function AboutPage({
       <section>
         <h2 className="mb-2 text-xl font-semibold">{t("dataTitle")}</h2>
         <p className="text-base-content/80">{t("dataBody")}</p>
+        {/* The owner chose to share OSM-derived playgrounds under the ODbL, on request (BL-70). */}
+        <p className="mt-2 text-base-content/80">{t("dataShare", { email: getPrivacyEmail() })}</p>
         <a
           href="https://www.openstreetmap.org/copyright"
           target="_blank"

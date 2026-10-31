@@ -34,6 +34,7 @@
     "authorLink": "Moja osebna stran",
     "dataTitle": "Podatki",
     "dataBody": "Zemljevid in nekatera igrišča so iz OpenStreetMap. Podatki © sodelavci OpenStreetMap, na voljo pod licenco Open Database License (ODbL).",
+    "dataShare": "Igrišča iz OpenStreetMap so na voljo pod isto licenco (ODbL). Za kopijo piši na {email}.",
     "dataLink": "Avtorske pravice OpenStreetMap",
     "supportTitle": "Podpri projekt",
     "supportBody": "Aplikacija je brezplačna in brez oglasov. Če ti je všeč, me lahko počastiš s kavico. Hvala!",

@@ -26,7 +26,7 @@ Conventions and the ID scheme are in [README.md](README.md). Status last reviewe
 | FR-PG-03 | Opening a detail page counts one view per session. Views drive "most viewed" on Home. | Could | Done — counter is gameable, see backlog | db |
 | FR-PG-04 | Signed-in users can save favourites (a heart on the map sheet and the playground's page) and see them on their profile. | Should | Done (ops 0014) | db, e2e |
 | FR-PG-05 | Community maintenance status (e.g. "well maintained", "needs repair"). | Could | Not started | manual |
-| FR-PG-06 | Playgrounds that came from OpenStreetMap credit it, as its ODbL licence asks: their page says "Podatki © sodelavci OpenStreetMap" (linking OSM's copyright page) and links the OSM feature. The About page names OSM's data under the ODbL. Playgrounds people added show no OSM credit. Whether OSM-derived rows must also be shared under the ODbL is the owner's open decision (BL-70). | Must | Done (ops 0023) | e2e |
+| FR-PG-06 | Playgrounds that came from OpenStreetMap credit it, as its ODbL licence asks: their page says "Podatki © sodelavci OpenStreetMap" (linking OSM's copyright page) and links the OSM feature. The About page names OSM's data under the ODbL. Playgrounds people added show no OSM credit. OSM-derived playgrounds are offered under the ODbL on request (the owner chose share-alike option A, 2026-10-31); the About page says so, with the contact address. | Must | Done (ops 0023) | e2e |
 
 ## Contribution (`FR-ADD`)
 

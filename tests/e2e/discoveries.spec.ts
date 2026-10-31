@@ -140,6 +140,8 @@ test("[FR-PG-06] once published, a discovery's page credits OpenStreetMap and li
     "href",
     "https://www.openstreetmap.org/copyright",
   );
+  // The owner chose to offer OSM-derived playgrounds under the ODbL, on request (BL-70).
+  await expect(page.getByText(sl.about.dataShare.split("{email}")[0].trim(), { exact: false })).toBeVisible();
   const { data: seeded } = await service().from("playgrounds").select("id").eq("name", "Tivoli Park Playground").single();
   await page.goto(`/sl/playground/${seeded!.id}`);
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
