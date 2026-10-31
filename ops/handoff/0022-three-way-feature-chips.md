@@ -1,7 +1,7 @@
 ---
 id: 0022
 title: Each feature is answered has / doesn't have / don't know, with one chip
-status: ready
+status: in-progress
 order: any
 destructive: false
 migrations: []
@@ -84,4 +84,4 @@ Expect `has_shade = true`, `has_water = false` and `has_toilets = null`. (After 
 
 ## Result log (Cursor)
 
-- 
+- **2026-10-31T15:38Z** started. 0021 → done (owner phone accepted). Preflight OK, no migrations. Pushing `f3c87cc`.

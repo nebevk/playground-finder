@@ -1,7 +1,7 @@
 ---
 id: 0021
 title: Mobile fixes, and no "Brez …" for boxes nobody ticked
-status: blocked
+status: done
 order: code-first
 destructive: false
 migrations: [20261030140000_unticked_features_unknown.sql]
@@ -123,3 +123,4 @@ Expect:
 - Pre-check false details: Novigrad f/w/t/p/acc/light=false; Ševlje f/w/t/tod/acc/light=false; Rovn toilets/benches/toddler=false.
 - **2026-10-30T15:14Z** pushed `ca8386f` (logging); code `71c316c` already live under prior READY. Applied `unticked_features_unknown` (prod `20261030151407`). Verify: playgrounds_with_a_no=0; true counts unchanged. Deploy `dpl_FoAjvKjPgYvTdbqFiofXgYt6ibAZ` READY. Smoke 200; Novigrad no rendered Brez pitnik/ograje. Advisors unchanged.
 - **Blocked** on owner phone: Igrišče Bled (or any that had Brez) clean; new add only shows ticked; filters 3 chips/row; Nazaj/Naprej arrows; Več alignment. Say **process ops** when done.
+- **2026-10-31T15:38Z** owner said process ops (phone UI checks accepted). **status → done**.
