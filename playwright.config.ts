@@ -1,5 +1,6 @@
 import { defineConfig, devices } from "@playwright/test";
 import { config as loadEnv } from "dotenv";
+import { E2E_DISCOVERY_SECRET } from "./tests/e2e/discoveries-secret";
 import { SENTRY_SINK } from "./tests/e2e/sentry-sink";
 
 // Same env as `pnpm dev`; global-setup refuses to run against a non-local Supabase.
@@ -60,6 +61,9 @@ export default defineConfig({
     env: {
       ...(Object.fromEntries(Object.entries(process.env).filter(([, v]) => v !== undefined)) as Record<string, string>),
       NEXT_PUBLIC_SENTRY_DSN: SENTRY_SINK.dsn,
+      // The discoveries API (tests/e2e/discoveries.spec.ts): a test secret, and room for every test run.
+      DISCOVERY_SECRET: E2E_DISCOVERY_SECRET,
+      DISCOVERY_DAILY_CAP: "50",
     },
   },
 });

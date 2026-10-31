@@ -1,6 +1,7 @@
 import { cache } from "react";
 import { unstable_cache, updateTag } from "next/cache";
 import { MAP_TAG, packPlayground, type PackedPlayground } from "./map-snapshot";
+import { osmFeatureUrl } from "./osm";
 import { PHOTO_BUCKET } from "./photo-storage";
 import { createAnonClient } from "./supabase/anon";
 import { createClient } from "./supabase/server";
@@ -152,7 +153,7 @@ export const getPlaygroundById = cache(async (id: string): Promise<PlaygroundDet
 
   const { data, error } = await supabase
     .from("playgrounds_geo")
-    .select(`${MAP_SELECT}, user_id`)
+    .select(`${MAP_SELECT}, user_id, source, external_id`)
     .eq("id", id)
     .eq("flagged", false)
     .eq("status", "published")
@@ -186,5 +187,9 @@ export const getPlaygroundById = cache(async (id: string): Promise<PlaygroundDet
 
   const unknownFeatures = PLAYGROUND_FEATURE_KEYS.filter((k) => row[k] == null);
 
-  return { ...base, photos, unknownFeatures, user_id };
+  // From OpenStreetMap: the page credits it and links the feature (ODbL, FR-PG-06).
+  const fromOsm = data.source === "osm";
+  const osmUrl = osmFeatureUrl(data.source, data.external_id);
+
+  return { ...base, photos, unknownFeatures, user_id, fromOsm, osmUrl };
 });

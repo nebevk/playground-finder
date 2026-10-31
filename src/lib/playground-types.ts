@@ -167,4 +167,7 @@ export type PlaygroundDetail = MapPlayground & {
   unknownFeatures: FeatureKey[];
   /** Who added it. Server-side only: decides whether the visitor may edit it. */
   user_id: string | null;
+  /** Found on OpenStreetMap: the page credits OSM (ODbL) and links the feature when known. */
+  fromOsm: boolean;
+  osmUrl: string | null;
 };

@@ -21,3 +21,7 @@ export function formatDistance(meters: number, locale: string): string {
   const km = new Intl.NumberFormat(locale, { maximumFractionDigits: meters < 10_000 ? 1 : 0 }).format(meters / 1000);
   return `${km} km`;
 }
+
+// Two playgrounds this close are probably the same one: the admin quick add warns, the review
+// queue lists them, and discovery skips the candidate (ADR-0003).
+export const SAME_PLAYGROUND_M = 150;

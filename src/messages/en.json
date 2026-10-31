@@ -32,6 +32,9 @@
     "authorTitle": "About me",
     "authorBody": "I'm Nejc Bevk, and I build this app in my spare time. It's a personal project, born from wanting a better overview of playgrounds for our little ones.",
     "authorLink": "My personal page",
+    "dataTitle": "Data",
+    "dataBody": "The map and some playgrounds come from OpenStreetMap. Data © OpenStreetMap contributors, available under the Open Database License (ODbL).",
+    "dataLink": "OpenStreetMap copyright and licence",
     "supportTitle": "Support the project",
     "supportBody": "The app is free and ad-free. If you like it, you can buy me a coffee. Thank you!",
     "supportCta": "Buy me a coffee on Ko-fi"
@@ -420,6 +423,8 @@
       "playhouse": "Playhouse",
       "water_play": "Water play"
     },
+    "osmCredit": "Data © OpenStreetMap contributors",
+    "osmFeature": "View on OpenStreetMap",
     "reportPlayground": "Report a problem",
     "photoAlt": "{name}, photo {n}",
     "edit": "Edit",

@@ -32,6 +32,9 @@
     "authorTitle": "O meni",
     "authorBody": "Aplikacijo v prostem času razvijam Nejc Bevk. To je moj osebni projekt, ki je nastal iz želje po boljšem pregledu nad igrišči za naše najmlajše.",
     "authorLink": "Moja osebna stran",
+    "dataTitle": "Podatki",
+    "dataBody": "Zemljevid in nekatera igrišča so iz OpenStreetMap. Podatki © sodelavci OpenStreetMap, na voljo pod licenco Open Database License (ODbL).",
+    "dataLink": "Avtorske pravice OpenStreetMap",
     "supportTitle": "Podpri projekt",
     "supportBody": "Aplikacija je brezplačna in brez oglasov. Če ti je všeč, me lahko počastiš s kavico. Hvala!",
     "supportCta": "Časti kavo na Ko-fi"
@@ -420,6 +423,8 @@
       "playhouse": "Hišica",
       "water_play": "Igrala z vodo"
     },
+    "osmCredit": "Podatki © sodelavci OpenStreetMap",
+    "osmFeature": "Poglej v OpenStreetMap",
     "reportPlayground": "Sporoči napako",
     "photoAlt": "{name}, fotografija {n}",
     "edit": "Uredi",

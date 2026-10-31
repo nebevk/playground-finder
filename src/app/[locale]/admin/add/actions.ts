@@ -4,13 +4,12 @@ import { revalidatePath } from "next/cache";
 import { clampText, DESCRIPTION_MAX, NAME_MAX } from "@/lib/limits";
 import { getAdminActionContext } from "@/lib/admin";
 import { geocodeInSlovenia } from "@/lib/geocode";
+import { SAME_PLAYGROUND_M } from "@/lib/geo";
 import { invalidateMapSnapshot } from "@/lib/playgrounds";
 import { featuresFromAnswers, isEquipmentKey, surfacesIn } from "@/lib/playground-types";
 
 export type GeoResult = { lat: number; lng: number; label: string };
 export type NearbyPlayground = { id: string; name: string; distance_m: number };
-
-const DUP_RADIUS_M = 150;
 
 // Geocode a Slovenian address or place (src/lib/geocode.ts). Admin-gated so it isn’t a public proxy.
 export async function geocodeAddressAction(query: string): Promise<GeoResult | null> {
@@ -27,7 +26,7 @@ export async function geocodeAddressAction(query: string): Promise<GeoResult | n
   }
 }
 
-// Playgrounds within DUP_RADIUS_M of a point — drives the "already exists nearby?" warning.
+// Playgrounds within SAME_PLAYGROUND_M of a point — drives the "already exists nearby?" warning.
 export async function nearbyPlaygroundsAction(
   lat: number,
   lng: number,
@@ -39,7 +38,7 @@ export async function nearbyPlaygroundsAction(
   const { data, error } = await ctx.supabase.rpc("playgrounds_near", {
     p_lat: lat,
     p_lng: lng,
-    p_radius_m: DUP_RADIUS_M,
+    p_radius_m: SAME_PLAYGROUND_M,
   });
   if (error || !data) {
     if (error) console.error("nearbyPlaygroundsAction failed", error);

@@ -49,6 +49,21 @@ export default async function AboutPage({
         </a>
       </section>
 
+      {/* The map and discovered playgrounds come from OpenStreetMap (ODbL asks for credit, FR-PG-06). */}
+      <section>
+        <h2 className="mb-2 text-xl font-semibold">{t("dataTitle")}</h2>
+        <p className="text-base-content/80">{t("dataBody")}</p>
+        <a
+          href="https://www.openstreetmap.org/copyright"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="link link-primary mt-2 inline-flex items-center gap-1"
+        >
+          {t("dataLink")}
+          <ExternalLink className="size-4" aria-hidden />
+        </a>
+      </section>
+
       <section className="rounded-box bg-base-200/60 p-5">
         <h2 className="mb-2 text-xl font-semibold">{t("supportTitle")}</h2>
         <p className="text-base-content/80">{t("supportBody")}</p>

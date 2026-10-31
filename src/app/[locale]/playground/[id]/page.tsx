@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { setRequestLocale, getTranslations } from "next-intl/server";
-import { ArrowLeft, ImagePlus, Navigation, Pencil } from "lucide-react";
+import { ArrowLeft, ExternalLink, ImagePlus, Navigation, Pencil } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { getCurrentUser } from "@/lib/supabase/server";
 import { EQUIPMENT_KEYS, getPlaygroundById, PLAYGROUND_FEATURE_KEYS, type EquipmentKey } from "@/lib/playgrounds";
@@ -198,6 +198,33 @@ export default async function PlaygroundDetailPage({
                 ))}
               </ul>
             </section>
+          )}
+
+          {/* Found on OpenStreetMap: its data is under the ODbL, which asks for this credit (FR-PG-06). */}
+          {playground.fromOsm && (
+            <p className="-my-3 flex items-center gap-1 text-sm text-base-content/70">
+              <a
+                href="https://www.openstreetmap.org/copyright"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="link inline-flex min-h-11 items-center"
+              >
+                {t("osmCredit")}
+              </a>
+              {/* One row on a phone: the feature is a 44 px icon link, named for screen readers. */}
+              {playground.osmUrl && (
+                <a
+                  href={playground.osmUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={t("osmFeature")}
+                  title={t("osmFeature")}
+                  className="btn btn-ghost btn-circle"
+                >
+                  <ExternalLink className="size-4" aria-hidden />
+                </a>
+              )}
+            </p>
           )}
 
           {/* Anyone signed in can add photos (FR-ADD-06; the page asks visitors to sign in). A lone

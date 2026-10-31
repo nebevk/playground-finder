@@ -2,6 +2,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ArrowLeft, ExternalLink, Pencil } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { requireAdmin } from "@/lib/admin";
+import { SAME_PLAYGROUND_M } from "@/lib/geo";
 import { osmFeatureUrl, osmPinUrl } from "@/lib/osm";
 import { usernamesById } from "@/lib/profiles";
 import {
@@ -21,7 +22,6 @@ import { setPlaygroundStatusAction } from "../actions";
 // admin publishes it; rejected ones stay rejected, so discovery doesn't propose them again.
 const SHOWN = 50;
 const RECENTLY_REJECTED = 20;
-const NEARBY_M = 150;
 
 export default async function PendingPlaygroundsPage({
   params,
@@ -83,7 +83,7 @@ export default async function PendingPlaygroundsPage({
   // was already rejected.
   const nearby = await Promise.all(
     rows.map(async (r) => {
-      const { data, error } = await supabase.rpc("playgrounds_near", { p_lat: r.lat, p_lng: r.lng, p_radius_m: NEARBY_M });
+      const { data, error } = await supabase.rpc("playgrounds_near", { p_lat: r.lat, p_lng: r.lng, p_radius_m: SAME_PLAYGROUND_M });
       if (error) console.error("pending queue: nearby lookup failed", error);
       return (data ?? []).filter((n) => n.id !== r.id);
     }),
@@ -184,7 +184,7 @@ export default async function PendingPlaygroundsPage({
                     )}
 
                     <div>
-                      <h4 className="text-sm font-semibold">{t("nearbyHeading", { distance: NEARBY_M })}</h4>
+                      <h4 className="text-sm font-semibold">{t("nearbyHeading", { distance: SAME_PLAYGROUND_M })}</h4>
                       {nearby[i].length === 0 ? (
                         <p className="text-sm text-base-content/60">{t("nearbyNone")}</p>
                       ) : (

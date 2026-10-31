@@ -196,6 +196,12 @@ Discovery automation inserts **`pending`** with `source = 'osm'`.
     - Credit OpenStreetMap wherever OSM-derived data is shown, for example on the detail page of a `source = 'osm'` playground.
     - Be ready to share the OSM-derived rows under ODbL. `source` keeps them identifiable.
     - Confirm the obligations before the routine ships.
+  - **Built in ops 0023:**
+    - `POST /api/discoveries` (FR-ADM-09) holds the service role, and the routine gets only `DISCOVERY_SECRET`.
+    - It dedupes against every status, by `external_id` and within 150 m.
+    - The "inside Slovenia" check uses OSM's own border. Natural Earth's put Piran outside and Gorizia inside.
+    - OSM is credited on its playgrounds' pages and on About (FR-PG-06).
+    - **Still open:** the share-alike choice (BL-70), which is the owner's.
 - **Revisit when:** volume needs bulk approve; drafts need multi-step enrichment before publish; or people's additions need review after all.
 
 ## Schema (as built: `20261030120000_playground_status.sql`)
