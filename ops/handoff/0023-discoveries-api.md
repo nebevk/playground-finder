@@ -1,7 +1,7 @@
 ---
 id: 0023
 title: A secret-protected way in for OpenStreetMap discoveries, and OSM credit
-status: blocked
+status: done
 order: code-first
 destructive: false
 migrations: []
@@ -115,3 +115,4 @@ Expect:
 
 - **2026-11-10T10:36Z** started. Code already on master (`3ecee9d`/`804b5b5`) and prod READY. Smoke 200. `POST /api/discoveries` without auth → **503** (fails closed; secret not set yet).
 - **Blocked** on owner: in Vercel Production (and Preview if needed) set `DISCOVERY_SECRET` (`openssl rand -base64 32`, ≥32 chars) and `DISCOVERY_DAILY_CAP=2`, redeploy, give the secret to Huston outside git/chat. Then say **process ops**.
+- **2026-11-10T10:45Z** owner set secret and redeployed (`dpl_EherziY2…` READY). Verify: no-auth and wrong Bearer → **401** (was 503); `from_osm=0`; smoke 200; About mentions OpenStreetMap. Advisors unchanged. Authenticated Trieste curl left to owner/Huston (don't paste the secret). **status → done**.
