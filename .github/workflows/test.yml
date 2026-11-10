@@ -34,9 +34,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: supabase/setup-cli@v1
+      - uses: supabase/setup-cli@v3
         with:
-          version: latest
+          # Pin to v3.x (^3 gets bug fixes while avoiding v4 breaking changes).
+          version: ^3
       # Applies every migration + seed to a fresh local stack (NFR-OPS-01).
       - run: supabase start
       - run: supabase test db
@@ -54,9 +55,10 @@ jobs:
           node-version-file: .nvmrc
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - uses: supabase/setup-cli@v1
+      - uses: supabase/setup-cli@v3
         with:
-          version: latest
+          # Pin to v3.x (^3 gets bug fixes while avoiding v4 breaking changes).
+          version: ^3
       - run: supabase start
       - name: Point the app at the local stack
         run: |

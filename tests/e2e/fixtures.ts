@@ -29,7 +29,7 @@ export const E2E_RESET_USER = {
   password: "e2e-Password-123",
 };
 
-// Local auth emails land in Mailpit (supabase/config.toml [inbucket]). Returns the first link
+// Local auth emails land in Mailpit (supabase/config.toml [local_smtp]). Returns the first link
 // in the newest email to `to` that arrived after `since`.
 export async function emailLink(to: string, since: Date, timeoutMs = 15_000): Promise<string> {
   const api = "http://127.0.0.1:54324/api/v1";
